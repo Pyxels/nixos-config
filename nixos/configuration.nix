@@ -1,0 +1,109 @@
+{ inputs, lib, config, pkgs, ... }:
+
+{
+  imports =
+    [
+      # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+      ./vpn_config
+    ];
+
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub = {
+    enable = true;
+    useOSProber = true;
+    device = "nodev";
+    efiSupport = true;
+  };
+
+  networking.networkmanager.enable = true;
+  networking.hostName = "nixos-l540";
+
+  services.openssh.enable = true;
+
+  hardware.bluetooth.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    media-session.config.bluez-monitor = {
+      properties = {
+        "bluez5.headset-roles" = [ ];
+        "bluez5.hfphsp-backend" = "none";
+      };
+      rules = [
+        {
+          matches = [{ "device.name" = "~bluez_card.*"; }];
+          actions = {
+            "update-props" = {
+              "bluez5.reconnect-profiles" = [ "a2dp_sink" ];
+            };
+          };
+        }
+      ];
+    };
+  };
+
+  time.timeZone = "Europe/Berlin";
+  i18n.defaultLocale = "en_US.UTF-8";
+  console = {
+    keyMap = "de";
+  };
+
+  #########################################
+  # Global packages
+  #########################################
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+
+    inputs.agenix.packages.${system}.default
+  ];
+
+  fonts.fonts = with pkgs; [
+    (nerdfonts.override { fonts = [ "RobotoMono" ]; })
+  ];
+
+  programs.hyprland.enable = true;
+  security.pam.services.swaylock = { };
+
+
+  #########################################
+  # Users
+  #########################################
+  users.users.jonas = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "networkmanager" ];
+  };
+
+  nix = {
+    # This will add each flake input as a registry
+    # To make nix3 commands consistent with your flake
+    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
+
+    package = pkgs.nixFlakes;
+
+    # This will additionally add your inputs to the system's legacy channels
+    # Making legacy nix commands consistent as well, awesome!
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+
+    settings = {
+      experimental-features = "nix-command flakes";
+      auto-optimise-store = true;
+      substituters = [ "https://hyprland.cachix.org" ];
+      trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+    };
+  };
+
+  # dont change
+  system.stateVersion = "22.11"; # Did you read the comment?
+
+}
+

@@ -1,0 +1,88 @@
+{ inputs, config, pkgs, system, lib, name, configPath, ... }:
+
+{
+  home.username = "jonas";
+  home.homeDirectory = "/home/jonas";
+
+  # dont change
+  home.stateVersion = "22.11";
+
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
+  };
+  qt.enable = true;
+  qt.style.name = "adwaita-dark";
+  gtk.enable = true;
+  gtk.theme.name = "Adwaita-dark";
+
+  imports = [
+    ./waybar
+    ./hyprland
+  ];
+
+  programs = {
+    # Let Home Manager install and manage itself.
+    home-manager.enable = true;
+    git = import ./git.nix;
+
+    neovim = {
+      enable = true;
+      defaultEditor = true;
+      viAlias = true;
+      vimAlias = true;
+    };
+
+    fzf.enable = true;
+    fzf.enableBashIntegration = true;
+    alacritty.enable = true;
+    alacritty.settings = import ./alacritty.nix;
+    bash = import ./bash.nix name;
+    starship = import ./starship.nix;
+  };
+
+  home.packages = with pkgs; [
+    # system
+    killall
+    upower
+
+    # utilities & tools
+    btop
+    ripgrep
+    bat
+    fd
+    exa
+    less
+    libqalculate
+    feh
+    mpv
+
+    # programming shit
+    gcc
+    rustup
+
+    # user apps
+    zathura
+    firefox
+    discord
+
+    # nix
+    nvd
+
+    inputs.kickoff.defaultPackage.${system}
+  ];
+
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "discord"
+  ];
+
+  home.sessionVariables = import ./env_vars.nix;
+  home.sessionPath = [
+    "/home/${name}/.local/share/nvim/mason/bin"
+    "${configPath}/home/scripts"
+  ];
+
+  # Nicely reload system units when changing configs
+  systemd.user.startServices = "sd-switch";
+}
