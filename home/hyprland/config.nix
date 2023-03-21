@@ -80,12 +80,7 @@
   windowrulev2 = workspace name:, class:^(org.qbittorrent.qBittorrent)$
   windowrulev2 = workspace name:, title:^(WhatsApp — Mozilla Firefox)$
   windowrulev2 = workspace name:, class:^(discord)$
-  windowrulev2 = workspace name:, class:^(ff_discord)$
 
-  windowrulev2 = float, title:^(Firefox — Sharing Indicator)$
-  windowrulev2 = nofocus, title:^(Firefox — Sharing Indicator)$
-  windowrulev2 = move 100%-60 20, title:^(Firefox — Sharing Indicator)$
-  windowrulev2 = nofullscreenrequest, title:^(Firefox — Sharing Indicator)$
   windowrulev2 = nofullscreenrequest, class:^(firefox)$, title:^(Opening.*)$
 
 
