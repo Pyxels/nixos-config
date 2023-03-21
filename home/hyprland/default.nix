@@ -1,11 +1,11 @@
-{ inputs, config, system, pkgs, ... }: {
+{ inputs, config, system, pkgs, configPath, ... }: {
   imports = [
     inputs.hyprland.homeManagerModules.default
   ];
 
   wayland.windowManager.hyprland = {
     enable = true;
-    extraConfig = import ./config.nix;
+    extraConfig = import ./config.nix { inherit configPath; };
   };
 
   home.packages = with pkgs; [
