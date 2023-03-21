@@ -21,6 +21,10 @@
     ./hyprland
   ];
 
+  services = {
+    dunst = import ./dunst.nix;
+  };
+
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
@@ -39,6 +43,7 @@
     alacritty.settings = import ./alacritty.nix;
     bash = import ./bash.nix name;
     starship = import ./starship.nix;
+
     firefox = import ./firefox.nix;
   };
 
@@ -46,6 +51,7 @@
     # system
     killall
     upower
+    libnotify
 
     # utilities & tools
     btop
