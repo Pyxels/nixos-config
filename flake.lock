@@ -267,6 +267,22 @@
         "type": "indirect"
       }
     },
+    "nvim-config": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1679398913,
+        "narHash": "sha256-g/kNgcOOklsVycsw5um4LRVIwIhL8taYR2JJgb8k0v4=",
+        "owner": "pyxels",
+        "repo": "nvim-config",
+        "rev": "19d26e9319f14f33c96b7be70d9533abecd57362",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pyxels",
+        "repo": "nvim-config",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "agenix": "agenix",
@@ -274,7 +290,8 @@
         "hyprland": "hyprland",
         "hyprpaper": "hyprpaper",
         "kickoff": "kickoff",
-        "nixpkgs": "nixpkgs_5"
+        "nixpkgs": "nixpkgs_5",
+        "nvim-config": "nvim-config"
       }
     },
     "utils": {

@@ -9,6 +9,11 @@
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
 
+    nvim-config = {
+      url = "github:pyxels/nvim-config";
+      flake = false;
+    };
+
     hyprland.url = "github:hyprwm/Hyprland";
     hyprpaper.url = "github:hyprwm/hyprpaper";
 
@@ -20,7 +25,7 @@
       hostname = "nixos-l540";
       name = "jonas";
       system = "x86_64-linux";
-      configPath = "/home/jonas/.dotfiles";
+      configPath = "/home/${name}/.dotfiles";
     in
     {
       nixosConfigurations = {
