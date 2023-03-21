@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+filename=~/Pictures/screenshots/$(date -u +"%Y-%m-%d_%H-%M-%S").png
+
+grim -s 2 -g "$(slurp)" "$filename"
+wl-copy < "$filename"

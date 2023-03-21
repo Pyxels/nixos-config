@@ -93,9 +93,9 @@
   bind = SUPER_SHIFT, Period, exec, pamixer --allow-boost -i 10
   bind = SUPER,       Comma,  exec, pamixer --allow-boost -d 2
   bind = SUPER_SHIFT, Comma,  exec, pamixer --allow-boost -d 10
-  bind = SUPER_SHIFT, B,      exec, sb-bluetooth_toggle
+  bind = SUPER_SHIFT, B,      exec, headset_toggle
   bind = SUPER_SHIFT, L,      exec, swaylock -eFi ~/.config/hypr/img/lockscreen.png
-  bind = SUPER,       P,      exec, ${configPath}/home/scripts/toggle_music
+  bind = SUPER,       P,      exec, toggle_music
 
   # Layout
   bind = SUPER,       Space,  layoutmsg, swapwithmaster master
@@ -143,8 +143,8 @@
 
 
   # Interactive workspace selector/creator
-  bind = SUPER,       Y, exec, ${configPath}/home/hyprland/select_workspace
-  bind = SUPER_SHIFT, Y, exec, ${configPath}/home/hyprland/create_workspace
+  bind = SUPER,       Y, exec, select_workspace
+  bind = SUPER_SHIFT, Y, exec, create_workspace
 
   # Move/resize windows with mainMod + LMB/RMB and dragging
   bindm = SUPER, mouse:272, movewindow
@@ -175,7 +175,7 @@
   env = QT_QPA_PLATFORM,wayland
 
   # etc
-  env = SUDO_ASKPASS,${configPath}/home/scripts/askpass_kickoff.sh
+  env = SUDO_ASKPASS,${configPath}/home/scripts/askpass_kickoff
 ''
 + (if hostname == "vetus" then ''
   ########################################################################################

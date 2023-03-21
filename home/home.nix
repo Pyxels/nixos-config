@@ -52,6 +52,7 @@
     killall
     upower
     libnotify
+    socat
 
     # utilities & tools
     btop
@@ -83,7 +84,6 @@
     "discord"
   ];
 
-  home.sessionVariables = import ./env_vars.nix;
   home.sessionPath = [
     "/home/${name}/.local/share/nvim/mason/bin"
     "${configPath}/home/scripts"
