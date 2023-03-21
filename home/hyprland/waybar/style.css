@@ -1,0 +1,98 @@
+* {
+  font-size: 15px;
+  font-family: monospace;
+}
+
+window#waybar {
+  background: #282828;
+  color: #EBDBB2;
+}
+
+#custom-right-arrow-dark,
+#custom-left-arrow-dark {
+  color: #1D2021;
+}
+#custom-right-arrow-light,
+#custom-left-arrow-light {
+  color: #282828;
+  background: #1D2021;
+}
+
+#workspaces,
+#window,
+#clock.1,
+#clock.2,
+#clock.3,
+#pulseaudio,
+#memory,
+#cpu,
+#temperature,
+#bluetooth,
+#custom-vpn,
+#custom-gpu-temp,
+#battery,
+#tray,
+#custom-packages {
+  background: #1D2021;
+}
+
+#workspaces button {
+  padding: 0 2px;
+  color: #EBDBB2;
+}
+#workspaces button.active {
+  color: #CC241D;
+}
+
+#workspaces button:hover {
+  box-shadow: inherit;
+  text-shadow: inherit;
+}
+#workspaces button:hover {
+  background: #1D2021;
+  border: #1D2021;
+  padding: 0 3px;
+}
+
+#pulseaudio {
+  color: #268bd2;
+}
+#memory {
+  color: #2aa198;
+}
+#cpu {
+  color: #6c71c4;
+}
+#disk {
+  color: #b58900;
+}
+#bluetooth {
+  color: #458588;
+}
+#custom-vpn,
+#battery,
+#tray {
+  color: #98971A;
+}
+#temperature,
+#custom-gpu-temp {
+  color: #FABD2F;
+}
+#custom-packages {
+  color: #FE8019;
+}
+
+#window,
+#clock,
+#pulseaudio,
+#memory,
+#cpu,
+#temperature,
+#bluetooth,
+#custom-vpn,
+#custom-gpu-temp,
+#battery,
+#tray,
+#custom-packages {
+  padding: 0 10px;
+}

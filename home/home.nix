@@ -18,7 +18,6 @@
   gtk.theme.name = "Adwaita-dark";
 
   imports = [
-    ./waybar
     ./hyprland
   ];
 

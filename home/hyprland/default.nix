@@ -1,6 +1,7 @@
 { inputs, config, system, pkgs, hostname, configPath, ... }: {
   imports = [
     inputs.hyprland.homeManagerModules.default
+    ./waybar
   ];
 
   wayland.windowManager.hyprland = {

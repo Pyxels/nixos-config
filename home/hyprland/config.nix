@@ -154,7 +154,8 @@
   # Startup
   ########################################################################################
 
-  exec-once = waybar & hyprpaper -n
+  exec-once = waybar
+  exec-once = hyprpaper -n
   exec-once = polkit-kde-authentication-agent-1
 
 

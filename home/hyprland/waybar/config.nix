@@ -1,10 +1,13 @@
-{
+{ hostname }: {
   mainBar = {
     layer = "top";
     position = "bottom";
 
     modules-left = [
       "wlr/workspaces"
+      "custom/right-arrow-dark"
+      "custom/right-arrow-light"
+      "hyprland/window"
       "custom/right-arrow-dark"
     ];
     modules-center = [
@@ -29,10 +32,24 @@
       "cpu"
       "custom/left-arrow-light"
       "custom/left-arrow-dark"
-      "battery"
+      "temperature"
+    ] ++ (if hostname == "vetus" then [
+      "custom/gpu-temp"
+    ] else [ ])
+    ++ [
       "custom/left-arrow-light"
       "custom/left-arrow-dark"
-      "disk"
+      "bluetooth"
+      "custom/left-arrow-light"
+      "custom/left-arrow-dark"
+      "custom/vpn"
+    ] ++ (if hostname == "nixos-l540" then [
+      "custom/left-arrow-light"
+      "custom/left-arrow-dark"
+      "battery"
+    ]
+    else [ ])
+    ++ [
       "custom/left-arrow-light"
       "custom/left-arrow-dark"
       "tray"
@@ -73,6 +90,17 @@
       tooltip = false;
     };
 
+
+    "custom/vpn" = {
+      exec = "printf \"%s\" \"$(sed \"s/.*/ /\" /sys/class/net/tun0/operstate 2>/dev/null)\"";
+      interval = 5;
+    };
+    "custom/gpu-temp" = {
+      exec = "echo $(($(cat /sys/class/hwmon/hwmon1/temp1_input) / 1000 ))";
+      format = "GPU: {}°C";
+      interval = 5;
+    };
+
     pulseaudio = {
       format = "{icon} {volume:2}%";
       format-bluetooth = "{icon}  {volume}%";
@@ -81,7 +109,7 @@
         headphones = "";
         default = [
           ""
-            ""
+          ""
         ];
       };
       scroll-step = 5;
@@ -105,11 +133,25 @@
       format = "{icon} {capacity}%";
       format-icons = [
         ""
-          ""
-          ""
-          ""
-          ""
+        ""
+        ""
+        ""
+        ""
       ];
+    };
+    temperature = {
+      critical-threshold = 80;
+      format-critical = "{temperatureC}°C {icon}";
+      format = "{temperatureC}°C {icon}";
+      format-icons = [ "" "" "" ];
+    };
+    bluetooth = {
+      format = " {status}";
+      format-connected = " {num_connections}";
+      tooltip-format = "{controller_alias}\t{controller_address}\n\n{num_connections} connected";
+      tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
+      tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+      tooltip-format-enumerate-connected-battery = "{device_alias}\t{device_address}\t{device_battery_percentage}%";
     };
     disk = {
       interval = 5;
