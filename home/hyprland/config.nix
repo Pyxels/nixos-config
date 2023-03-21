@@ -1,4 +1,4 @@
-{ configPath }: ''
+{ configPath, hostname }: ''
   ########################################################################################
   # Variables
   ########################################################################################
@@ -55,17 +55,6 @@
   master {
       new_is_master = false
   }
-
-
-  ########################################################################################
-  # Monitors
-  ########################################################################################
-
-  monitor = eDP-1, preferred, auto, 1
-  monitor =      , preferred, auto, 1
-
-  # Default workspaces on startup
-  workspace = eDP-1,  name:
 
 
   ########################################################################################
@@ -187,3 +176,57 @@
   # etc
   env = SUDO_ASKPASS,${configPath}/home/scripts/askpass_kickoff.sh
 ''
++ (if hostname == "vetus" then ''
+  ########################################################################################
+  # Monitors
+  ########################################################################################
+
+  $left_mon = DVI-D-1
+  $center_mon = DP-5
+  $right_mon = DP-6
+
+  monitor = $left_mon,    preferred, 0x0,     1
+  monitor = $center_mon,  preferred, 1920x0,  1.5
+  monitor = $right_mon,   preferred, 4480x0,  1
+  # Fallback
+  monitor = ,             preferred, auto,    1
+
+
+  ########################################################################################
+  # Workspaces
+  ########################################################################################
+
+  # Default workspaces on startup
+  workspace = $center_mon,  name:
+  workspace = $left_mon,    name:
+  workspace = $right_mon,   name:
+
+
+  wsbind = name:, $left_mon
+
+  wsbind = name:, $center_mon
+  wsbind = name:, $center_mon
+  wsbind = name:, $center_mon
+  wsbind = name:, $center_mon
+  wsbind = name: Kodi, $center_mon
+
+  wsbind = name:, $right_mon
+  wsbind = name:, $right_mon
+  wsbind = name:, $right_mon
+  wsbind = name:, $right_mon
+  wsbind = name:, $right_mon
+''
+else
+  (if hostname == "nixos-l540" then ''
+    ########################################################################################
+    # Monitors
+    ########################################################################################
+
+    monitor = eDP-1, preferred, auto, 1
+    monitor =      , preferred, auto, 1
+
+    # Default workspaces on startup
+    workspace = eDP-1,  name:
+
+
+  '' else ""))

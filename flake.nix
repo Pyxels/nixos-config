@@ -43,7 +43,7 @@
       homeConfigurations = {
         "${name}@${hostname}" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system}; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs system name configPath; }; # Pass flake inputs to our config
+          extraSpecialArgs = { inherit inputs system hostname name configPath; }; # Pass flake inputs to our config
           modules = [
             ./home/home.nix
           ];

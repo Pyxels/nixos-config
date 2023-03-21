@@ -1,4 +1,4 @@
-{ inputs, config, pkgs, system, lib, name, configPath, ... }:
+{ inputs, config, pkgs, system, lib, hostname, name, configPath, ... }:
 
 {
   home.username = "jonas";
