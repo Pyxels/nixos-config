@@ -22,6 +22,7 @@
   services.openssh.enable = true;
 
   hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = if hostname == "vetus" then true else false;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
