@@ -4,12 +4,11 @@
   userEmail = "39232833+Pyxels@users.noreply.github.com";
   userName = "Pyxels";
 
-  signing.key = "/home/jonas/.ssh/id_rsa.pub";
-  signing.signByDefault = true;
   extraConfig = {
     init.defaultBranch = "master";
     commit.gpgsign = true;
     gpg.format = "ssh";
+    user.signingkey = "~/.ssh/id_rsa.pub";
   };
 
   delta.enable = true;
