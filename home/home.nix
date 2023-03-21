@@ -83,10 +83,7 @@
     "${configPath}/home/scripts"
   ];
 
-  home.file."nvim-config" = {
-    source = inputs.nvim-config;
-    target = ".config/nvim";
-  };
+  home.file.".config/nvim".source = inputs.nvim-config;
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
