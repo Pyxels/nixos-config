@@ -66,6 +66,7 @@
     zathura
     firefox
     discord
+    qbittorrent
 
     # nix
     nvd
