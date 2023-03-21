@@ -104,7 +104,7 @@
   bind = SUPER_SHIFT, Period, exec, pamixer --allow-boost -i 10
   bind = SUPER,       Comma,  exec, pamixer --allow-boost -d 2
   bind = SUPER_SHIFT, Comma,  exec, pamixer --allow-boost -d 10
-  # bind = SUPER_SHIFT, B,      exec, sb-bluetooth_toggle
+  bind = SUPER_SHIFT, B,      exec, sb-bluetooth_toggle
   bind = SUPER_SHIFT, L,      exec, swaylock -eFi ~/.config/hypr/img/lockscreen.png
   
   # Layout
@@ -152,8 +152,8 @@
   
   
   # Interactive workspace selector/creator
-  # bind = SUPER,       Y, exec, $CONFIG/scripts/select_workspace.sh
-  # bind = SUPER_SHIFT, Y, exec, $CONFIG/scripts/create_workspace.sh
+  bind = SUPER,       Y, exec, $CONFIG/scripts/select_workspace.sh
+  bind = SUPER_SHIFT, Y, exec, $CONFIG/scripts/create_workspace.sh
   
   # Move/resize windows with mainMod + LMB/RMB and dragging
   bindm = SUPER, mouse:272, movewindow
@@ -165,8 +165,6 @@
   
   exec-once = waybar & hyprpaper -n
   exec-once = polkit-kde-authentication-agent-1
-  
-  # exec-once = piactl connect
 
 
   ########################################################################################
