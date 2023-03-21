@@ -40,6 +40,7 @@
     alacritty.settings = import ./alacritty.nix;
     bash = import ./bash.nix name;
     starship = import ./starship.nix;
+    firefox = import ./firefox.nix;
   };
 
   home.packages = with pkgs; [
@@ -64,7 +65,6 @@
 
     # user apps
     zathura
-    firefox
     discord
     qbittorrent
 
