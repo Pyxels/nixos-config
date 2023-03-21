@@ -1,8 +1,8 @@
 { inputs, config, pkgs, system, lib, hostname, name, configPath, ... }:
 
 {
-  home.username = "jonas";
-  home.homeDirectory = "/home/jonas";
+  home.username = name;
+  home.homeDirectory = "/home/${name}";
 
   # dont change
   home.stateVersion = "22.11";

@@ -1,4 +1,4 @@
-{ inputs, lib, config, pkgs, ... }:
+{ inputs, lib, config, pkgs, name, hostname, ... }:
 
 {
   imports =
@@ -17,7 +17,7 @@
   };
 
   networking.networkmanager.enable = true;
-  networking.hostName = "nixos-l540";
+  networking.hostName = hostname;
 
   services.openssh.enable = true;
 
@@ -72,7 +72,7 @@
   #########################################
   # Users
   #########################################
-  users.users.jonas = {
+  users.users.${name} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" ];
   };

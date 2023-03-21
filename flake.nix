@@ -31,7 +31,7 @@
     {
       nixosConfigurations = {
         ${hostname} = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs system; }; # Pass flake inputs to our config
+          specialArgs = { inherit inputs system name hostname; }; # Pass flake inputs to our config
           modules = [
             agenix.nixosModules.default
             hyprland.nixosModules.default
