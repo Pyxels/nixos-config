@@ -23,7 +23,7 @@
 
   outputs = { nixpkgs, home-manager, hyprland, agenix, ... }@inputs:
     let
-      hostname = "nixos-l540";
+      hostname = "vetus";
       name = "jonas";
       system = "x86_64-linux";
       configPath = "/home/${name}/.dotfiles";
