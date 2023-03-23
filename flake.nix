@@ -15,9 +15,11 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.inputs.nixpkgs.follows = "nixpkgs";
     hyprpaper.url = "github:hyprwm/hyprpaper";
 
-    kickoff.url = "path:custom/kickoff";
+    kickoff.url = "github:pyxels/kickoff";
+    kickoff.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { nixpkgs, home-manager, hyprland, agenix, ... }@inputs:
@@ -26,7 +28,6 @@
       system = "x86_64-linux";
       configPath = "/home/${name}/.dotfiles";
 
-      # TODO check if name needed
       mkNixosSystem = hostname: nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs system name hostname; }; # Pass flake inputs to our config
         modules = [
