@@ -17,6 +17,12 @@
   gtk.enable = true;
   gtk.theme.name = "Adwaita-dark";
 
+  home.pointerCursor = {
+    name = "phinger-cursors";
+    package = pkgs.phinger-cursors;
+    gtk.enable = true;
+  };
+
   imports = [
     ./hyprland
   ];
