@@ -22,31 +22,37 @@
 
   outputs = { nixpkgs, home-manager, hyprland, agenix, ... }@inputs:
     let
-      hostname = "vetus";
       name = "jonas";
       system = "x86_64-linux";
       configPath = "/home/${name}/.dotfiles";
+
+      # TODO check if name needed
+      mkNixosSystem = hostname: nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs system name hostname; }; # Pass flake inputs to our config
+        modules = [
+          agenix.nixosModules.default
+          hyprland.nixosModules.default
+          ./nixos/${hostname}/configuration.nix
+        ];
+      };
+
+      mkHomeManagerConfig = name: hostname: home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system}; # Home-manager requires 'pkgs' instance
+        extraSpecialArgs = { inherit inputs system hostname name configPath; }; # Pass flake inputs to our config
+        modules = [
+          ./home/home.nix
+        ];
+      };
     in
     {
       nixosConfigurations = {
-        ${hostname} = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs system name hostname; }; # Pass flake inputs to our config
-          modules = [
-            agenix.nixosModules.default
-            hyprland.nixosModules.default
-            ./nixos/configuration.nix
-          ];
-        };
+        vetus = mkNixosSystem "vetus";
+        nixos-l540 = mkNixosSystem "nixos-l540";
       };
 
       homeConfigurations = {
-        "${name}@${hostname}" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${system}; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs system hostname name configPath; }; # Pass flake inputs to our config
-          modules = [
-            ./home/home.nix
-          ];
-        };
+        "${name}@vetus" = mkHomeManagerConfig name "vetus";
+        "${name}@nixos-l540" = mkHomeManagerConfig name "nixos-l540";
       };
     };
 }
