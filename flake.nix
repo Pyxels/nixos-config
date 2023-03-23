@@ -13,9 +13,8 @@
       url = "github:pyxels/nvim-config";
       flake = false;
     };
-    
-    # Pinning to commit due to build breakage, see https://github.com/hyprwm/Hyprland/issues/1842
-    hyprland.url = "github:hyprwm/Hyprland/37ced6aca4ad8f18f8e205e3cdb6de9c8964d4b6";
+
+    hyprland.url = "github:hyprwm/Hyprland";
     hyprpaper.url = "github:hyprwm/hyprpaper";
 
     kickoff.url = "path:custom/kickoff";
