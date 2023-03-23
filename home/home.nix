@@ -64,6 +64,7 @@
     libqalculate
     feh
     mpv
+    pamixer
 
     # programming shit
     gcc
