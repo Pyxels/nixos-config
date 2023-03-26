@@ -15,7 +15,6 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
-    hyprland.inputs.nixpkgs.follows = "nixpkgs";
     hyprpaper.url = "github:hyprwm/hyprpaper";
 
     kickoff.url = "github:pyxels/kickoff";
