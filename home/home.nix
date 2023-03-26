@@ -71,6 +71,7 @@
     feh
     mpv
     pamixer
+    termdown
 
     # programming shit
     gcc
