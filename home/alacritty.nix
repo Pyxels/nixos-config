@@ -3,6 +3,8 @@
   window.decorations = "none";
   font = {
     normal.family = "RobotoMono Nerd Font";
+    offset.x = -1;
+    offset.y = -1;
   };
   colors = {
     primary = {
