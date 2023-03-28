@@ -24,35 +24,42 @@
   outputs = { nixpkgs, home-manager, hyprland, agenix, ... }@inputs:
     let
       name = "jonas";
+      hosts = [ "vetus" "nixos-l540" ];
       system = "x86_64-linux";
       configPath = "/home/${name}/.dotfiles";
 
-      mkNixosSystem = hostname: nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs system name hostname; }; # Pass flake inputs to our config
-        modules = [
-          agenix.nixosModules.default
-          hyprland.nixosModules.default
-          ./nixos/${hostname}/configuration.nix
-        ];
-      };
+      mkNixosSystems = hostnames:
+        builtins.listToAttrs (map
+          (hostname: {
+            name = hostname;
+            value = nixpkgs.lib.nixosSystem {
+              specialArgs = { inherit inputs system name hostname; }; # Pass flake inputs to our config
+              modules = [
+                agenix.nixosModules.default
+                hyprland.nixosModules.default
+                ./nixos/${hostname}/configuration.nix
+              ];
+            };
+          })
+          hostnames);
 
-      mkHomeManagerConfig = name: hostname: home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${system}; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = { inherit inputs system hostname name configPath; }; # Pass flake inputs to our config
-        modules = [
-          ./home/home.nix
-        ];
-      };
+      mkHomeConfigs = name: hostnames:
+        builtins.listToAttrs (map
+          (hostname: {
+            name = "${name}@${hostname}";
+            value = home-manager.lib.homeManagerConfiguration {
+              pkgs = nixpkgs.legacyPackages.${system}; # Home-manager requires 'pkgs' instance
+              extraSpecialArgs = { inherit inputs system hostname name configPath; }; # Pass flake inputs to our config
+              modules = [
+                ./home/home.nix
+              ];
+            };
+          })
+          hostnames);
     in
     {
-      nixosConfigurations = {
-        vetus = mkNixosSystem "vetus";
-        nixos-l540 = mkNixosSystem "nixos-l540";
-      };
+      nixosConfigurations = mkNixosSystems hosts;
 
-      homeConfigurations = {
-        "${name}@vetus" = mkHomeManagerConfig name "vetus";
-        "${name}@nixos-l540" = mkHomeManagerConfig name "nixos-l540";
-      };
+      homeConfigurations = mkHomeConfigs name hosts;
     };
 }
