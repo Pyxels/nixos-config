@@ -61,6 +61,7 @@
     socat
 
     # utilities & tools
+    jmtpfs
     btop
     ripgrep
     bat
