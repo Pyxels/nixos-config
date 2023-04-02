@@ -25,22 +25,6 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    media-session.config.bluez-monitor = {
-      properties = {
-        "bluez5.headset-roles" = [ ];
-        "bluez5.hfphsp-backend" = "none";
-      };
-      rules = [
-        {
-          matches = [{ "device.name" = "~bluez_card.*"; }];
-          actions = {
-            "update-props" = {
-              "bluez5.reconnect-profiles" = [ "a2dp_sink" ];
-            };
-          };
-        }
-      ];
-    };
   };
 
   time.timeZone = "Europe/Berlin";
