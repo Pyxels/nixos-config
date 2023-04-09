@@ -26,6 +26,26 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+  environment.etc = {
+    "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
+      bluez_monitor.properties = {
+        ["bluez5.enable-hw-volume"] = true,
+        ["bluez5.headset-roles"] = "[ ]",
+        ["bluez5.hfphsp-backend"] = "none",
+      }
+      bluez_monitor.rules = {
+        {
+          matches = {
+            {{ "device.name", "matches", "~bluez_card.*" },},
+          },
+          apply_properties = {
+            ["bluez5.auto-connect"] = "[ a2dp_sink ]",
+            ["bluez5.hw-volume"] = "[ a2dp_sink ]",
+          },
+        },
+      }
+    '';
+  };
 
   time.timeZone = "Europe/Berlin";
   i18n.defaultLocale = "en_US.UTF-8";
