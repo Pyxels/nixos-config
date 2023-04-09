@@ -36,7 +36,6 @@
               specialArgs = { inherit inputs system name hostname; }; # Pass flake inputs to our config
               modules = [
                 agenix.nixosModules.default
-                hyprland.nixosModules.default
                 ./nixos/${hostname}/configuration.nix
               ];
             };
