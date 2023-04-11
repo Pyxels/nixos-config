@@ -49,6 +49,8 @@
     alacritty.settings = import ./alacritty.nix;
     bash = import ./bash.nix name;
     starship = import ./starship.nix;
+    direnv.enable = true;
+    direnv.nix-direnv.enable = true;
 
     firefox = import ./firefox.nix;
   };
