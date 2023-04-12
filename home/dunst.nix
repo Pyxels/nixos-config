@@ -7,11 +7,10 @@
       corner_radius = 4;
       font = "Noto Sans 15";
       markup = true;
-      format = "<b>%s</b> %p\n%b";
+      format = "<b>%s</b> %p\\n%b";
       sort = true;
       indicate_hidden = true;
       alignment = "left";
-      bounce_freq = 5;
       show_age_threshold = 60;
       word_wrap = true;
       ignore_newline = false;
@@ -33,7 +32,6 @@
       padding = 8;
       horizontal_padding = 10;
       separator_color = "#263238";
-      startup_notification = false;
       browser = "firefox";
       icon_position = "left";
       max_icon_size = 32;
