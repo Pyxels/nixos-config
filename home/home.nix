@@ -103,6 +103,10 @@
   ];
 
   home.file.".config/nvim".source = inputs.nvim-config;
+  xdg.configFile.kickoff = {
+    target = "kickoff/config.toml";
+    text = import ./kickoff.nix;
+  };
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
