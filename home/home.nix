@@ -63,6 +63,7 @@
     socat
 
     # utilities & tools
+    jq
     jmtpfs
     btop
     ripgrep
