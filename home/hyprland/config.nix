@@ -71,6 +71,10 @@
   windowrulev2 = workspace name:, class:^(discord)$
 
   windowrulev2 = nofullscreenrequest, class:^(firefox)$, title:^(Opening.*)$
+  windowrulev2 = float, title:^(Firefox — Sharing Indicator)$
+  windowrulev2 = nofocus, title:^(Firefox — Sharing Indicator)$
+  windowrulev2 = move 100%-530 20, title:^(Firefox — Sharing Indicator)$
+  windowrulev2 = nofullscreenrequest, title:^(Firefox — Sharing Indicator)$
 
 
   ########################################################################################
