@@ -82,6 +82,7 @@
     rustup
 
     # user apps
+    kickoff
     zathura
     discord
     qbittorrent
@@ -89,8 +90,6 @@
 
     # nix
     nvd
-
-    inputs.kickoff.defaultPackage.${system}
   ];
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [

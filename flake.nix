@@ -16,9 +16,6 @@
 
     hyprland.url = "github:hyprwm/Hyprland";
     hyprpaper.url = "github:hyprwm/hyprpaper";
-
-    kickoff.url = "github:pyxels/kickoff";
-    kickoff.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { nixpkgs, home-manager, hyprland, agenix, ... }@inputs:
