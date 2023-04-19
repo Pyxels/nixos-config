@@ -187,8 +187,8 @@
   ########################################################################################
 
   $left_mon = DVI-D-1
-  $center_mon = DP-5
-  $right_mon = DP-6
+  $center_mon = DP-2
+  $right_mon = DP-1
 
   monitor = $left_mon,    preferred, 0x0,     1
   monitor = $center_mon,  preferred, 1920x0,  1.5
