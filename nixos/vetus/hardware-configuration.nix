@@ -8,24 +8,19 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
+  boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/c588743a-d4a1-4a4c-81f9-4739705c5290";
+    { device = "/dev/disk/by-uuid/c341da75-a4d0-492c-a8e3-28aead9e0897";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/0F4A-0C78";
+    { device = "/dev/disk/by-uuid/4E8E-2E06";
       fsType = "vfat";
-    };
-
-  fileSystems."/mnt/hdd_data" =
-    { device = "/dev/disk/by-uuid/94ACCD36ACCD1420";
-      fsType = "ntfs3";
     };
 
   fileSystems."/mnt/2tb_hdd" =
@@ -33,18 +28,20 @@
       fsType = "ext4";
     };
 
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/4ceb329e-cb08-4064-b097-e1cd36691a69"; }
-    ];
+  fileSystems."/mnt/hdd_data" =
+    { device = "/dev/disk/by-uuid/94ACCD36ACCD1420";
+      fsType = "ntfs3";
+    };
+
+  swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
   # still possible to use this option, but it's recommended to use it in conjunction
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp5s0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.tun0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.enp42s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
