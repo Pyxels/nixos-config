@@ -96,7 +96,7 @@
       interval = 5;
     };
     "custom/gpu-temp" = {
-      exec = "echo $(($(cat /sys/class/hwmon/hwmon1/temp1_input) / 1000 ))";
+      exec = "echo $(($(cat /sys/class/hwmon/hwmon2/temp1_input) / 1000 ))";
       format = "GPU: {}°C";
       interval = 5;
     };
@@ -144,7 +144,10 @@
       format-critical = "{temperatureC}°C {icon}";
       format = "{temperatureC}°C {icon}";
       format-icons = [ "" "" "" ];
-    };
+    } // (if hostname == "vetus" then {
+      hwmon-path = "/sys/class/hwmon/hwmon1/temp1_input";
+    }
+    else { });
     bluetooth = {
       format = " {status}";
       format-connected = " {num_connections}";
