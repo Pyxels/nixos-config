@@ -50,11 +50,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1681586243,
-        "narHash": "sha256-vdP79IZuDZVNSl4RN1LgEuab1Tkbv4gCxiE8VLdRf7U=",
+        "lastModified": 1681918601,
+        "narHash": "sha256-bhBGPPXSbzkYiMI6avFJq79GtMngHYEje85/vXjJnts=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "40ebb62101c83de81e5fd7c3cfe5cea2ed21b1ad",
+        "rev": "dfe7024f7ed9a1ccf7417c9683b6839f0e6f83a4",
         "type": "github"
       },
       "original": {
@@ -71,11 +71,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1681677152,
-        "narHash": "sha256-YRxNgHrrT7zt7tvmmw30H8ORcILf+23s08ibxrXYDk4=",
+        "lastModified": 1681907187,
+        "narHash": "sha256-9SE7RAHSCq1nAT/oZiqhtZT4cQVcLt/dfOdPro4++5s=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "f80f4f319442ebc385b758bbeb6abd89372308e9",
+        "rev": "6225591dbd77919beafc632e0795c6296e1da876",
         "type": "github"
       },
       "original": {
@@ -157,15 +157,16 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1681676248,
-        "narHash": "sha256-YatK7RpeYxGnL4iXpTODEUnKYkCGkUVLaKvLHojkfNg=",
+        "lastModified": 1681737997,
+        "narHash": "sha256-pHhjgsIkRMu80LmVe8QoKIZB6VZGRRxFmIvsC5S89k4=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "ff24a05847080bf4edbbebae6c04eb5da4bb97d1",
+        "rev": "f00994e78cd39e6fc966f0c4103f908e63284780",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -173,11 +174,11 @@
     "nvim-config": {
       "flake": false,
       "locked": {
-        "lastModified": 1679398913,
-        "narHash": "sha256-g/kNgcOOklsVycsw5um4LRVIwIhL8taYR2JJgb8k0v4=",
+        "lastModified": 1681921557,
+        "narHash": "sha256-L/cPSSm6tNeCEoqeFx+vxRtdcxNfCZdnPnTrgMv4DrE=",
         "owner": "pyxels",
         "repo": "nvim-config",
-        "rev": "19d26e9319f14f33c96b7be70d9533abecd57362",
+        "rev": "f060246a9edbe727e461c5261645f4791563e839",
         "type": "github"
       },
       "original": {
