@@ -24,6 +24,7 @@
   misc {
       # See: https://github.com/hyprwm/Hyprland/issues/1354
       mouse_move_focuses_monitor = false
+      disable_hyprland_logo = true
   }
 
   decoration {
@@ -202,24 +203,24 @@
   ########################################################################################
 
   # Default workspaces on startup
-  workspace = $center_mon,  name:
-  workspace = $left_mon,    name:
-  workspace = $right_mon,   name:
+  workspace = name: ,  monitor:$center_mon, default:true
+  workspace = name: ,    monitor:$left_mon, default:true
+  workspace = name: ,   monitor:$right_mon, default:true
 
 
-  wsbind = name:, $left_mon
+  workspace = name:, monitor:$left_mon, default:false
 
-  wsbind = name:, $center_mon
-  wsbind = name:, $center_mon
-  wsbind = name:, $center_mon
-  wsbind = name:, $center_mon
-  wsbind = name: Kodi, $center_mon
+  workspace = name:,       monitor:$center_mon, default:false
+  workspace = name:,       monitor:$center_mon, default:false
+  workspace = name:,       monitor:$center_mon, default:false
+  workspace = name:,       monitor:$center_mon, default:false
+  workspace = name: Kodi,  monitor:$center_mon, default:false
 
-  wsbind = name:, $right_mon
-  wsbind = name:, $right_mon
-  wsbind = name:, $right_mon
-  wsbind = name:, $right_mon
-  wsbind = name:, $right_mon
+  workspace = name:, monitor:$right_mon, default:false
+  workspace = name:, monitor:$right_mon, default:false
+  workspace = name:, monitor:$right_mon, default:false
+  workspace = name:, monitor:$right_mon, default:false
+  workspace = name:, monitor:$right_mon, default:false
 ''
 else
   (if hostname == "nixos-l540" then ''
@@ -231,7 +232,7 @@ else
     monitor =      , preferred, auto, 1
 
     # Default workspaces on startup
-    workspace = eDP-1,  name:
+    workspace = name: , monitor:eDP-1, default:true
 
 
   '' else ""))
