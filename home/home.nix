@@ -77,10 +77,6 @@
     pamixer
     termdown
 
-    # programming shit
-    gcc
-    rustup
-
     # user apps
     kickoff
     zathura
