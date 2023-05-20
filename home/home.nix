@@ -61,6 +61,7 @@
     upower
     libnotify
     socat
+    gcc # needed for nvim treesitter etc
 
     # utilities & tools
     jq
