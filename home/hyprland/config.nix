@@ -135,16 +135,16 @@
   bind = SUPER, 9, workspace, name:
   bind = SUPER, 0, workspace, name:
   # Move active window to workspace
-  bind = SUPER_SHIFT, 1, movetoworkspace, name:
-  bind = SUPER_SHIFT, 2, movetoworkspace, name:
-  bind = SUPER_SHIFT, 3, movetoworkspace, name:
-  bind = SUPER_SHIFT, 4, movetoworkspace, name:
-  bind = SUPER_SHIFT, 5, movetoworkspace, name:
-  bind = SUPER_SHIFT, 6, movetoworkspace, name:
-  bind = SUPER_SHIFT, 7, movetoworkspace, name:
-  bind = SUPER_SHIFT, 8, movetoworkspace, name:
-  bind = SUPER_SHIFT, 9, movetoworkspace, name:
-  bind = SUPER_SHIFT, 0, movetoworkspace, name:
+  bind = SUPER_SHIFT, 1, movetoworkspacesilent, name:
+  bind = SUPER_SHIFT, 2, movetoworkspacesilent, name:
+  bind = SUPER_SHIFT, 3, movetoworkspacesilent, name:
+  bind = SUPER_SHIFT, 4, movetoworkspacesilent, name:
+  bind = SUPER_SHIFT, 5, movetoworkspacesilent, name:
+  bind = SUPER_SHIFT, 6, movetoworkspacesilent, name:
+  bind = SUPER_SHIFT, 7, movetoworkspacesilent, name:
+  bind = SUPER_SHIFT, 8, movetoworkspacesilent, name:
+  bind = SUPER_SHIFT, 9, movetoworkspacesilent, name:
+  bind = SUPER_SHIFT, 0, movetoworkspacesilent, name:
 
 
   # Interactive workspace selector/creator
