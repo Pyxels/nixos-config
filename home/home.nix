@@ -77,6 +77,7 @@
     mpv
     pamixer
     termdown
+    gh # github cli
 
     # user apps
     kickoff
