@@ -202,12 +202,6 @@
   # Workspaces
   ########################################################################################
 
-  # Default workspaces on startup
-  workspace = name: ,  monitor:$center_mon, default:true
-  workspace = name: ,    monitor:$left_mon, default:true
-  workspace = name: ,   monitor:$right_mon, default:true
-
-
   workspace = name:, monitor:$left_mon, default:false
 
   workspace = name:,       monitor:$center_mon, default:false
@@ -221,6 +215,12 @@
   workspace = name:, monitor:$right_mon, default:false
   workspace = name:, monitor:$right_mon, default:false
   workspace = name:, monitor:$right_mon, default:false
+
+
+  # Default workspaces on startup
+  workspace = name: , monitor:$center_mon, default:true
+  workspace = name: , monitor:$left_mon,   default:true
+  workspace = name: , monitor:$right_mon,  default:true
 ''
 else
   (if hostname == "nixos-l540" then ''
