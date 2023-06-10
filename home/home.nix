@@ -104,7 +104,7 @@
   home.file.".config/nvim".source = inputs.nvim-config;
   xdg.configFile.kickoff = {
     target = "kickoff/config.toml";
-    text = import ./kickoff.nix;
+    source = ./kickoff.toml;
   };
   xdg.configFile.zellij = {
     target = "zellij/config.kdl";

@@ -1,4 +1,3 @@
-''
 # Kickoff config
 
 # Characters shown in front of the query.
@@ -35,4 +34,3 @@ complete = ["Tab"]
 nav_up = ["Up"]
 nav_down = ["Down"]
 exit = ["Escape"]
-''
