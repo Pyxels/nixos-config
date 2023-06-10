@@ -106,6 +106,10 @@
     target = "kickoff/config.toml";
     text = import ./kickoff.nix;
   };
+  xdg.configFile.zellij = {
+    target = "zellij/config.kdl";
+    source = ./zellij.kdl;
+  };
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";

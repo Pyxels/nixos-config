@@ -1,0 +1,5 @@
+keybinds {
+  search {
+    bind "N" { Search "up"; }
+  }
+}
