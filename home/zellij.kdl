@@ -1,5 +1,12 @@
 keybinds {
+  unbind "Ctrl h"
+  move {
+    bind "Ctrl b" { SwitchToMode "Normal"; }
+  }
   search {
     bind "N" { Search "up"; }
+  }
+  shared_except "move" "locked" {
+    bind "Ctrl b" { SwitchToMode "Move"; }
   }
 }
