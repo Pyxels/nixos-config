@@ -43,7 +43,6 @@
       vimAlias = true;
     };
     zellij.enable = true;
-    zellij.enableBashIntegration = true;
 
     fzf.enable = true;
     fzf.enableBashIntegration = true;
