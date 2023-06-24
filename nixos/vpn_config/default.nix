@@ -7,7 +7,7 @@
 
   services.openvpn.servers = {
     standard_home = {
-      autoStart = true;
+      autoStart = false;
       config = ''
         config ${config.age.secrets.vpn-config.path}
         auth-user-pass ${config.age.secrets.vpn-credentials.path}
