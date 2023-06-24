@@ -127,22 +127,22 @@
   bind = SUPER, 1, workspace, name:
   bind = SUPER, 2, workspace, name:
   bind = SUPER, 3, workspace, name:
-  bind = SUPER, 4, workspace, name:
+  bind = SUPER, 4, workspace, name:󰈙
   bind = SUPER, 5, workspace, name:
   bind = SUPER, 6, workspace, name:
   bind = SUPER, 7, workspace, name:
-  bind = SUPER, 8, workspace, name:
+  bind = SUPER, 8, workspace, name:󰎄
   bind = SUPER, 9, workspace, name:
   bind = SUPER, 0, workspace, name:
   # Move active window to workspace
   bind = SUPER_SHIFT, 1, movetoworkspacesilent, name:
   bind = SUPER_SHIFT, 2, movetoworkspacesilent, name:
   bind = SUPER_SHIFT, 3, movetoworkspacesilent, name:
-  bind = SUPER_SHIFT, 4, movetoworkspacesilent, name:
+  bind = SUPER_SHIFT, 4, movetoworkspacesilent, name:󰈙
   bind = SUPER_SHIFT, 5, movetoworkspacesilent, name:
   bind = SUPER_SHIFT, 6, movetoworkspacesilent, name:
   bind = SUPER_SHIFT, 7, movetoworkspacesilent, name:
-  bind = SUPER_SHIFT, 8, movetoworkspacesilent, name:
+  bind = SUPER_SHIFT, 8, movetoworkspacesilent, name:󰎄
   bind = SUPER_SHIFT, 9, movetoworkspacesilent, name:
   bind = SUPER_SHIFT, 0, movetoworkspacesilent, name:
 
@@ -208,12 +208,12 @@
   workspace = name:,       monitor:$center_mon, default:false
   workspace = name:,       monitor:$center_mon, default:false
   workspace = name:,       monitor:$center_mon, default:false
-  workspace = name: Kodi,  monitor:$center_mon, default:false
+  workspace = name:󰌔 Kodi,  monitor:$center_mon, default:false
 
   workspace = name:, monitor:$right_mon, default:false
-  workspace = name:, monitor:$right_mon, default:false
+  workspace = name:󰈙, monitor:$right_mon, default:false
   workspace = name:, monitor:$right_mon, default:false
-  workspace = name:, monitor:$right_mon, default:false
+  workspace = name:󰎄, monitor:$right_mon, default:false
   workspace = name:, monitor:$right_mon, default:false
 
 

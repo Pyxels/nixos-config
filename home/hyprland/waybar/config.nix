@@ -92,7 +92,7 @@
 
 
     "custom/vpn" = {
-      exec = "printf \"%s\" \"$(sed \"s/.*/ /\" /sys/class/net/tun0/operstate 2>/dev/null)\"";
+      exec = "printf \"%s\" \"$(sed \"s/.*/󰌾 /\" /sys/class/net/tun0/operstate 2>/dev/null)\"";
       interval = 5;
     };
     "custom/gpu-temp" = {
@@ -143,7 +143,7 @@
       critical-threshold = 80;
       format-critical = "{temperatureC}°C {icon}";
       format = "{temperatureC}°C {icon}";
-      format-icons = [ "" "" "" ];
+      format-icons = [ "" "" "󰈸" ];
     } // (if hostname == "vetus" then {
       hwmon-path = "/sys/class/hwmon/hwmon1/temp1_input";
     }

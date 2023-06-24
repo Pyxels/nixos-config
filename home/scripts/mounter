@@ -9,7 +9,7 @@ while test -f "$XDG_RUNTIME_DIR"/kickoff/kickoff.pid; do
 done
 
 # All connected phones
-phones=$(jmtpfs -l | grep -v "^\(Device\|Available\)" | awk -F', ' '{print "", $5, $6}')
+phones=$(jmtpfs -l | grep -v "^\(Device\|Available\)" | awk -F', ' '{print "󰄜", $5, $6}')
 
 # All newly connected drives
 # Ignore my builtin Drives
@@ -50,7 +50,7 @@ case "$chosen" in
         sudo -A mount "$dev" "$mp" && notify-send "💾Drive Mounted." "$dev mounted to $mp."
         ;;
 
-    *)
+    󰄜*)
         mp="/mnt/phone/"
         echo "Ok?" | kickoff --from-stdin --stdout -p "Tap Allow on your phone if it asks for permission and then press enter "
         sudo -A jmtpfs "$mp" -o allow_other,auto_unmount && notify-send "🤖 Android Mounted." "Android device mounted to $mp."

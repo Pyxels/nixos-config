@@ -35,9 +35,9 @@
       conflicted = "[ \${count} ](red bg:#665c54)";
       deleted = "[ \${count} ](fg:#f29218 bg:#665c54)";
       renamed = "[ \${count} ](fg:green bg:#665c54)";
-      ahead = "[ﰶ \${count} ](blue bg:#665c54)";
-      behind = "[ﰭ \${count} ](blue bg:#665c54)";
-      diverged = "[ﰶ \${ahead_count} ﰭ \${behind_count}](blue bg:#665c54)";
+      ahead = "[󰜸 \${count} ](blue bg:#665c54)";
+      behind = "[󰜯 \${count} ](blue bg:#665c54)";
+      diverged = "[󰜸 \${ahead_count} 󰜯 \${behind_count}](blue bg:#665c54)";
       untracked = "[ \${count} ](fg:#561a12 bg:#665c54)";
       stashed = "[ \${count} ](fg:#dede7c bg:#665c54)";
       modified = "[ \${count} ](fg:#f29218 bg:#665c54)";
@@ -82,7 +82,7 @@
       symbol = "";
       success_symbol = "[](fg:#fbf1c7 bg:#928374)";
       not_executable_symbol = "";
-      not_found_symbol = "";
+      not_found_symbol = "󰍉";
       sigint_symbol = "";
       signal_symbol = "";
       style = "bg:#928374 fg:red";
