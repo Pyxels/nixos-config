@@ -79,6 +79,7 @@
     pamixer
     termdown
     gh # github cli
+    vopono # vpn tunnels
 
     # user apps
     kickoff
