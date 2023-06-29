@@ -67,7 +67,6 @@
   windowrulev2 = bordercolor rgb(d3869b), pinned:1
 
   # For downloading Linux ISOs obviously
-  windowrulev2 = workspace name:, class:^(org.qbittorrent.qBittorrent)$
   windowrulev2 = workspace name:, title:^(WhatsApp — Mozilla Firefox)$
   windowrulev2 = workspace name:, class:^(discord)$
 
@@ -208,7 +207,6 @@
   workspace = name:,       monitor:$center_mon, default:false
   workspace = name:,       monitor:$center_mon, default:false
   workspace = name:,       monitor:$center_mon, default:false
-  workspace = name:󰌔 Kodi,  monitor:$center_mon, default:false
 
   workspace = name:, monitor:$right_mon, default:false
   workspace = name:󰈙, monitor:$right_mon, default:false

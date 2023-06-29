@@ -85,8 +85,6 @@
     kickoff
     zathura
     discord
-    qbittorrent
-    kodi-wayland
 
     # nix
     nvd

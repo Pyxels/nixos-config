@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-vopono exec --provider privateinternetaccess --server de_frankfurt "qbittorrent"

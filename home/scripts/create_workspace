@@ -2,8 +2,7 @@
 
 set -e
 
-predefined="󰌔 Kodi
- tmp
+predefined=" tmp
  YT"
 
 new_workspace=$(echo "$predefined" | kickoff --from-stdin --stdout --prompt 'Create Workspace:  ')
