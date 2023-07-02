@@ -85,6 +85,7 @@
     kickoff
     zathura
     discord
+    jellyfin-media-player
 
     # nix
     nvd
