@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 home-manager switch --flake ~/.dotfiles/ || exit 1
-previous_config=$(ls -1 --sort=time $NIX_USER_PROFILE_DIR/ | rg home-manager* | head -n 3 | tail -n 1)
-nvd diff "$NIX_USER_PROFILE_DIR/$previous_config" "$NIX_USER_PROFILE_DIR/home-manager"
+previous_config=$(ls -1 --sort=time $NIX_USER_PROFILE_DIR/ | head -n 3 | tail -n 1)
+nvd diff "$NIX_USER_PROFILE_DIR/$previous_config" "$NIX_USER_PROFILE_DIR/profile"
