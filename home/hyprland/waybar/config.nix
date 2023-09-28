@@ -1,4 +1,4 @@
-{ hostname }: {
+{ host }: {
   mainBar = {
     layer = "top";
     position = "bottom";
@@ -33,7 +33,7 @@
       "custom/left-arrow-light"
       "custom/left-arrow-dark"
       "temperature"
-    ] ++ (if hostname == "vetus" then [
+    ] ++ (if host.name == "vetus" then [
       "custom/gpu-temp"
     ] else [ ])
     ++ [
@@ -43,7 +43,7 @@
       "custom/left-arrow-light"
       "custom/left-arrow-dark"
       "custom/vpn"
-    ] ++ (if hostname == "nixos-l540" then [
+    ] ++ (if host.name == "nixos-l540" then [
       "custom/left-arrow-light"
       "custom/left-arrow-dark"
       "battery"
@@ -143,7 +143,7 @@
       format-critical = "{temperatureC}°C {icon}";
       format = "{temperatureC}°C {icon}";
       format-icons = [ "" "" "󰈸" ];
-    } // (if hostname == "vetus" then {
+    } // (if host.name == "vetus" then {
       hwmon-path = "/sys/class/hwmon/hwmon1/temp1_input";
     }
     else { });

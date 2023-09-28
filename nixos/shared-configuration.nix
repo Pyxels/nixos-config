@@ -1,4 +1,4 @@
-{ inputs, lib, config, pkgs, name, hostname, system, ... }:
+{ inputs, lib, config, pkgs, name, host, ... }:
 
 {
   imports =
@@ -15,7 +15,7 @@
   };
 
   networking.networkmanager.enable = true;
-  networking.hostName = hostname;
+  networking.hostName = host.name;
 
   services.openssh.enable = true;
 
@@ -61,7 +61,7 @@
     vim
     git
 
-    inputs.agenix.packages.${system}.default
+    inputs.agenix.packages.${host.system}.default
   ];
 
   fonts.packages = with pkgs; [
@@ -69,7 +69,7 @@
   ];
 
   programs.hyprland.enable = true;
-  programs.hyprland.package = inputs.hyprland.packages.${system}.hyprland;
+  programs.hyprland.package = inputs.hyprland.packages.${host.system}.hyprland;
   security.pam.services.swaylock = { };
 
 

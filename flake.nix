@@ -21,37 +21,36 @@
   outputs = { nixpkgs, home-manager, hyprland, agenix, ... }@inputs:
     let
       name = "jonas";
-      hosts = [ "vetus" "nixos-l540" ];
-      system = "x86_64-linux";
+      hosts = [{ name = "vetus"; system = "x86_64-linux"; } { name = "nixos-l540"; system = "x86_64-linux"; }];
       configPath = "/home/${name}/.dotfiles";
 
-      mkNixosSystems = hostnames:
+      mkNixosSystems = hosts:
         builtins.listToAttrs (map
-          (hostname: {
-            name = hostname;
+          (host: {
+            name = host.name;
             value = nixpkgs.lib.nixosSystem {
-              specialArgs = { inherit inputs system name hostname; }; # Pass flake inputs to our config
+              specialArgs = { inherit inputs name host; };
               modules = [
                 agenix.nixosModules.default
-                ./nixos/${hostname}/configuration.nix
+                ./nixos/${host.name}/configuration.nix
               ];
             };
           })
-          hostnames);
+          hosts);
 
-      mkHomeConfigs = name: hostnames:
+      mkHomeConfigs = name: hosts:
         builtins.listToAttrs (map
-          (hostname: {
-            name = "${name}@${hostname}";
+          (host: {
+            name = "${name}@${host.name}";
             value = home-manager.lib.homeManagerConfiguration {
-              pkgs = nixpkgs.legacyPackages.${system}; # Home-manager requires 'pkgs' instance
-              extraSpecialArgs = { inherit inputs system hostname name configPath; }; # Pass flake inputs to our config
+              pkgs = nixpkgs.legacyPackages.${host.system}; # Home-manager requires 'pkgs' instance
+              extraSpecialArgs = { inherit inputs host name configPath; };
               modules = [
                 ./home/home.nix
               ];
             };
           })
-          hostnames);
+          hosts);
     in
     {
       nixosConfigurations = mkNixosSystems hosts;
