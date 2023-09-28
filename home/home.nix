@@ -25,6 +25,7 @@
 
   imports = [
     ./hyprland
+    ./zellij
   ];
 
   services = {
@@ -42,7 +43,6 @@
       viAlias = true;
       vimAlias = true;
     };
-    zellij.enable = true;
 
     fzf.enable = true;
     fzf.enableBashIntegration = true;
@@ -104,10 +104,6 @@
   xdg.configFile.kickoff = {
     target = "kickoff/config.toml";
     source = ./kickoff.toml;
-  };
-  xdg.configFile.zellij = {
-    target = "zellij/config.kdl";
-    source = ./zellij.kdl;
   };
 
   # Nicely reload system units when changing configs
