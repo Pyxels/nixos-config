@@ -98,6 +98,7 @@
   home.sessionPath = [
     "/home/${name}/.local/share/nvim/mason/bin"
     "${configPath}/home/scripts"
+    "/home/${name}/.cargo/bin"
   ];
 
   home.file.".config/nvim".source = inputs.nvim-config;
