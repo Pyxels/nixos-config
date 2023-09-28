@@ -9,5 +9,16 @@
     ];
 
   networking.firewall.allowedTCPPorts = [ 6969 9090 ];
+  virtualisation = {
+    podman = {
+      enable = true;
+
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings = {
+        dns_enabled = true;
+      };
+    };
+  };
+  environment.systemPackages = [ pkgs.podman-compose ];
 }
 
