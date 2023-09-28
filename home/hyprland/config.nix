@@ -30,10 +30,12 @@
   decoration {
       rounding = 5
       inactive_opacity = 0.85
-      blur_passes = 2
-      blur_ignore_opacity = true
-
       drop_shadow = false
+
+      blur {
+          passes = 2
+          ignore_opacity = true
+      }
   }
 
   animations {

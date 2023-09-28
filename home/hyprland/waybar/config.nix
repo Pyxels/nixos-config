@@ -4,7 +4,7 @@
     position = "bottom";
 
     modules-left = [
-      "wlr/workspaces"
+      "hyprland/workspaces"
       "custom/right-arrow-dark"
       "custom/right-arrow-light"
       "hyprland/window"
@@ -72,8 +72,7 @@
       tooltip = false;
     };
 
-    "wlr/workspaces" = {
-      disable-scroll = true;
+    "hyprland/workspaces" = {
       format = "{name}";
     };
 

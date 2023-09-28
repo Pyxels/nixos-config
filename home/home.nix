@@ -71,7 +71,7 @@
     ripgrep
     bat
     fd
-    exa
+    eza
     less
     libqalculate
     feh

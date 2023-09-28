@@ -64,7 +64,7 @@
     inputs.agenix.packages.${system}.default
   ];
 
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "RobotoMono" ]; })
   ];
 
