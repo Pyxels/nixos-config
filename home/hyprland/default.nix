@@ -6,15 +6,13 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    extraConfig = import ./config.nix { inherit host configPath; };
+    extraConfig = import ./config.nix { inherit pkgs host configPath; };
   };
 
   home.packages = with pkgs; [
     libsForQt5.polkit-kde-agent
     hyprpaper
     wl-clipboard
-    grim
-    slurp
     swaylock
   ];
 

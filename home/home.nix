@@ -61,35 +61,26 @@
     killall
     upower
     libnotify
-    socat
     gcc # needed for nvim treesitter etc
 
     # utilities & tools
-    jq
-    jmtpfs
     btop
     ripgrep
     bat
     fd
     eza
     less
-    libqalculate
     feh
     mpv
     pamixer
-    termdown
     gh # github cli
-    vopono # vpn tunnels
 
     # user apps
     kickoff
     zathura
     discord
     jellyfin-media-player
-
-    # nix
-    nvd
-  ];
+  ] ++ import ./scripts { inherit pkgs configPath; };
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "discord"
@@ -97,7 +88,6 @@
 
   home.sessionPath = [
     "/home/${name}/.local/share/nvim/mason/bin"
-    "${configPath}/home/scripts"
     "/home/${name}/.cargo/bin"
   ];
 

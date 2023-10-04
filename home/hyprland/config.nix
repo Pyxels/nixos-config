@@ -1,4 +1,4 @@
-{ configPath, host }: ''
+{ pkgs, configPath, host }: ''
   ########################################################################################
   # Variables
   ########################################################################################
@@ -92,7 +92,7 @@
   # Applications
   bind = SUPER, D, exec, kickoff
   bind = SUPER, W, exec, firefox
-  bind = SUPER, N, exec, alacritty -e qalc
+  bind = SUPER, N, exec, alacritty -e ${pkgs.libqalculate}/bin/qalc
 
   # Shortcuts
   bind = SUPER,       Period, exec, pamixer --allow-boost -i 2
@@ -181,7 +181,7 @@
   env = QT_QPA_PLATFORM,wayland
 
   # etc
-  env = SUDO_ASKPASS,${configPath}/home/scripts/askpass_kickoff
+  env = SUDO_ASKPASS,askpass_kickoff
 ''
 + (if host.name == "vetus" then ''
   ########################################################################################

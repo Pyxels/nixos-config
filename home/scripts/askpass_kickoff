@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-echo | kickoff --config ~/.dotfiles/home/scripts/askpass_kickoff.toml --from-stdin --stdout
