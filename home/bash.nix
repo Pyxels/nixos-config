@@ -9,15 +9,14 @@ name: {
     ll = "exa -laF --git --octal-permissions --no-permissions --time-style iso --group-directories-first";
     v = "nvim";
     zf = "zathura --fork";
-    t = "taskwarrior-tui";
     ".." = "cd ..";
     "..." = "cd ../..";
     "...." = "cd ../../..";
   };
   historyControl = [ "ignoredups" "ignorespace" ];
   historyFile = "/home/${name}/.bash_history";
-  historyFileSize = 1000;
-  historySize = 1000;
+  historyFileSize = 50000;
+  historySize = 10000;
   initExtra =
     ''
       case "$-" in *i*) ;; *) return ;; esac
