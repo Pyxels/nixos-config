@@ -1,0 +1,4 @@
+{ ... }:
+{
+  targets.genericLinux.enable = true;
+}

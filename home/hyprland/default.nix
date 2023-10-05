@@ -22,4 +22,13 @@
   home.file.".config/hypr/hyprpaper.conf".source = ./hyprpaper.conf;
   home.file.".config/hypr/img/background.png".source = ./background.png;
   home.file.".config/hypr/img/lockscreen.png".source = ./lockscreen.png;
+
+  services = {
+    dunst = import ./dunst.nix;
+  };
+
+  home.packages = with pkgs; [
+    libnotify
+    pamixer
+  ];
 }

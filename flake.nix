@@ -21,7 +21,11 @@
   outputs = { nixpkgs, home-manager, hyprland, agenix, ... }@inputs:
     let
       name = "jonas";
-      hosts = [{ name = "vetus"; system = "x86_64-linux"; } { name = "nixos-l540"; system = "x86_64-linux"; }];
+      hosts = [
+        { name = "vetus";       system = "x86_64-linux"; modules = [ ./home/theming.nix ./home/hyprland ./home/programs ./home/terminal.nix ]; }
+        { name = "nixos-l540";  system = "x86_64-linux"; modules = [ ./home/theming.nix ./home/hyprland ./home/programs ./home/terminal.nix ]; }
+        { name = "jonas-bits";  system = "x86_64-linux"; modules = [ ./home/non_nixos.nix ./home/terminal.nix ]; }
+      ];
       configPath = "/home/${name}/.dotfiles";
 
       mkNixosSystems = hosts:
@@ -45,9 +49,7 @@
             value = home-manager.lib.homeManagerConfiguration {
               pkgs = nixpkgs.legacyPackages.${host.system}; # Home-manager requires 'pkgs' instance
               extraSpecialArgs = { inherit inputs host name configPath; };
-              modules = [
-                ./home/home.nix
-              ];
+              modules = [ ./home/home.nix ] ++ host.modules;
             };
           })
           hosts);
