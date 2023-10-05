@@ -1,4 +1,4 @@
-{ inputs, host, ... }: {
+{ host, ... }: {
   programs.waybar = {
     enable = true;
     style = ./style.css;

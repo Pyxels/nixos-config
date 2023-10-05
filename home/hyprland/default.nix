@@ -1,4 +1,4 @@
-{ inputs, config, pkgs, host, configPath, ... }: {
+{ inputs, pkgs, host, ... }: {
   imports = [
     inputs.hyprland.homeManagerModules.default
     ./waybar
@@ -6,7 +6,7 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    extraConfig = import ./config.nix { inherit pkgs host configPath; };
+    extraConfig = import ./config.nix { inherit pkgs host; };
   };
 
   home.packages = with pkgs; [
