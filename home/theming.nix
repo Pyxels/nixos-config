@@ -6,10 +6,17 @@
       color-scheme = "prefer-dark";
     };
   };
-  qt.enable = true;
-  qt.style.name = "adwaita-dark";
-  gtk.enable = true;
-  gtk.theme.name = "Adwaita-dark";
+  qt = {
+    enable = true;
+    platformTheme = "gtk";
+    style.name = "adwaita-dark";
+    style.package = pkgs.adwaita-qt;
+  };
+  gtk = {
+    enable = true;
+    theme.name = "Adwaita-dark";
+    theme.package = pkgs.adw-gtk3;
+  };
 
   home.pointerCursor = {
     name = "phinger-cursors";
