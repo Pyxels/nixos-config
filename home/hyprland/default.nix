@@ -1,4 +1,5 @@
-{ inputs, pkgs, host, ... }: {
+{ inputs, pkgs, host, ... }:
+{
   imports = [
     inputs.hyprland.homeManagerModules.default
     ./waybar
@@ -9,11 +10,18 @@
     extraConfig = import ./config.nix { inherit pkgs host; };
   };
 
+  services = {
+    dunst = import ./dunst.nix;
+  };
+
   home.packages = with pkgs; [
     libsForQt5.polkit-kde-agent
     hyprpaper
     wl-clipboard
     swaylock
+
+    libnotify
+    pamixer
   ];
 
   nixpkgs.overlays = [
@@ -22,13 +30,4 @@
   home.file.".config/hypr/hyprpaper.conf".source = ./hyprpaper.conf;
   home.file.".config/hypr/img/background.png".source = ./background.png;
   home.file.".config/hypr/img/lockscreen.png".source = ./lockscreen.png;
-
-  services = {
-    dunst = import ./dunst.nix;
-  };
-
-  home.packages = with pkgs; [
-    libnotify
-    pamixer
-  ];
 }
