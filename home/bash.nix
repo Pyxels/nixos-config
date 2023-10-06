@@ -19,6 +19,12 @@ name: {
   historySize = 10000;
   initExtra =
     ''
+
+      # more complex alias for nix run
+      nr() {
+        nix run nixpkgs#"$1"
+      }
+
       case "$-" in *i*) ;; *) return ;; esac
       # always run ll after cd'ing into a directory
       function cd {
