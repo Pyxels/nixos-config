@@ -22,7 +22,7 @@ name: {
 
       # more complex alias for nix run
       nr() {
-        nix run nixpkgs#"$1"
+        nix run nixpkgs#"$@"
       }
 
       case "$-" in *i*) ;; *) return ;; esac
