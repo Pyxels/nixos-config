@@ -21,7 +21,7 @@
     hyprpaper.url = "github:hyprwm/hyprpaper";
   };
 
-  outputs = { nixpkgs, home-manager, hyprland, agenix, ... }@inputs:
+  outputs = { nixpkgs, home-manager, agenix, ... }@inputs:
     let
       name = "jonas";
       hosts = [
