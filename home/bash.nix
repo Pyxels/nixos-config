@@ -20,9 +20,12 @@ name: {
   initExtra =
     ''
 
-      # more complex alias for nix run
+      # more complex alias for nix run and nix shell
       nr() {
         nix run nixpkgs#"$@"
+      }
+      ns() {
+        nix shell nixpkgs#"$@"
       }
 
       case "$-" in *i*) ;; *) return ;; esac
