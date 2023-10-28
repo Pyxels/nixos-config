@@ -8,13 +8,11 @@
       ../shared-configuration.nix
     ];
 
-  virtualisation = {
-    podman = {
-      enable = true;
-      dockerSocket.enable = true;
-    };
+  virtualisation.docker = {
+    enable = true;
+    enableOnBoot = false;
   };
   environment.systemPackages = [ pkgs.docker-compose ];
-  users.users.${name}.extraGroups = [ "podman" ];
+  users.users.${name}.extraGroups = [ "docker" ];
 }
 
