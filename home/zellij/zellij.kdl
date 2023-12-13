@@ -1,3 +1,5 @@
+default_mode "locked"
+
 keybinds {
   unbind "Ctrl h"
   move {
