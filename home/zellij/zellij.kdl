@@ -9,4 +9,8 @@ keybinds {
   shared_except "move" "locked" {
     bind "Ctrl b" { SwitchToMode "Move"; }
   }
+  locked {
+    bind "Alt h" { MoveFocusOrTab "Left"; }
+    bind "Alt l" { MoveFocusOrTab "Right"; }
+  }
 }
