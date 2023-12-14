@@ -30,6 +30,7 @@
     gcc # needed for nvim treesitter etc
 
     # utilities & tools
+    wl-clipboard
     btop
     ripgrep
     bat
