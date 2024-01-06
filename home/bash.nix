@@ -1,5 +1,8 @@
 name: {
   enable = true;
+  sessionVariables = {
+    FLAKE = "/home/${name}/.dotfiles";
+  };
   shellAliases = {
     cp = "cp -i";
     mv = "mv -i";

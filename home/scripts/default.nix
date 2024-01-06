@@ -3,9 +3,6 @@ let
   importShellBin = file: import file { inherit pkgs configPath; };
 in
 map importShellBin [
-  ./home-manager_switch.nix
-  ./nixos-rebuild.nix
-
   ./screenshot.nix
   ./askpass_kickoff.nix
   ./headset_toggle.nix

@@ -39,6 +39,7 @@
     less
     feh
     gh # github cli
+    inputs.nh.packages.${system}.default # nix helper
 
     # user apps
   ] ++ import ./scripts { inherit pkgs configPath; };
