@@ -9,7 +9,6 @@
     git = import ./git.nix;
 
     neovim = {
-      enable = true;
       defaultEditor = true;
       viAlias = true;
       vimAlias = true;
@@ -40,14 +39,12 @@
     feh
     gh # github cli
     inputs.nh.packages.${system}.default # nix helper
+    inputs.nixvim-config.packages.${system}.default # my nvim instance
 
     # user apps
   ] ++ import ./scripts { inherit pkgs configPath; };
 
   home.sessionPath = [
-    "/home/${name}/.local/share/nvim/mason/bin"
     "/home/${name}/.cargo/bin"
   ];
-
-  home.file.".config/nvim".source = inputs.nvim-config;
 }

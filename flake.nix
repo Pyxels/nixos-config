@@ -12,9 +12,9 @@
       inputs.darwin.follows = "";
     };
 
-    nvim-config = {
-      url = "github:pyxels/nvim-config";
-      flake = false;
+    nixvim-config = {
+      url = "github:pyxels/nixvim-config";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
