@@ -400,11 +400,11 @@
         "nixvim": "nixvim"
       },
       "locked": {
-        "lastModified": 1704734244,
-        "narHash": "sha256-5kTF94HGCTECs5Co7+2/UM1pYrEqlPGd62WYFbIbXuU=",
+        "lastModified": 1704794249,
+        "narHash": "sha256-rOSb7qUXVLADMDatzzyLcm2B68WJn6qwuzESTOX3J1I=",
         "owner": "pyxels",
         "repo": "nixvim-config",
-        "rev": "da625675e904852f0ef6d031d890925fd0d635ad",
+        "rev": "b829fdcbfed249e39c69124a8a176c8b4cb078e6",
         "type": "github"
       },
       "original": {
