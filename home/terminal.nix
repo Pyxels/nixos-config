@@ -1,6 +1,10 @@
-{ inputs, pkgs, name, configPath, ... }:
 {
-
+  inputs,
+  pkgs,
+  name,
+  configPath,
+  ...
+}: {
   imports = [
     ./zellij
   ];
@@ -16,29 +20,32 @@
     direnv.nix-direnv.enable = true;
   };
 
-  home.packages = with pkgs; [
-    # system
-    killall
-    upower
-    gcc # needed for nvim treesitter etc
+  home.packages = with pkgs;
+    [
+      # system
+      killall
+      upower
+      gcc # needed for nvim treesitter etc
 
-    # utilities & tools
-    wl-clipboard
-    btop
-    ripgrep
-    bat
-    fd
-    eza
-    less
-    feh
-    gh # github cli
-    inputs.nh.packages.${system}.default # nix helper
-    inputs.nixvim-config.packages.${system}.default # my nvim instance
+      # utilities & tools
+      wl-clipboard
+      btop
+      ripgrep
+      bat
+      fd
+      eza
+      less
+      feh
+      gh # github cli
+      inputs.nh.packages.${system}.default # nix helper
+      inputs.nixvim-config.packages.${system}.default # my nvim instance
+    ]
+    ++ import ./scripts {inherit pkgs configPath;};
 
-    # user apps
-  ] ++ import ./scripts { inherit pkgs configPath; };
-
-  home.sessionPath = [
-    "/home/${name}/.cargo/bin"
-  ];
+  home = {
+    sessionPath = [
+      "/home/${name}/.cargo/bin"
+    ];
+    sessionVariables.EDITOR = "nvim";
+  };
 }
