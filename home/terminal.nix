@@ -8,12 +8,6 @@
   programs = {
     git = import ./git.nix;
 
-    neovim = {
-      defaultEditor = true;
-      viAlias = true;
-      vimAlias = true;
-    };
-
     fzf.enable = true;
     fzf.enableBashIntegration = true;
     bash = import ./bash.nix name;
