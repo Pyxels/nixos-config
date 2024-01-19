@@ -25,7 +25,6 @@
       # system
       killall
       upower
-      gcc # needed for nvim treesitter etc
 
       # utilities & tools
       wl-clipboard
