@@ -36,7 +36,7 @@
       less
       feh
       gh # github cli
-      inputs.nh.packages.${system}.default # nix helper
+      nh # nix helper
       inputs.nixvim-config.packages.${system}.default # my nvim instance
     ]
     ++ import ./scripts {inherit pkgs configPath;};
