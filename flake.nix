@@ -21,45 +21,48 @@
     hyprpaper.url = "github:hyprwm/hyprpaper";
   };
 
-  outputs = { nixpkgs, home-manager, agenix, ... }@inputs:
-    let
-      name = "jonas";
-      hosts = [
-        { name = "vetus";       system = "x86_64-linux"; modules = [ ./home/theming.nix ./home/hyprland ./home/programs ./home/terminal.nix ]; }
-        { name = "nixos-l540";  system = "x86_64-linux"; modules = [ ./home/theming.nix ./home/hyprland ./home/programs ./home/terminal.nix ]; }
-        { name = "jonas-bits";  system = "x86_64-linux"; modules = [ ./home/non_nixos.nix ./home/terminal.nix ]; }
-      ];
-      configPath = "/home/${name}/.dotfiles";
+  outputs = {
+    nixpkgs,
+    home-manager,
+    agenix,
+    ...
+  } @ inputs: let
+    name = "jonas";
+    configPath = "/home/${name}/.dotfiles";
+    hosts = ["vetus" "nixos-l540" "jonas-bits"];
 
-      mkNixosSystems = hosts:
-        builtins.listToAttrs (map
-          (host: {
-            name = host.name;
-            value = nixpkgs.lib.nixosSystem {
-              specialArgs = { inherit inputs name host; };
-              modules = [
-                agenix.nixosModules.default
-                ./nixos/${host.name}/configuration.nix
-              ];
-            };
-          })
-          hosts);
+    mkNixosSystems = hosts:
+      builtins.listToAttrs (map
+        (hostName: let
+          host = import ./hosts/${hostName}.nix {};
+        in {
+          name = hostName;
+          value = nixpkgs.lib.nixosSystem {
+            specialArgs = {inherit inputs name host;};
+            modules = [
+              agenix.nixosModules.default
+              ./nixos/${hostName}/configuration.nix
+            ];
+          };
+        })
+        hosts);
 
-      mkHomeConfigs = name: hosts:
-        builtins.listToAttrs (map
-          (host: {
-            name = "${name}@${host.name}";
-            value = home-manager.lib.homeManagerConfiguration {
-              pkgs = nixpkgs.legacyPackages.${host.system}; # Home-manager requires 'pkgs' instance
-              extraSpecialArgs = { inherit inputs host name configPath; };
-              modules = [ ./home/home.nix ] ++ host.modules;
-            };
-          })
-          hosts);
-    in
-    {
-      nixosConfigurations = mkNixosSystems hosts;
+    mkHomeConfigs = name: hosts:
+      builtins.listToAttrs (map
+        (hostName: let
+          host = import ./hosts/${hostName}.nix {};
+        in {
+          name = "${name}@${hostName}";
+          value = home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgs.legacyPackages.${host.system}; # Home-manager requires 'pkgs' instance
+            extraSpecialArgs = {inherit inputs name configPath host;};
+            modules = [./home/home.nix] ++ host.modules;
+          };
+        })
+        hosts);
+  in {
+    nixosConfigurations = mkNixosSystems hosts;
 
-      homeConfigurations = mkHomeConfigs name hosts;
-    };
+    homeConfigurations = mkHomeConfigs name hosts;
+  };
 }
