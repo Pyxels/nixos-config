@@ -262,7 +262,7 @@ in {
           ########################################################################################
 
           monitor =
-            map (monitor: ''"${monitor.name}, ${monitor.resolution}, ${monitor.position}, ${monitor.scale}"'')
+            map (monitor: "${monitor.name}, ${monitor.resolution}, ${monitor.position}, ${monitor.scale}")
             cfg.monitors
             ++ [",preferred, auto, 1"];
 
