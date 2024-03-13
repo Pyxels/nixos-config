@@ -18,6 +18,7 @@
   networking.hostName = host.name;
 
   services.openssh.enable = true;
+  services.mullvad-vpn.enable = true;
 
   hardware.bluetooth.enable = true;
   services.pipewire = {
