@@ -30,6 +30,7 @@
       wl-clipboard
       btop
       ripgrep
+      parallel
       bat
       fd
       eza
