@@ -18,6 +18,7 @@
     starship = import ./starship.nix;
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
+    atuin.enable = true;
   };
 
   home.packages = with pkgs;
