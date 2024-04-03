@@ -19,6 +19,7 @@
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
     atuin.enable = true;
+    atuin.flags = ["--disable-up-arrow"];
   };
 
   home.packages = with pkgs;
