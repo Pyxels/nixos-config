@@ -17,6 +17,12 @@
     bash = import ./bash.nix name;
     starship = import ./starship.nix;
     direnv.enable = true;
+    direnv.config = {
+      global = {
+        hide_env_diff = true;
+        warn_timeout = "1m";
+      };
+    };
     direnv.nix-direnv.enable = true;
     atuin.enable = true;
     atuin.flags = ["--disable-up-arrow"];
@@ -48,6 +54,9 @@
     sessionPath = [
       "/home/${name}/.cargo/bin"
     ];
-    sessionVariables.EDITOR = "nvim";
+    sessionVariables = {
+      EDITOR = "nvim";
+      DIRENV_LOG_FORMAT = ''\033[2mdirenv: %s\033[0m'';
+    };
   };
 }
