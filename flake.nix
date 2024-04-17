@@ -64,5 +64,7 @@
     nixosConfigurations = mkNixosSystems hosts;
 
     homeConfigurations = mkHomeConfigs name hosts;
+
+    templates = import ./templates;
   };
 }
