@@ -30,6 +30,7 @@
 in {
   imports = [
     ./waybar
+    ./scripts
   ];
 
   options.customConfig.hyprland = {

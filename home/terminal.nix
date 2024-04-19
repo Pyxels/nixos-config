@@ -2,7 +2,6 @@
   inputs,
   pkgs,
   name,
-  configPath,
   ...
 }: {
   imports = [
@@ -29,27 +28,25 @@
     atuin.flags = ["--disable-up-arrow"];
   };
 
-  home.packages = with pkgs;
-    [
-      # system
-      killall
-      upower
+  home.packages = with pkgs; [
+    # system
+    killall
+    upower
 
-      # utilities & tools
-      wl-clipboard
-      btop
-      ripgrep
-      parallel
-      bat
-      fd
-      eza
-      less
-      feh
-      gh # github cli
-      nh # nix helper
-      inputs.nixvim-config.packages.${system}.default # my nvim instance
-    ]
-    ++ import ./scripts {inherit pkgs configPath;};
+    # utilities & tools
+    wl-clipboard
+    btop
+    ripgrep
+    parallel
+    bat
+    fd
+    eza
+    less
+    feh
+    gh # github cli
+    nh # nix helper
+    inputs.nixvim-config.packages.${system}.default # my nvim instance
+  ];
 
   home = {
     sessionPath = [
