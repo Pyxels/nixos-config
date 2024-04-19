@@ -7,15 +7,15 @@
 }: {
   imports = [
     ./zellij
+    ./bash.nix
+    ./git.nix
+    ./starship.nix
   ];
 
   programs = {
-    git = import ./git.nix;
-
     fzf.enable = true;
     fzf.enableBashIntegration = true;
-    bash = import ./bash.nix name;
-    starship = import ./starship.nix;
+
     direnv.enable = true;
     direnv.config = {
       global = {
@@ -24,6 +24,7 @@
       };
     };
     direnv.nix-direnv.enable = true;
+
     atuin.enable = true;
     atuin.flags = ["--disable-up-arrow"];
   };
