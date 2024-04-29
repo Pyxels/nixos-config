@@ -2,6 +2,7 @@
   inputs,
   pkgs,
   name,
+  host,
   ...
 }: {
   imports = [
@@ -45,7 +46,11 @@
     feh
     gh # github cli
     nh # nix helper
-    inputs.nixvim-config.packages.${system}.default # my nvim instance
+    nixvim-config
+  ];
+
+  nixpkgs.overlays = [
+    (_: _: {nixvim-config = inputs.nixvim-config.packages.${host.system}.default;})
   ];
 
   home = {
