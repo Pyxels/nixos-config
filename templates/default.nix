@@ -12,11 +12,11 @@ rec {
     '';
   };
 
-  rust = {
-    path = ./rust;
+  rust-crane = {
+    path = ./rust-crane;
     description = "A rust development and build flake using crane";
     welcomeText = ''
-      # Simple Dev Shell Template
+      # Rust - Crane
       ## Intended usage
       Starting point for rust development using the crane library (https://crane.dev/).
       Run `direnv allow` to enable automatic dev shell loading.
