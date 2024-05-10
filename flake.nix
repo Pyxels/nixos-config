@@ -44,7 +44,8 @@
   } @ inputs: let
     name = "jonas";
     configPath = "/home/${name}/.dotfiles";
-    hosts = ["vetus" "nixos-l540" "jonas-bits"];
+    hosts = ["vetus" "nixos-l540"];
+    homes = hosts ++ ["jonas-bits"];
 
     mkNixosSystems = hosts:
       builtins.listToAttrs (map
@@ -96,7 +97,7 @@
     };
   in {
     nixosConfigurations = mkNixosSystems hosts;
-    homeConfigurations = mkHomeConfigs name hosts;
+    homeConfigurations = mkHomeConfigs name homes;
 
     templates = import ./templates;
 
