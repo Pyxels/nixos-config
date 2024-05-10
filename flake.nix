@@ -81,9 +81,12 @@
       src = ./.;
       hooks = {
         alejandra.enable = true;
-        deadnix.enable = true;
         flake-checker.enable = true;
         nil.enable = true;
+        deadnix = {
+          enable = true;
+          settings.exclude = ["./nixos/vetus/hardware-configuration.nix" "./nixos/nixos-l540/hardware-configuration.nix" "./templates/rust-crane/flake.nix"];
+        };
         statix = {
           enable = true;
           settings.ignore = ["**/*hardware-configuration.nix"];
@@ -104,6 +107,10 @@
     devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
       inherit (git-hooks) shellHook;
       buildInputs = git-hooks.enabledPackages;
+    };
+
+    checks.x86_64-linux = {
+      inherit git-hooks;
     };
   };
 }
