@@ -23,7 +23,7 @@
 
   generateMonitors = monitors:
     builtins.listToAttrs (map (monitor: {
-        name = monitor.name;
+        inherit (monitor) name;
         value = monitor.code;
       })
       monitors);
@@ -280,20 +280,25 @@ in {
       dunst = import ./dunst.nix;
     };
 
-    home.packages = with pkgs; [
-      libsForQt5.polkit-kde-agent
-      hyprpaper
-      wl-clipboard
+    home = {
+      packages = with pkgs; [
+        libsForQt5.polkit-kde-agent
+        hyprpaper
+        wl-clipboard
 
-      libnotify
-      pamixer
-    ];
+        libnotify
+        pamixer
+      ];
+
+      file = {
+        ".config/hypr/hyprpaper.conf".source = ./hyprpaper.conf;
+        ".config/hypr/img/background.png".source = ./background.png;
+        ".config/hypr/img/lockscreen.png".source = ./lockscreen.png;
+      };
+    };
 
     nixpkgs.overlays = [
       (_: _: {hyprpaper = inputs.hyprpaper.packages.${host.system}.default;})
     ];
-    home.file.".config/hypr/hyprpaper.conf".source = ./hyprpaper.conf;
-    home.file.".config/hypr/img/background.png".source = ./background.png;
-    home.file.".config/hypr/img/lockscreen.png".source = ./lockscreen.png;
   };
 }

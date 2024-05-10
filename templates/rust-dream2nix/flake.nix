@@ -36,7 +36,7 @@
       default = bin;
 
       docker = pkgs.dockerTools.buildImage {
-        name = bin.name;
+        inherit (bin) name;
         tag = bin.version;
         config.Cmd = ["${bin}/bin/${bin.name}"];
       };

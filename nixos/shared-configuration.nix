@@ -1,10 +1,13 @@
-{ inputs, pkgs, name, host, ... }:
-
 {
-  imports =
-    [
-      ./vpn_config
-    ];
+  inputs,
+  pkgs,
+  name,
+  host,
+  ...
+}: {
+  imports = [
+    ./vpn_config
+  ];
 
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub = {
@@ -17,16 +20,18 @@
   networking.networkmanager.enable = true;
   networking.hostName = host.name;
 
-  services.openssh.enable = true;
-  services.mullvad-vpn.enable = true;
+  services = {
+    openssh.enable = true;
+    mullvad-vpn.enable = true;
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
+  };
 
   hardware.bluetooth.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
 
   time.timeZone = "Europe/Berlin";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -46,20 +51,19 @@
   ];
 
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "RobotoMono" ]; })
+    (nerdfonts.override {fonts = ["RobotoMono"];})
   ];
 
   programs.hyprland.enable = true;
   programs.hyprland.package = inputs.hyprland.packages.${host.system}.hyprland;
-  security.pam.services.swaylock = { };
-
+  security.pam.services.swaylock = {};
 
   #########################################
   # Users
   #########################################
   users.users.${name} = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = ["wheel" "networkmanager"];
   };
 
   nix = {
@@ -72,13 +76,11 @@
     settings = {
       experimental-features = "nix-command flakes";
       auto-optimise-store = true;
-      substituters = [ "https://hyprland.cachix.org" ];
-      trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+      substituters = ["https://hyprland.cachix.org"];
+      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
     };
   };
 
   # dont change
   system.stateVersion = "22.11"; # Did you read the comment?
-
 }
-

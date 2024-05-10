@@ -1,4 +1,4 @@
-{...}: {
+_: {
   name = "jonas-bits";
   system = "x86_64-linux";
   modules = [

@@ -1,4 +1,4 @@
-{...}: {
+_: {
   name = "vetus";
   system = "x86_64-linux";
   modules = [

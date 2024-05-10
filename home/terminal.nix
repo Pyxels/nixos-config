@@ -16,14 +16,16 @@
     fzf.enable = true;
     fzf.enableBashIntegration = true;
 
-    direnv.enable = true;
-    direnv.config = {
-      global = {
-        hide_env_diff = true;
-        warn_timeout = "1m";
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+      config = {
+        global = {
+          hide_env_diff = true;
+          warn_timeout = "1m";
+        };
       };
     };
-    direnv.nix-direnv.enable = true;
 
     atuin.enable = true;
     atuin.flags = ["--disable-up-arrow"];

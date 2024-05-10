@@ -1,4 +1,4 @@
-{...}: {
+_: {
   name = "nixos-l540";
   system = "x86_64-linux";
   modules = [

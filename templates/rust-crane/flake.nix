@@ -77,8 +77,7 @@
               ]
               ++ buildInputs;
 
-            shellHook =
-              pre-commit-check.${system}.shellHook;
+            inherit (pre-commit-check.${system}) shellHook;
           };
 
           ci = pkgs.mkShell {
@@ -105,8 +104,7 @@
 
           # Audit dependencies
           audit = craneLib.cargoAudit {
-            inherit src;
-            advisory-db = inputs.advisory-db;
+            inherit (inputs) advisory-db src;
           };
         };
 
