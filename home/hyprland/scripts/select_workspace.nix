@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-
+{pkgs, ...}:
 pkgs.writeShellScriptBin "select_workspace" ''
 
   set -e
@@ -11,7 +10,7 @@ pkgs.writeShellScriptBin "select_workspace" ''
   id=$(echo "$selection" | awk -F ',' '{print $NF}')
   name=$(echo "$selection" | awk -F ',' '{print $1}')
 
-# Check if workspace is a named workspace
+  # Check if workspace is a named workspace
   if [ "$id" -le -1337 ]; then
     goto="name:$name"
   else
@@ -19,5 +18,4 @@ pkgs.writeShellScriptBin "select_workspace" ''
   fi
 
   ${pkgs.hyprland}/bin/hyprctl dispatch workspace "$goto"
-
 ''

@@ -1,4 +1,4 @@
-{ host }: {
+{host}: {
   mainBar = {
     layer = "top";
     position = "bottom";
@@ -21,39 +21,49 @@
       "clock#3"
       "custom/right-arrow-dark"
     ];
-    modules-right = [
-      "custom/left-arrow-dark"
-      "pulseaudio"
-      "custom/left-arrow-light"
-      "custom/left-arrow-dark"
-      "memory"
-      "custom/left-arrow-light"
-      "custom/left-arrow-dark"
-      "cpu"
-      "custom/left-arrow-light"
-      "custom/left-arrow-dark"
-      "temperature"
-    ] ++ (if host.name == "vetus" then [
-      "custom/gpu-temp"
-    ] else [ ])
-    ++ [
-      "custom/left-arrow-light"
-      "custom/left-arrow-dark"
-      "bluetooth"
-      "custom/left-arrow-light"
-      "custom/left-arrow-dark"
-      "custom/vpn"
-    ] ++ (if host.name == "nixos-l540" then [
-      "custom/left-arrow-light"
-      "custom/left-arrow-dark"
-      "battery"
-    ]
-    else [ ])
-    ++ [
-      "custom/left-arrow-light"
-      "custom/left-arrow-dark"
-      "tray"
-    ];
+    modules-right =
+      [
+        "custom/left-arrow-dark"
+        "pulseaudio"
+        "custom/left-arrow-light"
+        "custom/left-arrow-dark"
+        "memory"
+        "custom/left-arrow-light"
+        "custom/left-arrow-dark"
+        "cpu"
+        "custom/left-arrow-light"
+        "custom/left-arrow-dark"
+        "temperature"
+      ]
+      ++ (
+        if host.name == "vetus"
+        then [
+          "custom/gpu-temp"
+        ]
+        else []
+      )
+      ++ [
+        "custom/left-arrow-light"
+        "custom/left-arrow-dark"
+        "bluetooth"
+        "custom/left-arrow-light"
+        "custom/left-arrow-dark"
+        "custom/vpn"
+      ]
+      ++ (
+        if host.name == "nixos-l540"
+        then [
+          "custom/left-arrow-light"
+          "custom/left-arrow-dark"
+          "battery"
+        ]
+        else []
+      )
+      ++ [
+        "custom/left-arrow-light"
+        "custom/left-arrow-dark"
+        "tray"
+      ];
 
     "custom/left-arrow-dark" = {
       format = "";
@@ -88,7 +98,6 @@
       format = "{:%m-%d}";
       tooltip = false;
     };
-
 
     "custom/vpn" = {
       exec = "printf \"%s\" \"$(sed \"s/.*/󰌾 /\" /sys/class/net/tun0/operstate 2>/dev/null)\"";
@@ -138,15 +147,20 @@
         ""
       ];
     };
-    temperature = {
-      critical-threshold = 80;
-      format-critical = "{temperatureC}°C {icon}";
-      format = "{temperatureC}°C {icon}";
-      format-icons = [ "" "" "󰈸" ];
-    } // (if host.name == "vetus" then {
-      hwmon-path = "/sys/class/hwmon/hwmon1/temp1_input";
-    }
-    else { });
+    temperature =
+      {
+        critical-threshold = 80;
+        format-critical = "{temperatureC}°C {icon}";
+        format = "{temperatureC}°C {icon}";
+        format-icons = ["" "" "󰈸"];
+      }
+      // (
+        if host.name == "vetus"
+        then {
+          hwmon-path = "/sys/class/hwmon/hwmon1/temp1_input";
+        }
+        else {}
+      );
     bluetooth = {
       format = " {status}";
       format-connected = " {num_connections}";
@@ -165,4 +179,3 @@
     };
   };
 }
-

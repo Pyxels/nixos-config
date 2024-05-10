@@ -1,5 +1,8 @@
-{ lib, pkgs, ... }:
 {
+  lib,
+  pkgs,
+  ...
+}: {
   programs = {
     alacritty.enable = true;
     alacritty.settings = import ./alacritty.nix;
@@ -16,9 +19,10 @@
     jellyfin-media-player
   ];
 
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "discord"
-  ];
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      "discord"
+    ];
 
   xdg.configFile.kickoff = {
     target = "kickoff/config.toml";

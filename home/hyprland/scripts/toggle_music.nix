@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-
+{pkgs, ...}:
 pkgs.writeShellScriptBin "toggle_music" ''
 
   socket=/tmp/mpvsocket

@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-
+{pkgs, ...}:
 pkgs.writeShellScriptBin "umounter" ''
 
   # Analogous to ./drive_mounter.nix

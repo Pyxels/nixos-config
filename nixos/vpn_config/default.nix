@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+{config, ...}: {
   age.secrets = {
     vpn-credentials.file = ../../secrets/vpn-credentials.age;
     vpn-config.file = ../../secrets/vpn-config.age;
@@ -15,4 +14,3 @@
     };
   };
 }
-

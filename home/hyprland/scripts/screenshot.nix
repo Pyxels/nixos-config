@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-
+{pkgs, ...}:
 pkgs.writeShellScriptBin "screenshot" ''
 
   filename=~/Pictures/screenshots/$(date -u +"%Y-%m-%d_%H-%M-%S").png

@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-
+{pkgs, ...}:
 pkgs.writeShellScriptBin "headset_toggle" ''
 
   id=30:50:75:48:AE:10
