@@ -8,9 +8,11 @@
 
     agenix = {
       url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.darwin.follows = "";
-      inputs.home-manager.follows = "home-manager";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        darwin.follows = "";
+        home-manager.follows = "home-manager";
+      };
     };
 
     nixvim-config = {
@@ -21,9 +23,16 @@
     hyprland.url = "github:hyprwm/Hyprland";
     hyprpaper = {
       url = "github:hyprwm/hyprpaper";
-      inputs.hyprlang.follows = "hyprland/hyprlang";
-      inputs.nixpkgs.follows = "hyprland/nixpkgs";
-      inputs.systems.follows = "hyprland/systems";
+      inputs = {
+        hyprlang.follows = "hyprland/hyprlang";
+        nixpkgs.follows = "hyprland/nixpkgs";
+        systems.follows = "hyprland/systems";
+      };
+    };
+
+    pre-commit-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -66,11 +75,34 @@
           };
         })
         hosts);
+
+    git-hooks = inputs.pre-commit-hooks.lib.x86_64-linux.run {
+      src = ./.;
+      hooks = {
+        alejandra.enable = true;
+        deadnix.enable = true;
+        flake-checker.enable = true;
+        nil.enable = true;
+        statix = {
+          enable = true;
+          settings.ignore = ["**/*hardware-configuration.nix"];
+        };
+
+        shellcheck.enable = true;
+        actionlint.enable = true;
+        commitizen.enable = true;
+        check-merge-conflicts.enable = true;
+      };
+    };
   in {
     nixosConfigurations = mkNixosSystems hosts;
-
     homeConfigurations = mkHomeConfigs name hosts;
 
     templates = import ./templates;
+
+    devShell.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+      inherit (git-hooks) shellHook;
+      buildInputs = git-hooks.enabledPackages;
+    };
   };
 }

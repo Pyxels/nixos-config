@@ -1,0 +1,3 @@
+# devshell/direnv
+.pre-commit-config.yaml
+.direnv/
