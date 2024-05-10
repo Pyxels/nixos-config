@@ -101,7 +101,7 @@
 
     templates = import ./templates;
 
-    devShell.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+    devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
       inherit (git-hooks) shellHook;
       buildInputs = git-hooks.enabledPackages;
     };
