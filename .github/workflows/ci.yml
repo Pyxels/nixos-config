@@ -3,11 +3,11 @@ name: CI
 on:
   push
 
-
 jobs:
-  check:
+  checks:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - name: Check Nix flake Nixpkgs inputs
-        uses: DeterminateSystems/flake-checker-action@main
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: nix flake check -L
