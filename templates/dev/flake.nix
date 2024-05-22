@@ -1,18 +1,15 @@
 {
   description = "Basic Dev Shell";
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs.flake-parts.url = "github:hercules-ci/flake-parts";
 
-  outputs = {
-    nixpkgs,
-    flake-utils,
-    ...
-  }:
-    flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = nixpkgs.legacyPackages.${system};
-    in {
-      devShells.default = pkgs.mkShell {
-        packages = with pkgs; [bashInteractive];
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"];
+      perSystem = {pkgs, ...}: {
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [bashInteractive];
+        };
       };
-    });
+    };
 }
