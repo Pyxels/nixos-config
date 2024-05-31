@@ -19,8 +19,11 @@
 
     nixvim-config = {
       url = "github:pyxels/nixvim-config";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        pre-commit-hooks.follows = "git-hooks";
+      };
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
