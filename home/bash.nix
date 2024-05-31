@@ -13,7 +13,7 @@
       ll = "exa -laF --git --octal-permissions --no-permissions --time-style iso --group-directories-first";
       v = "nvim";
       zf = "zathura --fork";
-      dc = "docker-compose";
+      dc = "docker compose";
       ".." = "cd ..";
       "..." = "cd ../..";
       "...." = "cd ../../..";
