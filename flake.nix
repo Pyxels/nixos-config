@@ -20,7 +20,6 @@
     nixvim-config = {
       url = "github:pyxels/nixvim-config";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
         pre-commit-hooks.follows = "git-hooks";
       };
