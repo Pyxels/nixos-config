@@ -1,18 +1,20 @@
 {pkgs, ...}:
-pkgs.writeShellScriptBin "create_workspace" ''
+pkgs.writeShellApplication {
+  name = "create_workspace";
 
-  set -e
+  runtimeInputs = with pkgs; [hyprland kickoff jq];
 
-  predefined=" tmp
-   YT"
+  text = ''
+    predefined=" tmp
+     YT"
 
-  new_workspace=$(echo "$predefined" | ${pkgs.kickoff}/bin/kickoff --from-stdin --stdout --prompt 'Create Workspace:  ')
-  activemonitor=$(${pkgs.hyprland}/bin/hyprctl monitors -j | ${pkgs.jq}/bin/jq -r '.[] | select(.focused==true).name')
+    new_workspace=$(echo "$predefined" | kickoff --from-stdin --stdout --prompt 'Create Workspace:  ')
+    activemonitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused==true).name')
 
-  test -n "$new_workspace"
+    test -n "$new_workspace"
 
-  # Bind new workspace to current active monitor and open
-  ${pkgs.hyprland}/bin/hyprctl keyword wsbind "name:$new_workspace,$activemonitor"
-  ${pkgs.hyprland}/bin/hyprctl dispatch workspace "name:$new_workspace"
-
-''
+    # Bind new workspace to current active monitor and open
+    hyprctl keyword wsbind "name:$new_workspace,$activemonitor"
+    hyprctl dispatch workspace "name:$new_workspace"
+  '';
+}

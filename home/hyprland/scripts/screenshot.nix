@@ -1,9 +1,13 @@
 {pkgs, ...}:
-pkgs.writeShellScriptBin "screenshot" ''
+pkgs.writeShellApplication {
+  name = "screenshot";
 
-  filename=~/Pictures/screenshots/$(date -u +"%Y-%m-%d_%H-%M-%S").png
+  runtimeInputs = with pkgs; [grim slurp wl-clipboard];
 
-  ${pkgs.grim}/bin/grim -s 2 -g "$(${pkgs.slurp}/bin/slurp)" "$filename"
-  ${pkgs.wl-clipboard}/bin/wl-copy < "$filename"
+  text = ''
+    filename=~/Pictures/screenshots/$(date -u +"%Y-%m-%d_%H-%M-%S").png
 
-''
+    grim -s 2 -g "$(slurp)" "$filename"
+    ${pkgs.wl-clipboard}/bin/wl-copy < "$filename"
+  '';
+}
