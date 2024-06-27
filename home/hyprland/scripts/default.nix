@@ -7,7 +7,6 @@
 in {
   home.packages = map importShellBin [
     ./screenshot.nix
-    ./askpass_kickoff.nix
     ./headset_toggle.nix
     ./toggle_music.nix
     ./drive_mounter.nix
