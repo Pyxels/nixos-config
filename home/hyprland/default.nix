@@ -146,6 +146,7 @@ in {
           };
 
           cursor.inactive_timeout = 5;
+          cursor.enable_hyprcursor = false;
 
           misc = {
             mouse_move_focuses_monitor = false;
