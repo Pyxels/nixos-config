@@ -57,6 +57,7 @@
   programs.hyprland.enable = true;
   programs.hyprland.package = inputs.hyprland.packages.${host.system}.hyprland;
   security.pam.services.swaylock = {};
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   #########################################
   # Users

@@ -141,14 +141,11 @@ in {
             gaps_out = 10;
             border_size = 2;
             "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-            cursor_inactive_timeout = 5;
 
             layout = "master";
           };
 
-          master = {
-            new_is_master = false;
-          };
+          cursor.inactive_timeout = 5;
 
           misc = {
             mouse_move_focuses_monitor = false;
