@@ -73,7 +73,7 @@
               name = "${name}@${hostName}";
               value = inputs.home-manager.lib.homeManagerConfiguration {
                 pkgs = nixpkgs.legacyPackages.${host.system}; # Home-manager requires 'pkgs' instance
-                extraSpecialArgs = {inherit inputs name configPath host;};
+                extraSpecialArgs = {inherit inputs name configPath host nixpkgs;};
                 modules = [./home/home.nix] ++ host.modules;
               };
             })
