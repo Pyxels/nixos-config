@@ -2,16 +2,21 @@
   inputs,
   pkgs,
   name,
-  host,
   ...
 }: {
   imports = [
+    inputs.nixvim-config.homeModules.default
     ./zellij
     ./bash.nix
     ./git.nix
     ./starship.nix
     ./run_local_nixpkgs.nix
   ];
+
+  nixvim-config = {
+    enable = true;
+    aliases = ["v" "vim"];
+  };
 
   programs = {
     fzf.enable = true;
@@ -49,11 +54,6 @@
     feh
     gh # github cli
     nh # nix helper
-    nixvim-config
-  ];
-
-  nixpkgs.overlays = [
-    (_: _: {nixvim-config = inputs.nixvim-config.packages.${host.system}.default;})
   ];
 
   home = {
@@ -61,7 +61,6 @@
       "/home/${name}/.cargo/bin"
     ];
     sessionVariables = {
-      EDITOR = "nvim";
       DIRENV_LOG_FORMAT = ''\033[2mdirenv: %s\033[0m'';
     };
   };

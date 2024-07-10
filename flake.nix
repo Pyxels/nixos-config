@@ -21,7 +21,7 @@
       url = "github:pyxels/nixvim-config";
       inputs = {
         flake-parts.follows = "flake-parts";
-        pre-commit-hooks.follows = "git-hooks";
+        git-hooks.follows = "git-hooks";
       };
     };
 
