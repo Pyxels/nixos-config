@@ -14,7 +14,7 @@ inputs.git-hooks.lib.${system}.run {
     };
     statix = {
       enable = true;
-      settings.ignore = ["**/*hardware-configuration.nix"];
+      settings.ignore = ["**/*hardware-configuration.nix" "**/arm-vps/configuration.nix"];
     };
 
     shellcheck.enable = true;

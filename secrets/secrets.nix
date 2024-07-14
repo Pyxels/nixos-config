@@ -11,6 +11,5 @@ let
 in {
   "vpn-credentials.age".publicKeys = users ++ systems;
   "vpn-config.age".publicKeys = users ++ systems;
-  "domain.age".publicKeys = users ++ systems;
-  "attic.env.age".publicKeys = users ++ systems;
+  "attic-config.age".publicKeys = users ++ systems;
 }

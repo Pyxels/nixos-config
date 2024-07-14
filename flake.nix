@@ -17,6 +17,16 @@
       };
     };
 
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    attic = {
+      url = "github:zhaofengli/attic";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixvim-config = {
       url = "github:pyxels/nixvim-config";
       inputs = {
@@ -41,13 +51,18 @@
     };
   };
 
-  outputs = {nixpkgs, ...} @ inputs:
+  outputs = {
+    nixpkgs,
+    self,
+    ...
+  } @ inputs:
     inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       flake = let
         name = "jonas";
         configPath = "/home/${name}/.dotfiles";
         hosts = ["vetus" "nixos-l540"];
         homes = hosts ++ ["jonas-bits"];
+        servers = ["arm-vps"];
 
         mkNixosSystems = hosts:
           builtins.listToAttrs (map
@@ -79,10 +94,12 @@
             })
             hosts);
       in {
-        nixosConfigurations = mkNixosSystems hosts;
+        nixosConfigurations = mkNixosSystems (hosts ++ servers);
         homeConfigurations = mkHomeConfigs name homes;
 
         templates = import ./templates;
+
+        deploy = import ./hosts/servers.nix {inherit inputs self;};
       };
 
       systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"];
