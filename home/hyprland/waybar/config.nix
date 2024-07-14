@@ -100,7 +100,7 @@
     };
 
     "custom/vpn" = {
-      exec = "printf \"%s\" \"$(sed \"s/.*/󰌾 /\" /sys/class/net/tun0/operstate 2>/dev/null)\"";
+      exec = "printf \"%s\" $(mullvad status | head -n1 | sed \"s/^Connected.*/󰌾/\" | sed \"s/^Disconnected.*//\")";
       interval = 5;
     };
     "custom/gpu-temp" = {
