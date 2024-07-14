@@ -2,6 +2,7 @@
   inputs,
   pkgs,
   config,
+  host,
   ...
 }: let
   domain = "pyxels.me";
@@ -15,6 +16,8 @@ in {
     ./hardware-configuration.nix
     ./networking.nix
 
+    ../../modules/system/filespace-checker.nix
+
     {
       age.secrets = {
         attic-config.file = ../../secrets/attic-config.age;
@@ -26,7 +29,7 @@ in {
 
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
-  networking.hostName = "arm-vps";
+  networking.hostName = host.name;
   networking.domain = "";
   services.openssh.enable = true;
   services.openssh.settings.PasswordAuthentication = false;
