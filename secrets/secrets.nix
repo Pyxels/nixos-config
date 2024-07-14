@@ -9,7 +9,5 @@ let
   arm-vps = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLMDZFCA5FqnUaHSkIUt9+7u1f6xUwSwIXZ2j5kDV/c root@arm-vps";
   systems = [nixos-l540 vetus arm-vps];
 in {
-  "vpn-credentials.age".publicKeys = users ++ systems;
-  "vpn-config.age".publicKeys = users ++ systems;
   "attic-config.age".publicKeys = users ++ systems;
 }

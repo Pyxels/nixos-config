@@ -5,9 +5,7 @@
   host,
   ...
 }: {
-  imports = [
-    ./vpn_config
-  ];
+  imports = [];
 
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub = {
