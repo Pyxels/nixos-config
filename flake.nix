@@ -112,7 +112,11 @@
       in {
         devShells.default = pkgs.mkShell {
           inherit (git-hooks) shellHook;
-          buildInputs = git-hooks.enabledPackages;
+          buildInputs =
+            git-hooks.enabledPackages
+            ++ [
+              inputs.deploy-rs.packages.${system}.default
+            ];
         };
 
         checks = {
