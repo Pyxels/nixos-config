@@ -8,6 +8,7 @@
   domain = "pyxels.me";
   atticDomain = "attic.${domain}";
   ntfyDomain = "ntfy.${domain}";
+  matrixDomain = "matrix.${domain}";
 in {
   imports = [
     inputs.attic.nixosModules.atticd
@@ -65,7 +66,6 @@ in {
   };
 
   ### ATTIC ###
-
   services.atticd = {
     enable = true;
 
@@ -85,8 +85,24 @@ in {
     };
   };
 
-  ### REVERSE PROXY ###
+  ### MATRIX CONDUIT ###
+  services.matrix-conduit = {
+    enable = true;
 
+    settings = {
+      global = {
+        server_name = domain;
+        well_known = {
+          client = "https://${matrixDomain}";
+          server = "${matrixDomain}:443";
+        };
+
+        enable_lightning_bolt = false;
+      };
+    };
+  };
+
+  ### REVERSE PROXY ###
   networking.firewall.allowedTCPPorts = [80 443];
   networking.firewall.allowedUDPPorts = [80 443];
 
@@ -113,6 +129,31 @@ in {
         proxyPass = "http://127.0.0.1:8778";
         proxyWebsockets = true;
       };
+    };
+
+    virtualHosts.${matrixDomain} = {
+      enableACME = true;
+      forceSSL = true;
+      locations."^~ /_matrix" = {
+        proxyPass = "http://[::1]:${toString config.services.matrix-conduit.settings.global.port}";
+        proxyWebsockets = true;
+        extraConfig = ''
+          proxy_buffering off;
+        '';
+      };
+      locations."/".return = 404;
+    };
+    virtualHosts.${domain} = {
+      enableACME = true;
+      forceSSL = true;
+      locations."^~ /.well-known/matrix" = {
+        proxyPass = "http://[::1]:${toString config.services.matrix-conduit.settings.global.port}";
+        proxyWebsockets = true;
+        extraConfig = ''
+          proxy_buffering off;
+        '';
+      };
+      locations."/".return = 404;
     };
   };
 
