@@ -9,7 +9,7 @@
     ./zellij
     ./bash.nix
     ./git.nix
-    ./starship.nix
+    ./oh-my-posh.nix
     ./run_local_nixpkgs.nix
   ];
 
