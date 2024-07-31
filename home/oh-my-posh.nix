@@ -40,18 +40,18 @@
                 "{{ if and (or (eq .Staging.Modified 0) (eq .Staging.Added 0)) (and (eq .Working.Modified 0) (gt .Working.Untracked 0)) }}magenta{{end}}"
               ];
               template = "{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }}";
-              properties. fetch_status = true;
+              properties.fetch_status = true;
             }
             {
               type = "git";
               foreground = "cyan";
               template = " {{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}";
-              properties. fetch_status = true;
+              properties.fetch_status = true;
             }
             {
               type = "git";
-              template = "{{ if gt .StashCount 0 }}  {{ end }}";
-              properties. fetch_status = true;
+              template = "{{ if gt .StashCount 0 }}{{ if gt .StashCount 1 }} {{ .StashCount }}{{ end }}  {{ end }}";
+              properties.fetch_status = true;
             }
           ];
         }
@@ -66,7 +66,7 @@
               foreground = "yellow";
               template = "{{ .FormattedMs }}";
 
-              properties. threshold = 1000;
+              properties.threshold = 1000;
             }
             {
               type = "text";
