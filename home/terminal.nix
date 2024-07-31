@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  lib,
   name,
   ...
 }: {
@@ -19,8 +20,12 @@
   };
 
   programs = {
-    fzf.enable = true;
-    fzf.enableBashIntegration = true;
+    fzf = {
+      enable = true;
+      enableBashIntegration = true;
+      fileWidgetCommand = "${lib.getExe pkgs.fd} --type f --hidden --exclude .git";
+      fileWidgetOptions = ["--preview '${lib.getExe pkgs.bat} --color=always {}'"];
+    };
 
     direnv = {
       enable = true;
