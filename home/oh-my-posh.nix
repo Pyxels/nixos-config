@@ -6,6 +6,7 @@
       version = 2;
       final_space = true;
       disable_notice = true;
+      disable_cursor_positioning = true;
 
       blocks = [
         {
