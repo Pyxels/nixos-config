@@ -82,6 +82,7 @@ in {
         avg-size = 64 * 1024; # 64 KiB
         max-size = 256 * 1024; # 256 KiB
       };
+      garbage-collection.default-retention-period = "6 months";
     };
   };
 
