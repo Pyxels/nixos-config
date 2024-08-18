@@ -15,8 +15,6 @@ in {
     ./hardware-configuration.nix
     ./networking.nix
 
-    ../../modules/system/filespace-checker.nix
-
     {
       age.secrets = {
         attic-config.file = ../../secrets/attic-config.age;

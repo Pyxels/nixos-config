@@ -10,5 +10,4 @@ let
   systems = [nixos-l540 vetus arm-vps];
 in {
   "attic-config.age".publicKeys = users ++ systems;
-  "ntfy-client.age".publicKeys = users ++ systems;
 }
