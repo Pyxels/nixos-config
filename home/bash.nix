@@ -9,6 +9,9 @@
       mv = "mv -i";
       rm = "rm -i";
       df = "df -h";
+      gs = "git status";
+      gd = "git diff";
+      gds = "git diff --staged";
       # ll="ls -lAhF";
       ll = "exa -laF --git --octal-permissions --no-permissions --time-style iso --group-directories-first";
       zf = "zathura --fork";
