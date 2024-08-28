@@ -18,3 +18,5 @@ keybinds {
     bind "Alt k" { MoveFocus "Up"; }
   }
 }
+
+theme "gruvbox-dark"
