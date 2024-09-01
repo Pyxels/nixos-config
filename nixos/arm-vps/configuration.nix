@@ -22,7 +22,19 @@ in {
     }
   ];
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+
+    settings = {
+      trusted-users = ["root" "@wheel"];
+      experimental-features = "nix-command flakes";
+      auto-optimise-store = true;
+    };
+  };
 
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
@@ -35,7 +47,7 @@ in {
   swapDevices = [
     {
       device = "/swapfile";
-      size = 8 * 1024; # 16GB
+      size = 8 * 1024; # 8GB
     }
   ];
 
