@@ -10,6 +10,8 @@
     firefox = import ./firefox.nix;
   };
 
+  services.syncthing.enable = true;
+
   home.packages = with pkgs; [
     mpv
     kickoff
@@ -17,11 +19,14 @@
 
     discord
     jellyfin-media-player
+
+    obsidian
   ];
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "discord"
+      "obsidian"
     ];
 
   xdg.configFile.kickoff = {
