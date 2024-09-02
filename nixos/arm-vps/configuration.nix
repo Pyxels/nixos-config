@@ -7,6 +7,7 @@
 }: let
   domain = "pyxels.me";
   atticDomain = "attic.${domain}";
+  bitwardenDomain = "bitwarden.${domain}";
 in {
   imports = [
     inputs.attic.nixosModules.atticd
@@ -217,6 +218,17 @@ in {
     };
   };
 
+  ### Vaultwarden ###
+  services.vaultwarden = {
+    enable = true;
+    config = {
+      DOMAIN = "https://${bitwardenDomain}";
+      SIGNUPS_ALLOWED = false;
+      ROCKET_PORT = 8000;
+    };
+    environmentFile = "/root/vaultwarden.env";
+  };
+
   ### REVERSE PROXY ###
   networking.firewall.allowedTCPPorts = [80 443];
   networking.firewall.allowedUDPPorts = [80 443];
@@ -235,6 +247,7 @@ in {
       "prometheus".servers."127.0.0.1:${toString config.services.prometheus.port}" = {};
       "loki".servers."127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}" = {};
       "promtail".servers."127.0.0.1:${toString config.services.promtail.configuration.server.http_listen_port}" = {};
+      "bitwarden".servers."127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}" = {};
     };
 
     virtualHosts.${atticDomain} = {
@@ -251,6 +264,18 @@ in {
       locations."/" = {
         proxyPass = "http://grafana";
         proxyWebsockets = true;
+      };
+    };
+
+    virtualHosts.${bitwardenDomain} = {
+      enableACME = true;
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://bitwarden";
+        proxyWebsockets = true;
+      };
+      locations."/admin" = {
+        return = "301 https://${bitwardenDomain}/";
       };
     };
   };
