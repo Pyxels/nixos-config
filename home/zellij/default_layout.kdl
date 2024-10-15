@@ -7,7 +7,7 @@ layout {
   }
   
   tab name="run"
-  tab name="code"
   tab name="git"
+  tab name="code"
   tab name="cmd"
 }
