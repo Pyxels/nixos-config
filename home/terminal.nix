@@ -59,7 +59,6 @@
     feh
     gh # github cli
     nh # nix helper
-    inputs.attic.packages.${system}.attic-client # binary cache
   ];
 
   home = {
