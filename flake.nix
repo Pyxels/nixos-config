@@ -114,9 +114,7 @@
           inherit (git-hooks) shellHook;
           buildInputs =
             git-hooks.enabledPackages
-            ++ [
-              inputs.deploy-rs.packages.${system}.default
-            ];
+            ++ [pkgs.deploy-rs];
         };
 
         checks = {
