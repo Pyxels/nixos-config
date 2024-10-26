@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Run backend checks
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Install Nix"
+        uses: cachix/install-nix-action@v30
+
+      - name: "Update RustSec/advisory-db"
+        run: nix flake lock --update-input advisory-db
+      - name: "Run .#checks in parallel"
+        run: nix run github:Mic92/nix-fast-build -- --no-nom --skip-cached

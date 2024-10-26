@@ -3,48 +3,32 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    flake-utils.url = "github:numtide/flake-utils";
-
-    crane = {
-      url = "github:ipetkov/crane";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    crane.url = "github:ipetkov/crane";
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    pre-commit-hooks = {
-      url = "github:cachix/pre-commit-hooks.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-    };
-
     advisory-db = {
       url = "github:rustsec/advisory-db";
       flake = false;
     };
   };
 
-  outputs = {
-    # self,
-    nixpkgs,
-    flake-utils,
-    crane,
-    pre-commit-hooks,
-    ...
-  } @ inputs:
-    flake-utils.lib.eachDefaultSystem (
-      system: let
-        # TODO: replace with crate name
-        project-name = "mycrate";
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"];
+      perSystem = {
+        lib,
+        system,
+        pkgs,
+        ...
+      }: let
+        # TODO change app name
+        projectName = "TODO";
 
-        pkgs = nixpkgs.legacyPackages.${system};
-
-        pre-commit-check.${system} = pre-commit-hooks.lib.${system}.run {
-          src = ./.;
-          hooks = {
-            rustfmt.enable = true;
-            clippy.enable = true;
-            clippy.settings.denyWarnings = true;
-          };
+        git-hooks = import ./git-hooks.nix {
+          inherit lib inputs pkgs system;
         };
 
         buildInputs = with pkgs; [
@@ -53,17 +37,17 @@
           rustfmt
         ];
 
-        craneLib = crane.lib.${system};
+        craneLib = inputs.crane.mkLib pkgs;
         src = craneLib.cleanCargoSource (craneLib.path ./.);
         cargoArtifacts = craneLib.buildDepsOnly {inherit src;};
 
         bin = craneLib.buildPackage {inherit src cargoArtifacts;};
-        dockerImage = pkgs.dockerTools.buildImage {
-          name = project-name;
+        dockerImage = pkgs.dockerTools.buildLayeredImage {
+          name = projectName;
           tag = "latest";
-          config = {
-            Cmd = ["${bin}/bin/${project-name}"];
-          };
+          # for debugging purposes, can be removed
+          contents = with pkgs; [busybox dockerTools.binSh];
+          config.Cmd = ["${bin}/bin/${projectName}"];
         };
       in {
         devShells = {
@@ -71,13 +55,13 @@
           default = pkgs.mkShell {
             packages = with pkgs;
               [
-                cargo-watch
+                bacon
                 cargo-audit
                 rust-analyzer
               ]
               ++ buildInputs;
 
-            inherit (pre-commit-check.${system}) shellHook;
+            inherit (git-hooks.default) shellHook;
           };
 
           ci = pkgs.mkShell {
@@ -104,7 +88,8 @@
 
           # Audit dependencies
           audit = craneLib.cargoAudit {
-            inherit (inputs) advisory-db src;
+            inherit (inputs) advisory-db;
+            inherit src;
           };
         };
 
@@ -112,6 +97,6 @@
           inherit bin dockerImage;
           default = bin;
         };
-      }
-    );
+      };
+    };
 }
