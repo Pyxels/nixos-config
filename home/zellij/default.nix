@@ -20,6 +20,7 @@
           "bind \"Alt l\"" = {MoveFocusOrTab = "Right";};
           "bind \"Alt j\"" = {MoveFocus = "Down";};
           "bind \"Alt k\"" = {MoveFocus = "Up";};
+          "bind \"Alt w\"" = {ToggleFloatingPanes = {};};
         };
         shared = generateTabBindings 9;
       };
