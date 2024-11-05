@@ -1,5 +1,11 @@
-_: {
-  programs.zellij = {
+{lib, ...}: {
+  programs.zellij = let
+    generateTabBindings = x:
+      lib.listToAttrs (map (n: {
+        name = "bind \"Alt ${toString n}\"";
+        value = {GoToTab = n + 1;};
+      }) (lib.range 0 x));
+  in {
     enable = true;
     settings = {
       default_mode = "locked";
@@ -15,6 +21,7 @@ _: {
           "bind \"Alt j\"" = {MoveFocus = "Down";};
           "bind \"Alt k\"" = {MoveFocus = "Up";};
         };
+        shared = generateTabBindings 9;
       };
 
       theme = "gruvbox-dark";
