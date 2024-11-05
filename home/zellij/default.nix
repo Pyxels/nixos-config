@@ -1,11 +1,29 @@
 _: {
-  programs.zellij.enable = true;
+  programs.zellij = {
+    enable = true;
+    settings = {
+      default_mode = "locked";
+
+      keybinds = {
+        unbind = ["Ctrl h"];
+        move."bind \"Ctrl b\"" = {SwitchToMode = "Normal";};
+        search."bind \"N\"" = {Search = "up";};
+        "shared_except \"move\" \"locked\""."bind \"Ctrl b\"" = {SwitchToMode = "Move";};
+        locked = {
+          "bind \"Alt h\"" = {MoveFocusOrTab = "Left";};
+          "bind \"Alt l\"" = {MoveFocusOrTab = "Right";};
+          "bind \"Alt j\"" = {MoveFocus = "Down";};
+          "bind \"Alt k\"" = {MoveFocus = "Up";};
+        };
+      };
+
+      theme = "gruvbox-dark";
+      ui.pane_frames.hide_session_name = true;
+      session_serialization = false;
+    };
+  };
 
   xdg.configFile = {
-    zellij_config = {
-      target = "zellij/config.kdl";
-      source = ./zellij.kdl;
-    };
     zellij_layout = {
       target = "zellij/layouts/default.kdl";
       source = ./default_layout.kdl;
