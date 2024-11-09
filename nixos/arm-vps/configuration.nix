@@ -1,4 +1,5 @@
 {
+  lib,
   inputs,
   pkgs,
   config,
@@ -229,6 +230,26 @@ in {
       ROCKET_PORT = 8000;
     };
     environmentFile = "/root/vaultwarden.env";
+  };
+  systemd = {
+    timers."vaultwarden_backup" = {
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnCalendar = "03:00";
+        Persistent = true;
+        Unit = "vaultwarden_backup.service";
+      };
+    };
+    services."vaultwarden_backup" = {
+      script = ''
+        ${lib.getExe pkgs.sqlite} /var/lib/bitwarden_rs/db.sqlite3 \
+          ".backup '/var/lib/syncthing/vaultwarden_backups/db-$(date '+%Y-%m-%d').sqlite3'"
+      '';
+      serviceConfig = {
+        Type = "oneshot";
+        User = "root";
+      };
+    };
   };
 
   ### REVERSE PROXY ###
