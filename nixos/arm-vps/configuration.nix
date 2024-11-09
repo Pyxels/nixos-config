@@ -11,7 +11,6 @@
   bitwardenDomain = "bitwarden.${domain}";
 in {
   imports = [
-    inputs.attic.nixosModules.atticd
     inputs.nixvim-config.nixosModules.default
 
     ./hardware-configuration.nix
@@ -69,9 +68,7 @@ in {
   services.atticd = {
     enable = true;
 
-    # Replace with absolute path to your credentials file
-    credentialsFile = config.age.secrets.attic-config.path;
-
+    environmentFile = config.age.secrets.attic-config.path;
     settings = {
       listen = "[::]:8080";
       require-proof-of-possession = false;
