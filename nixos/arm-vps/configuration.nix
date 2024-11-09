@@ -62,6 +62,8 @@ in {
     aliases = ["v"];
   };
 
+  services.syncthing.enable = true;
+
   ### ATTIC ###
   services.atticd = {
     enable = true;
