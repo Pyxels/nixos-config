@@ -637,11 +637,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1730785428,
-        "narHash": "sha256-Zwl8YgTVJTEum+L+0zVAWvXAGbWAuXHax3KzuejaDyo=",
+        "lastModified": 1731139594,
+        "narHash": "sha256-IigrKK3vYRpUu+HEjPL/phrfh7Ox881er1UEsZvw9Q4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "4aa36568d413aca0ea84a1684d2d46f55dbabad7",
+        "rev": "76612b17c0ce71689921ca12d9ffdc9c23ce40b2",
         "type": "github"
       },
       "original": {
@@ -674,16 +674,15 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1731061033,
-        "narHash": "sha256-9qwOTa5hVvzL9N/+L1lu/Bn1r3Sm6/87TKeY+wPltNI=",
-        "owner": "pyxels",
+        "lastModified": 1731504310,
+        "narHash": "sha256-R20OKYJcDcEqjQGI2/Z/kmaTMoBVSLd5ESR8fbW79Rk=",
+        "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "6b03dcfafaec98973fad626a29b8e86a6c93a1a1",
+        "rev": "e552c984a24c88017f8bfe6807527b7a9c77e22c",
         "type": "github"
       },
       "original": {
-        "owner": "pyxels",
-        "ref": "feat/prettierd/disableTsFormatting",
+        "owner": "nix-community",
         "repo": "nixvim",
         "type": "github"
       }
@@ -704,11 +703,11 @@
         "nixvim": "nixvim"
       },
       "locked": {
-        "lastModified": 1731070552,
-        "narHash": "sha256-tQpMZ4C+CkQ5w/dqW8IpKwOpkoZFdpkKzGCC2SBNUFE=",
+        "lastModified": 1731506294,
+        "narHash": "sha256-xfVTao5bP/0l1uv/6pqQjJKrY0q0I7yxq1/b+BA92+E=",
         "owner": "pyxels",
         "repo": "nixvim-config",
-        "rev": "401b686857e1fcfb645511e2d5622acbe36a45b9",
+        "rev": "8f32e9c75d77804b32459ed30295d4774abadb10",
         "type": "github"
       },
       "original": {
@@ -728,11 +727,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1730760712,
-        "narHash": "sha256-F4H98tjNgySlSLItuOqHYo9LF85rFoS/Vr0uOrq7BM4=",
+        "lastModified": 1731060242,
+        "narHash": "sha256-43yLsOm/wxBbfYSNDWVJeVv5Ij+23X3BIjFUfsdx/6M=",
         "owner": "NuschtOS",
         "repo": "search",
-        "rev": "aa5214c81b904a19f7a54f7a8f288f7902586eee",
+        "rev": "ef493352f9e1f051e01a55c062731503a6b36b4e",
         "type": "github"
       },
       "original": {
