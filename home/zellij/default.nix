@@ -41,4 +41,21 @@
       source = ./gruvbox_with_selection.kdl;
     };
   };
+
+  nixpkgs.overlays = [
+    (final: prev: {
+      zellij = prev.zellij.overrideAttrs (oldAttrs: rec {
+        src = final.fetchFromGitHub {
+          owner = "pyxels";
+          repo = "zellij";
+          rev = "31b82cb8667a1300c11083ca39fe0289e66a5163";
+          sha256 = "sha256-h2V2Po/4Qq61Xc60n1IBJmQFiEla04Qy0U79MstUGOQ=";
+        };
+        cargoDeps = oldAttrs.cargoDeps.overrideAttrs {
+          inherit src;
+          outputHash = "sha256-P/ncCDQcYfvQIx5HGNOMV8fNxfVcfWfCMQjlhiiCZcc=";
+        };
+      });
+    })
+  ];
 }
