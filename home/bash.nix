@@ -12,6 +12,7 @@
       gs = "git status";
       gd = "git diff";
       gds = "git diff --staged";
+      gl = "git log";
       # ll="ls -lAhF";
       ll = "exa -laF --git --octal-permissions --no-permissions --time-style iso --group-directories-first";
       zf = "zathura --fork";
