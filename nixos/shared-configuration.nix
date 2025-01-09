@@ -49,7 +49,7 @@
   ];
 
   fonts.packages = with pkgs; [
-    (nerdfonts.override {fonts = ["RobotoMono"];})
+    nerd-fonts.roboto-mono
   ];
 
   programs.hyprland.enable = true;
