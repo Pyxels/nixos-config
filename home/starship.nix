@@ -17,16 +17,16 @@
         style = "fg:blue";
         read_only_style = "fg:red";
         read_only = "🔒";
-        format = "[$read_only]($read_only_style)[$path]($style) ";
+        format = "[$read_only]($read_only_style)[$path]($style)";
         truncation_length = 4;
         truncation_symbol = ".../";
       };
       git_branch = {
         style = "fg:white";
-        format = "[$branch]($style)";
+        format = "[ $branch]($style)";
       };
       git_status = {
-        format = "[( $ahead_behind$stashed )]($style)";
+        format = "[( $ahead_behind$stashed)]($style)";
         ahead = "[󰜷 \${count} ](blue)";
         behind = "[󰜮 \${count} ](blue)";
         diverged = "[󰹺 \${ahead_count}/\${behind_count} ](blue)";
@@ -52,13 +52,13 @@
         style = "bold";
       };
       git_state = {
-        format = "\([$state( $progress_current/$progress_total) ]($style)\)";
+        format = "\([ $state( $progress_current/$progress_total)]($style)\)";
         style = "fg:gray";
       };
 
       nix_shell = {
         style = "fg:#ebdbb2";
-        format = "[$symbol]($style)";
+        format = "[ $symbol]($style)";
       };
 
       cmd_duration = {
