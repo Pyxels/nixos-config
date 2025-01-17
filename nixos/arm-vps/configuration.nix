@@ -51,6 +51,7 @@ in {
       size = 8 * 1024; # 8GB
     }
   ];
+  services.tailscale.enable = true;
 
   environment.systemPackages = with pkgs; [
     vim
