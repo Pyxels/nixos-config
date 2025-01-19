@@ -14,6 +14,7 @@
     device = "nodev";
     efiSupport = true;
   };
+  systemd.enableEmergencyMode = false;
 
   networking.networkmanager.enable = true;
   networking.hostName = host.name;
