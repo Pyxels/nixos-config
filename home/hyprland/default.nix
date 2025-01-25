@@ -156,7 +156,7 @@ in {
           decoration = {
             rounding = 5;
             inactive_opacity = 0.85;
-            drop_shadow = false;
+            shadow.enabled = false;
 
             blur = {
               passes = 2;
