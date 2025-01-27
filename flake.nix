@@ -55,7 +55,7 @@
       flake = let
         name = "jonas";
         configPath = "/home/${name}/.dotfiles";
-        hosts = ["vetus" "nixos-l540"];
+        hosts = ["vetus" "nixos-l540" "minimal-iso"];
         homes = hosts ++ ["jonas-bits"];
         servers = ["arm-vps"];
 
