@@ -6,6 +6,9 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
+
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     agenix = {
@@ -55,7 +58,7 @@
       flake = let
         name = "jonas";
         configPath = "/home/${name}/.dotfiles";
-        hosts = ["vetus" "nixos-l540" "minimal-iso"];
+        hosts = ["vetus" "nixos-l540" "minimal-iso" "beelink"];
         homes = hosts ++ ["jonas-bits"];
         servers = ["arm-vps"];
 
