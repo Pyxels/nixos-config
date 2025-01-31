@@ -94,6 +94,9 @@
       flags = ["-all"];
     };
   };
+  environment.shellAliases = {
+    dc = "docker compose";
+  };
 
   ### BESZEL ###
   systemd.services = {
