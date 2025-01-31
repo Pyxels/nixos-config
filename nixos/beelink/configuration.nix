@@ -49,16 +49,18 @@
 
   boot.tmp.cleanOnBoot = true;
   networking.hostName = host.name;
-  networking.domain = "";
-  services.openssh.enable = true;
-  services.openssh.settings.PasswordAuthentication = false;
+  services = {
+    openssh.enable = true;
+    openssh.settings.PasswordAuthentication = false;
+    tailscale.enable = true;
+    syncthing.enable = true;
+  };
   users.users.root.openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILXebXmITS8OF3CLbwVC+HFRg8b/96FiEccvAfQV/ovZ jonas@jonas-bits'' ''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPYL1ifWNX2y80O0Sk4OnKZIDJ3Y7dXVRtNcmCkusXuS jonas@vetus''];
   users.users.jonas = {
     isNormalUser = true;
     extraGroups = ["wheel" "docker"];
-    openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILXebXmITS8OF3CLbwVC+HFRg8b/96FiEccvAfQV/ovZ jonas@jonas-bits'' ''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPYL1ifWNX2y80O0Sk4OnKZIDJ3Y7dXVRtNcmCkusXuS jonas@vetus''];
+    openssh.authorizedKeys.keys = config.users.users.root.openssh.authorizedKeys.keys;
   };
-  services.tailscale.enable = true;
 
   programs.bash.interactiveShellInit = let
     RED = "\\033[31m";
@@ -86,7 +88,6 @@
     aliases = ["v"];
   };
 
-  services.syncthing.enable = true;
   virtualisation.docker = {
     enable = true;
     autoPrune = {
