@@ -36,6 +36,7 @@ in {
       auto-optimise-store = true;
     };
   };
+  services.journald.extraConfig = "SystemMaxUse=100M";
 
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
