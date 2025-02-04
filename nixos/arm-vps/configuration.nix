@@ -16,6 +16,8 @@ in {
     ./hardware-configuration.nix
     ./networking.nix
 
+    ../../modules/pocket-id
+
     {
       age.secrets = {
         attic-config.file = ../../secrets/attic-config.age;
@@ -352,5 +354,11 @@ in {
   security.acme = {
     acceptTerms = true;
     defaults.email = "acme@${domain}";
+  };
+
+  ### POCKET-ID ###
+  customConfig.pocket-id = {
+    enable = true;
+    url = "id.${domain}";
   };
 }
