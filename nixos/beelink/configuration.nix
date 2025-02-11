@@ -92,7 +92,7 @@
     enable = true;
     autoPrune = {
       enable = true;
-      flags = ["-all"];
+      flags = ["--all"];
     };
   };
   environment.shellAliases = {
