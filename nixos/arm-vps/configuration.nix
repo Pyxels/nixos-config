@@ -282,6 +282,9 @@ in {
         WorkingDirectory = "/root/beszel";
         ExecStart = "${pkgs.beszel}/bin/beszel-hub serve --http '0.0.0.0:8090'";
       };
+      environment = {
+        USER_CREATION = "true";
+      };
       wantedBy = ["multi-user.target"];
     };
     beszel-agent = {
