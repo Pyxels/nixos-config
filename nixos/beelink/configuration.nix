@@ -11,6 +11,14 @@
 
     ./hardware-configuration.nix
     ./disko-config.nix
+
+    ../../modules/wanderer
+
+    {
+      age.secrets = {
+        meiliSecret.file = ../../secrets/wanderer-meili-masterkey.age;
+      };
+    }
   ];
 
   system.stateVersion = "25.05";
@@ -121,5 +129,13 @@
     allowedTCPPorts = [80 443];
     allowedUDPPorts = [80 443 config.services.tailscale.port];
     trustedInterfaces = ["tailscale0"];
+  };
+
+  ### WANDERER ###
+  customConfig.wanderer = {
+    enable = true;
+    enableNginx = false;
+    meiliSecretPath = config.age.secrets.meiliSecret.path;
+    # TODO url = "";
   };
 }
