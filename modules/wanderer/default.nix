@@ -28,7 +28,7 @@ in {
     };
     oauth2ProxySecretsPath = mkOption {
       type = types.nullOr types.path;
-      default = false;
+      default = null;
       description = "Set to enable access to reverse proxy only with OIDC. The file should contain the config as env vars in the format `OAUTH2_PROXY_<key>=<value>`.";
     };
     stateDir = mkOption {

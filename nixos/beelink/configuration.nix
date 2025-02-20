@@ -19,6 +19,10 @@
         wandererSecrets = {
           file = ../../secrets/wanderer.age;
         };
+        oauth2ProxySecrets = {
+          file = ../../secrets/wanderer-oauth2-proxy.age;
+          # owner = "oauth2-proxy";
+        };
       };
     }
   ];
@@ -136,7 +140,8 @@
   ### WANDERER ###
   customConfig.wanderer = {
     enable = true;
-    enableReverseProxy = false;
     secretsPath = config.age.secrets.wandererSecrets.path;
+    enableReverseProxy = false;
+    # oauth2ProxySecretsPath = config.age.secrets.oauth2ProxySecrets.path;
   };
 }
