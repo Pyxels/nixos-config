@@ -17,6 +17,7 @@
     {
       age.secrets = {
         meiliSecret.file = ../../secrets/wanderer-meili-masterkey.age;
+        urlSecret.file = ../../secrets/wanderer-origin-url.age;
       };
     }
   ];
@@ -136,6 +137,6 @@
     enable = true;
     enableNginx = false;
     meiliSecretPath = config.age.secrets.meiliSecret.path;
-    # TODO url = "";
+    urlSecretPath = config.age.secrets.urlSecret.path;
   };
 }

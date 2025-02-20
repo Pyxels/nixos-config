@@ -12,4 +12,5 @@ let
 in {
   "attic-config.age".publicKeys = users ++ systems;
   "wanderer-meili-masterkey.age".publicKeys = users ++ [beelink];
+  "wanderer-origin-url.age".publicKeys = users ++ [beelink];
 }
