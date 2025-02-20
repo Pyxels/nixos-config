@@ -10,9 +10,15 @@ in {
   options.customConfig.wanderer = {
     enable = mkEnableOption "wanderer service";
     url = mkOption {
-      type = types.str;
+      type = types.nullOr types.str;
       example = "wanderer.example.com";
       description = "URL where wanderer will be accessible";
+      default = null;
+    };
+    urlSecretPath = mkOption {
+      type = types.nullOr types.path;
+      description = "Path to secret file which contains the public facing url in the format: ORIGIN=https://<domain>";
+      default = null;
     };
     meiliSecretPath = mkOption {
       type = types.path;
@@ -46,6 +52,21 @@ in {
   };
 
   config = mkIf cfg.enable {
+    warnings =
+      if (cfg.url != null && cfg.urlSecretPath != null)
+      then ["You have set both url and secret url path. Behaviour not defined."]
+      else [];
+    assertions = [
+      {
+        assertion = cfg.url != null || cfg.urlSecretPath != null;
+        message = "Either url or urlSecretPath should be set.";
+      }
+      {
+        assertion = (cfg.enableNginx && cfg.url != null) || !cfg.enableNginx;
+        message = "Sadly, you currently need to set url to use nix managed nginx reverse proxy.";
+      }
+    ];
+
     services.nginx = mkIf cfg.enableNginx {
       enable = true;
       virtualHosts."${cfg.url}" = {
@@ -95,19 +116,32 @@ in {
         extraOptions = ["--network=wanderer-net"];
         ports = ["${toString cfg.frontendPort}:3000"];
         volumes = ["${cfg.stateDir}/uploads:/app/uploads"];
-        environmentFiles = [cfg.meiliSecretPath];
-        environment = {
-          MEILI_URL = "http://wanderer-search:7700";
-          ORIGIN = "https://${cfg.url}";
-          BODY_SIZE_LIMIT = "Infinity";
-          PUBLIC_POCKETBASE_URL = "http://wanderer-db:8090";
-          PUBLIC_DISABLE_SIGNUP = "true";
-          UPLOAD_FOLDER = "/app/uploads";
-          UPLOAD_USER = "";
-          UPLOAD_PASSWORD = "";
-          PUBLIC_VALHALLA_URL = "https://valhalla1.openstreetmap.de";
-          PUBLIC_NOMINATIM_URL = "https://nominatim.openstreetmap.org";
-        };
+        environmentFiles =
+          [cfg.meiliSecretPath]
+          ++ (
+            if cfg.urlSecretPath != null
+            then [cfg.urlSecretPath]
+            else []
+          );
+        environment =
+          {
+            MEILI_URL = "http://wanderer-search:7700";
+            BODY_SIZE_LIMIT = "Infinity";
+            PUBLIC_POCKETBASE_URL = "http://wanderer-db:8090";
+            PUBLIC_DISABLE_SIGNUP = "true";
+            UPLOAD_FOLDER = "/app/uploads";
+            UPLOAD_USER = "";
+            UPLOAD_PASSWORD = "";
+            PUBLIC_VALHALLA_URL = "https://valhalla1.openstreetmap.de";
+            PUBLIC_NOMINATIM_URL = "https://nominatim.openstreetmap.org";
+          }
+          // (
+            if cfg.url != null
+            then {
+              ORIGIN = "https://${cfg.url}";
+            }
+            else {}
+          );
       };
     };
   };
