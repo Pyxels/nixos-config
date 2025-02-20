@@ -58,20 +58,14 @@ in {
       };
     };
 
-    systemd.services = {
-      "podman-wanderer-network" = {
-        serviceConfig.Type = "oneshot";
-        wantedBy = ["multi-user.target"];
-        script = ''
-          ${lib.getExe pkgs.podman} network exists wanderer-net || ${lib.getExe pkgs.podman} network create wanderer-net
-        '';
-      };
-      "wanderer-create-state-dir" = {
-        serviceConfig.Type = "oneshot";
-        wantedBy = ["multi-user.target"];
-        script = "mkdir -p /var/lib/wanderer/{data.ms,pb_data,uploads}";
-      };
+    system.activationScripts = {
+      podman-wanderer-network = ''
+        ${lib.getExe pkgs.podman} network exists wanderer-net \
+          || ${lib.getExe pkgs.podman} network create wanderer-net
+      '';
+      wanderer-create-state-dir = "mkdir -p /var/lib/wanderer/{data.ms,pb_data,uploads}";
     };
+
     virtualisation.oci-containers.containers = {
       "wanderer-search" = {
         image = "docker.io/getmeili/meilisearch:v1.11.3";
