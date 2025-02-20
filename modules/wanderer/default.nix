@@ -9,30 +9,27 @@ with lib; let
 in {
   options.customConfig.wanderer = {
     enable = mkEnableOption "wanderer service";
-    url = mkOption {
-      type = types.nullOr types.str;
-      example = "wanderer.example.com";
-      description = "URL where wanderer will be accessible";
-      default = null;
-    };
-    urlSecretPath = mkOption {
-      type = types.nullOr types.path;
-      description = "Path to secret file which contains the public facing url in the format: ORIGIN=https://<domain>";
-      default = null;
-    };
-    meiliSecretPath = mkOption {
+    secretsPath = mkOption {
       type = types.path;
-      description = "Path to secret file which contains the meilisearch master key in the format: MEILI_MASTER_KEY=<secretkey>";
+      description = ''
+        Path to secret file which contains the public facing url and meili search master key:
+          ```
+          WANDERER_DOMAIN=<domain>
+          ORIGIN=https://<domain>
+          MEILI_MASTER_KEY=<secret-key>
+          ```
+        The file should be accessible by the user `caddy` if ran with reverse proxy on.
+      '';
     };
-    enableNginx = mkOption {
+    enableReverseProxy = mkOption {
       type = types.bool;
       default = true;
-      description = "Enable nginx reverse proxy with ACME";
+      description = "Enable reverse proxy";
     };
     stateDir = mkOption {
       type = types.str;
       default = "/var/lib/wanderer";
-      description = "Wanderer state directory";
+      description = "Wanderer state directory (without trailing /)";
     };
     backendPort = mkOption {
       type = types.port;
@@ -52,31 +49,24 @@ in {
   };
 
   config = mkIf cfg.enable {
-    warnings =
-      if (cfg.url != null && cfg.urlSecretPath != null)
-      then ["You have set both url and secret url path. Behaviour not defined."]
-      else [];
     assertions = [
       {
-        assertion = cfg.url != null || cfg.urlSecretPath != null;
-        message = "Either url or urlSecretPath should be set.";
-      }
-      {
-        assertion = (cfg.enableNginx && cfg.url != null) || !cfg.enableNginx;
-        message = "Sadly, you currently need to set url to use nix managed nginx reverse proxy.";
+        assertion = cfg.secretsPath != null;
+        message = "Secrets path needs to be set";
       }
     ];
 
-    services.nginx = mkIf cfg.enableNginx {
+    services.caddy = mkIf cfg.enableReverseProxy {
       enable = true;
-      virtualHosts."${cfg.url}" = {
-        enableACME = true;
-        forceSSL = true;
-        locations."/" = {
-          proxyWebsockets = true;
-          proxyPass = "http://127.0.0.1:${toString cfg.frontendPort}";
-        };
+      virtualHosts."{$WANDERER_DOMAIN}" = {
+        extraConfig = "reverse_proxy http://127.0.0.1:${toString cfg.frontendPort}";
       };
+      environmentFile = cfg.secretsPath;
+      logFormat = mkForce "level INFO";
+    };
+    networking.firewall = mkIf cfg.enableReverseProxy {
+      allowedTCPPorts = [80 443];
+      allowedUDPPorts = [80 443];
     };
 
     system.activationScripts = {
@@ -84,7 +74,7 @@ in {
         ${lib.getExe pkgs.podman} network exists wanderer-net \
           || ${lib.getExe pkgs.podman} network create wanderer-net
       '';
-      wanderer-create-state-dir = "mkdir -p /var/lib/wanderer/{data.ms,pb_data,uploads}";
+      wanderer-create-state-dir = "mkdir -p ${cfg.stateDir}/{data.ms,pb_data,uploads}";
     };
 
     virtualisation.oci-containers.containers = {
@@ -93,7 +83,7 @@ in {
         extraOptions = ["--network=wanderer-net"];
         ports = ["${toString cfg.meiliSearchPort}:7700"];
         volumes = ["${cfg.stateDir}/data.ms:/meili_data/data.ms"];
-        environmentFiles = [cfg.meiliSecretPath];
+        environmentFiles = [cfg.secretsPath];
         environment = {
           MEILI_URL = "http://wanderer-search:7700";
           MEILI_NO_ANALYTICS = "true";
@@ -105,7 +95,7 @@ in {
         extraOptions = ["--network=wanderer-net"];
         ports = ["${toString cfg.backendPort}:8090"];
         volumes = ["${cfg.stateDir}/pb_data:/pb_data"];
-        environmentFiles = [cfg.meiliSecretPath];
+        environmentFiles = [cfg.secretsPath];
         environment = {
           MEILI_URL = "http://wanderer-search:7700";
         };
@@ -116,32 +106,18 @@ in {
         extraOptions = ["--network=wanderer-net"];
         ports = ["${toString cfg.frontendPort}:3000"];
         volumes = ["${cfg.stateDir}/uploads:/app/uploads"];
-        environmentFiles =
-          [cfg.meiliSecretPath]
-          ++ (
-            if cfg.urlSecretPath != null
-            then [cfg.urlSecretPath]
-            else []
-          );
-        environment =
-          {
-            MEILI_URL = "http://wanderer-search:7700";
-            BODY_SIZE_LIMIT = "Infinity";
-            PUBLIC_POCKETBASE_URL = "http://wanderer-db:8090";
-            PUBLIC_DISABLE_SIGNUP = "true";
-            UPLOAD_FOLDER = "/app/uploads";
-            UPLOAD_USER = "";
-            UPLOAD_PASSWORD = "";
-            PUBLIC_VALHALLA_URL = "https://valhalla1.openstreetmap.de";
-            PUBLIC_NOMINATIM_URL = "https://nominatim.openstreetmap.org";
-          }
-          // (
-            if cfg.url != null
-            then {
-              ORIGIN = "https://${cfg.url}";
-            }
-            else {}
-          );
+        environmentFiles = [cfg.secretsPath];
+        environment = {
+          MEILI_URL = "http://wanderer-search:7700";
+          BODY_SIZE_LIMIT = "Infinity";
+          PUBLIC_POCKETBASE_URL = "http://wanderer-db:8090";
+          PUBLIC_DISABLE_SIGNUP = "true";
+          UPLOAD_FOLDER = "/app/uploads";
+          UPLOAD_USER = "";
+          UPLOAD_PASSWORD = "";
+          PUBLIC_VALHALLA_URL = "https://valhalla1.openstreetmap.de";
+          PUBLIC_NOMINATIM_URL = "https://nominatim.openstreetmap.org";
+        };
       };
     };
   };

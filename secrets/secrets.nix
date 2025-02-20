@@ -11,6 +11,5 @@ let
   systems = [nixos-l540 vetus arm-vps beelink];
 in {
   "attic-config.age".publicKeys = users ++ systems;
-  "wanderer-meili-masterkey.age".publicKeys = users ++ [beelink];
-  "wanderer-origin-url.age".publicKeys = users ++ [beelink];
+  "wanderer.age".publicKeys = users ++ [beelink];
 }
