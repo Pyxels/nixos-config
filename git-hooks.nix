@@ -17,7 +17,10 @@ inputs.git-hooks.lib.${system}.run {
       settings.ignore = ["**/*hardware-configuration.nix" "**/arm-vps/configuration.nix"];
     };
 
-    shellcheck.enable = true;
+    shellcheck = {
+      enable = true;
+      excludes = [".*\.envrc$"];
+    };
     actionlint.enable = true;
     commitizen.enable = true;
     check-merge-conflicts.enable = true;

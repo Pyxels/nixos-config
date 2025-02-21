@@ -7,6 +7,7 @@
       }) (lib.range 0 x));
   in {
     enable = true;
+    enableBashIntegration = false;
     settings = {
       default_mode = "locked";
 
@@ -44,16 +45,17 @@
 
   nixpkgs.overlays = [
     (final: prev: {
-      zellij = prev.zellij.overrideAttrs (oldAttrs: rec {
+      zellij = prev.zellij.overrideAttrs (_oldAttrs: rec {
+        version = "0.42.0";
         src = final.fetchFromGitHub {
           owner = "pyxels";
           repo = "zellij";
-          rev = "31b82cb8667a1300c11083ca39fe0289e66a5163";
-          sha256 = "sha256-h2V2Po/4Qq61Xc60n1IBJmQFiEla04Qy0U79MstUGOQ=";
+          rev = "126491a7c6c88c41ac2088895471daf5d97260f5";
+          sha256 = "sha256-fvTakUrriGPQ/ASowyPgo0Rk2ctQcMynx3Gm7rM9TnY=";
         };
-        cargoDeps = oldAttrs.cargoDeps.overrideAttrs {
+        cargoDeps = final.rustPlatform.fetchCargoVendor {
           inherit src;
-          outputHash = "sha256-P/ncCDQcYfvQIx5HGNOMV8fNxfVcfWfCMQjlhiiCZcc=";
+          hash = "sha256-TipkZXnXsSENJaTtyY3QLsVmHrhAgg8s39FKUysYJiY=";
         };
       });
     })
