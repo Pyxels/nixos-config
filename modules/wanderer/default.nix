@@ -14,22 +14,10 @@ in {
       description = ''
         Path to secret file which contains the public facing url and meili search master key:
           ```
-          WANDERER_DOMAIN=<domain>
           ORIGIN=https://<domain>
           MEILI_MASTER_KEY=<secret-key>
           ```
-        The file should be accessible by the user `caddy` if ran with reverse proxy on.
       '';
-    };
-    enableReverseProxy = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable reverse proxy";
-    };
-    oauth2ProxySecretsPath = mkOption {
-      type = types.nullOr types.path;
-      default = null;
-      description = "Set to enable access to reverse proxy only with OIDC. The file should contain the config as env vars in the format `OAUTH2_PROXY_<key>=<value>`.";
     };
     stateDir = mkOption {
       type = types.str;
@@ -60,47 +48,6 @@ in {
         message = "Secrets path needs to be set";
       }
     ];
-
-    services.caddy = mkIf cfg.enableReverseProxy {
-      enable = true;
-      virtualHosts."{$WANDERER_DOMAIN}" = {
-        extraConfig = ''
-          handle /oauth2/* {
-            reverse_proxy 127.0.0.1:4180 {
-              header_up X-Real-IP {http.request.header.CF-Connecting-IP}
-              header_up X-Forwarded-Uri {uri}
-            }
-          }
-
-          handle {
-            forward_auth 127.0.0.1:4180 {
-              uri /oauth2/auth
-
-              header_up X-Real-IP {http.request.header.CF-Connecting-IP}
-
-              @error status 401
-              handle_response @error {
-                redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
-              }
-            }
-
-            reverse_proxy http://127.0.0.1:${toString cfg.frontendPort}
-          }
-        '';
-      };
-      environmentFile = cfg.secretsPath;
-    };
-    networking.firewall = mkIf cfg.enableReverseProxy {
-      allowedTCPPorts = [80 443];
-      allowedUDPPorts = [80 443];
-    };
-
-    services.oauth2-proxy = mkIf (cfg.oauth2ProxySecretsPath != null) {
-      enable = true;
-      provider = "oidc";
-      extraConfig.reverse-proxy = true;
-      keyFile = cfg.oauth2ProxySecretsPath;
-    };
 
     system.activationScripts = {
       wanderer-create-state-dir = "mkdir -p ${cfg.stateDir}/{data.ms,pb_data,uploads}";

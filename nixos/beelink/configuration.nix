@@ -17,12 +17,14 @@
 
     {
       age.secrets = {
-        wandererSecrets = {
-          file = ../../secrets/wanderer.age;
-        };
+        wandererSecrets.file = ../../secrets/wanderer.age;
         oauth2ProxySecrets = {
-          file = ../../secrets/wanderer-oauth2-proxy.age;
-          # owner = "oauth2-proxy";
+          file = ../../secrets/oauth2-proxy.age;
+          owner = "oauth2-proxy";
+        };
+        domain = {
+          file = ../../secrets/beelink-private-domain.age;
+          owner = "caddy";
         };
       };
     }
@@ -126,7 +128,44 @@
   customConfig.wanderer = {
     enable = true;
     secretsPath = config.age.secrets.wandererSecrets.path;
-    enableReverseProxy = false;
-    # oauth2ProxySecretsPath = config.age.secrets.oauth2ProxySecrets.path;
+  };
+
+  ### REVERSE PROXY ###
+  services.oauth2-proxy = {
+    enable = true;
+    provider = "oidc";
+    extraConfig.reverse-proxy = true;
+    keyFile = config.age.secrets.oauth2ProxySecrets.path;
+  };
+  services.caddy = let
+    mkOauth2Proxy = port: ''
+      handle /oauth2/* {
+        reverse_proxy 127.0.0.1:4180 {
+          header_up X-Real-IP {http.request.header.CF-Connecting-IP}
+          header_up X-Forwarded-Uri {uri}
+        }
+      }
+
+      handle {
+        forward_auth 127.0.0.1:4180 {
+          uri /oauth2/auth
+
+          header_up X-Real-IP {http.request.header.CF-Connecting-IP}
+
+          @error status 401
+          handle_response @error {
+            redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
+          }
+        }
+
+        reverse_proxy http://127.0.0.1:${port}
+      }
+    '';
+  in {
+    enable = true;
+    virtualHosts."trails.{$DOMAIN}" = {
+      extraConfig = mkOauth2Proxy (toString config.customConfig.wanderer.frontendPort);
+    };
+    environmentFile = config.age.secrets.domain.path;
   };
 }
