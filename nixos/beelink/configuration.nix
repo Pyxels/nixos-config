@@ -130,6 +130,9 @@
     secretsPath = config.age.secrets.wandererSecrets.path;
   };
 
+  ### AUDIOBOOKSHELF ###
+  services.audiobookshelf.enable = true;
+
   ### REVERSE PROXY ###
   services.oauth2-proxy = {
     enable = true;
@@ -163,8 +166,9 @@
     '';
   in {
     enable = true;
-    virtualHosts."trails.{$DOMAIN}" = {
-      extraConfig = mkOauth2Proxy (toString config.customConfig.wanderer.frontendPort);
+    virtualHosts = {
+      "trails.{$DOMAIN}".extraConfig = mkOauth2Proxy (toString config.customConfig.wanderer.frontendPort);
+      "audio.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.audiobookshelf.port}";
     };
     environmentFile = config.age.secrets.domain.path;
   };
