@@ -135,6 +135,7 @@
 
   ### JELLYFIN ###
   services.jellyfin.enable = true;
+  services.jellyseerr.enable = true;
 
   ### REVERSE PROXY ###
   services.oauth2-proxy = {
@@ -173,6 +174,7 @@
       "trails.{$DOMAIN}".extraConfig = mkOauth2Proxy (toString config.customConfig.wanderer.frontendPort);
       "audio.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.audiobookshelf.port}";
       "media.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:8096";
+      "request.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.jellyseerr.port}";
     };
     environmentFile = config.age.secrets.domain.path;
   };
