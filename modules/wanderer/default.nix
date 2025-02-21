@@ -103,11 +103,22 @@ in {
     };
 
     system.activationScripts = {
-      podman-wanderer-network = ''
-        ${lib.getExe pkgs.podman} network exists wanderer-net \
-          || ${lib.getExe pkgs.podman} network create wanderer-net
-      '';
       wanderer-create-state-dir = "mkdir -p ${cfg.stateDir}/{data.ms,pb_data,uploads}";
+    };
+
+    systemd.services."podman-wanderer-network" = {
+      path = [pkgs.podman];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStop = "${lib.getExe pkgs.podman} network rm -f wanderer-net";
+      };
+      script = ''
+        podman network inspect wanderer-net \
+          || podman network create wanderer-net --driver=bridge
+      '';
+      partOf = ["podman-compose-test-root.target"];
+      wantedBy = ["multi-user.target"];
     };
 
     virtualisation.oci-containers.containers = {
