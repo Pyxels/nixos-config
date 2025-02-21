@@ -48,6 +48,10 @@ in {
       };
     };
 
+    system.activationScripts = {
+      pocket-id-create-state-dir = "mkdir -p ${cfg.stateDir}";
+    };
+
     users.users."pocket-id" = {
       uid = 2001;
       isSystemUser = true;
