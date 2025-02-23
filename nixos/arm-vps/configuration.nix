@@ -7,7 +7,6 @@
   ...
 }: let
   domain = "pyxels.me";
-  atticDomain = "attic.${domain}";
   bitwardenDomain = "bitwarden.${domain}";
 in {
   imports = [
@@ -18,12 +17,6 @@ in {
 
     ../../modules/pocket-id
     ../../modules/reboot-required
-
-    {
-      age.secrets = {
-        attic-config.file = ../../secrets/attic-config.age;
-      };
-    }
   ];
 
   nix = {
@@ -68,25 +61,6 @@ in {
   };
 
   services.syncthing.enable = true;
-
-  ### ATTIC ###
-  services.atticd = {
-    enable = true;
-
-    environmentFile = config.age.secrets.attic-config.path;
-    settings = {
-      listen = "[::]:8080";
-      require-proof-of-possession = false;
-      api-endpoint = "https://${atticDomain}/";
-      chunking = {
-        nar-size-threshold = 64 * 1024; # 64 KiB
-        min-size = 16 * 1024; # 16 KiB
-        avg-size = 64 * 1024; # 64 KiB
-        max-size = 256 * 1024; # 256 KiB
-      };
-      garbage-collection.default-retention-period = "6 months";
-    };
-  };
 
   ### MONITORING ###
   services.prometheus = {
@@ -307,14 +281,6 @@ in {
       "loki".servers."127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}" = {};
       "promtail".servers."127.0.0.1:${toString config.services.promtail.configuration.server.http_listen_port}" = {};
       "bitwarden".servers."127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}" = {};
-    };
-
-    virtualHosts.${atticDomain} = {
-      enableACME = true;
-      forceSSL = true;
-      locations."/" = {
-        proxyPass = "http://attic";
-      };
     };
 
     virtualHosts."grafana.${domain}" = {
