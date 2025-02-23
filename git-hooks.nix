@@ -10,7 +10,12 @@ inputs.git-hooks.lib.${system}.run {
     nil.enable = true;
     deadnix = {
       enable = true;
-      settings.exclude = ["./nixos/vetus/hardware-configuration.nix" "./nixos/nixos-l540/hardware-configuration.nix" "./templates/rust-crane/flake.nix"];
+      settings.exclude = [
+        "./nixos/vetus/hardware-configuration.nix"
+        "./nixos/nixos-l540/hardware-configuration.nix"
+        "./templates/rust-crane/flake.nix"
+        "./secrets/secrets.nix"
+      ];
     };
     statix = {
       enable = true;
