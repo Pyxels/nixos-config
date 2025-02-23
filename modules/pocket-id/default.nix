@@ -13,11 +13,6 @@ in {
       example = "pocket.example.com";
       description = "Url where pocket-id will be accessible.";
     };
-    enableNginx = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable nginx reverse proxy with ACME";
-    };
     stateDir = mkOption {
       type = types.str;
       default = "/var/lib/pocket-id";
@@ -31,23 +26,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.nginx = mkIf cfg.enableNginx {
-      enable = true;
-      virtualHosts."${cfg.url}" = {
-        enableACME = true;
-        forceSSL = true;
-        locations."/" = {
-          proxyWebsockets = true;
-          proxyPass = "http://127.0.0.1:${toString cfg.port}";
-          extraConfig = ''
-            proxy_busy_buffers_size   512k;
-            proxy_buffers   4 512k;
-            proxy_buffer_size   256k;
-          '';
-        };
-      };
-    };
-
     system.activationScripts = {
       pocket-id-create-state-dir = "mkdir -p ${cfg.stateDir}";
     };
