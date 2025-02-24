@@ -127,7 +127,7 @@ in {
           protocol = "http";
           http_port = 3010;
           http_addr = "127.0.0.1";
-          rootUrl = "https://grafana.${domain}/";
+          root_url = "https://grafana.${domain}/";
         };
         analytics.reporting_enable = false;
       };
@@ -216,57 +216,28 @@ in {
     };
   };
 
-  ### REVERSE PROXY ###
-  networking.firewall.allowedTCPPorts = [80 443];
-  networking.firewall.allowedUDPPorts = [80 443];
-
-  services.nginx = {
-    enable = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-    clientMaxBodySize = "500m";
-
-    upstreams = {
-      "attic".servers."127.0.0.1:8080" = {};
-      "grafana".servers."127.0.0.1:${toString config.services.grafana.settings.server.http_port}" = {};
-      "prometheus".servers."127.0.0.1:${toString config.services.prometheus.port}" = {};
-      "loki".servers."127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}" = {};
-      "promtail".servers."127.0.0.1:${toString config.services.promtail.configuration.server.http_listen_port}" = {};
-      "bitwarden".servers."127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}" = {};
-    };
-
-    virtualHosts."grafana.${domain}" = {
-      enableACME = true;
-      forceSSL = true;
-      locations."/" = {
-        proxyPass = "http://grafana";
-        proxyWebsockets = true;
-      };
-    };
-
-    virtualHosts.${bitwardenDomain} = {
-      enableACME = true;
-      forceSSL = true;
-      locations."/" = {
-        proxyPass = "http://bitwarden";
-        proxyWebsockets = true;
-      };
-      locations."/admin" = {
-        return = "301 https://${bitwardenDomain}/";
-      };
-    };
-  };
-
-  security.acme = {
-    acceptTerms = true;
-    defaults.email = "acme@${domain}";
-  };
-
   ### POCKET-ID ###
   customConfig.pocket-id = {
     enable = true;
     url = "id.${domain}";
+  };
+
+  ### REVERSE PROXY ###
+  networking.firewall.allowedTCPPorts = [80 443];
+  networking.firewall.allowedUDPPorts = [80 443];
+
+  services.caddy = {
+    enable = true;
+    virtualHosts = {
+      "grafana.${domain}".extraConfig = "reverse_proxy ${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
+
+      ${bitwardenDomain}.extraConfig = ''
+        handle /admin* {
+          redir https://${bitwardenDomain}/ 301
+        }
+        reverse_proxy 127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}
+      '';
+      ${config.customConfig.pocket-id.url}.extraConfig = "reverse_proxy 127.0.0.1:${toString config.customConfig.pocket-id.port}";
+    };
   };
 }
