@@ -14,4 +14,5 @@ in {
   "wanderer.age".publicKeys = users ++ [beelink];
   "oauth2-proxy.age".publicKeys = users ++ [beelink];
   "beelink-private-domain.age".publicKeys = users ++ [beelink];
+  "wireguard-conf.age".publicKeys = users ++ [beelink];
 }
