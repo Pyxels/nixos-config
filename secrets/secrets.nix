@@ -15,4 +15,7 @@ in {
   "oauth2-proxy.age".publicKeys = users ++ [beelink];
   "beelink-private-domain.age".publicKeys = users ++ [beelink];
   "wireguard-conf.age".publicKeys = users ++ [beelink];
+  "beelink-radarr-key.age".publicKeys = users ++ [beelink];
+  "beelink-sonarr-key.age".publicKeys = users ++ [beelink];
+  "beelink-prowlarr-key.age".publicKeys = users ++ [beelink];
 }
