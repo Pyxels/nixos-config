@@ -158,6 +158,19 @@
     };
   };
 
+  ### IMMICH ###
+  system.activationScripts = {
+    immich-create-media-dir = "mkdir -p ${config.services.immich.mediaLocation} && chown ${config.services.immich.user}:${config.services.immich.group} ${config.services.immich.mediaLocation}";
+  };
+  services = {
+    immich = {
+      enable = true;
+      mediaLocation = "/mnt/big_hdd/photos";
+      accelerationDevices = null;
+      host = "0.0.0.0";
+    };
+  };
+
   ### REVERSE PROXY ###
   services.oauth2-proxy = {
     enable = true;
@@ -197,6 +210,7 @@
       "media.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:8096";
       "request.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.jellyseerr.port}";
       "grafana.{$DOMAIN}".extraConfig = mkOauth2Proxy (toString config.services.grafana.settings.server.http_port);
+      "photos.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.immich.port}";
     };
     environmentFile = config.age.secrets.domain.path;
   };
