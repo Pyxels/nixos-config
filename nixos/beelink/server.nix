@@ -84,6 +84,19 @@
     "audiobookshelf"
   ];
 
+  ### IMMICH ###
+  system.activationScripts = {
+    immich-create-media-dir = "mkdir -p ${config.services.immich.mediaLocation} && chown ${config.services.immich.user}:${config.services.immich.group} ${config.services.immich.mediaLocation}";
+  };
+  services = {
+    immich = {
+      enable = true;
+      mediaLocation = "/mnt/big_hdd/photos";
+      accelerationDevices = null;
+      host = "0.0.0.0";
+    };
+  };
+
   ### Monitoring ###
   services = {
     prometheus = {
@@ -155,19 +168,6 @@
           }
         ];
       };
-    };
-  };
-
-  ### IMMICH ###
-  system.activationScripts = {
-    immich-create-media-dir = "mkdir -p ${config.services.immich.mediaLocation} && chown ${config.services.immich.user}:${config.services.immich.group} ${config.services.immich.mediaLocation}";
-  };
-  services = {
-    immich = {
-      enable = true;
-      mediaLocation = "/mnt/big_hdd/photos";
-      accelerationDevices = null;
-      host = "0.0.0.0";
     };
   };
 
