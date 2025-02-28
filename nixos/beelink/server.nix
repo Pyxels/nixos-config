@@ -20,15 +20,18 @@
         };
         sonarr = {
           file = ../../secrets/beelink-sonarr-key.age;
-          owner = config.services.prometheus.exporters.exportarr-sonarr.user;
+          group = "media";
+          mode = "770";
         };
         radarr = {
           file = ../../secrets/beelink-radarr-key.age;
-          owner = config.services.prometheus.exporters.exportarr-radarr.user;
+          group = "media";
+          mode = "770";
         };
         prowlarr = {
           file = ../../secrets/beelink-prowlarr-key.age;
-          owner = config.services.prometheus.exporters.exportarr-prowlarr.user;
+          group = "media";
+          mode = "770";
         };
       };
     }
@@ -80,6 +83,7 @@
     "jonas"
     "sonarr"
     "radarr"
+    "prowlarr"
     "jellyfin"
     "audiobookshelf"
   ];
@@ -97,6 +101,11 @@
     };
   };
 
+  ### MEALIE ###
+  services.mealie = {
+    enable = true;
+  };
+
   ### Monitoring ###
   services = {
     prometheus = {
@@ -112,21 +121,21 @@
         exportarr-sonarr = {
           port = 3022;
           enable = true;
-          user = "sonarr";
+          group = "media";
           url = "http://127.0.0.1:8989";
           apiKeyFile = config.age.secrets.sonarr.path;
         };
         exportarr-radarr = {
           port = 3023;
           enable = true;
-          user = "radarr";
+          group = "media";
           url = "http://127.0.0.1:7878";
           apiKeyFile = config.age.secrets.radarr.path;
         };
         exportarr-prowlarr = {
           port = 3024;
           enable = true;
-          user = "prowlarr";
+          group = "media";
           url = "http://127.0.0.1:9696";
           apiKeyFile = config.age.secrets.prowlarr.path;
         };
@@ -211,6 +220,7 @@
       "request.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.jellyseerr.port}";
       "grafana.{$DOMAIN}".extraConfig = mkOauth2Proxy (toString config.services.grafana.settings.server.http_port);
       "photos.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.immich.port}";
+      "meals.{$DOMAIN}".extraConfig = mkOauth2Proxy (toString config.services.mealie.port);
     };
     environmentFile = config.age.secrets.domain.path;
   };
