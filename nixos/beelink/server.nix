@@ -106,6 +106,11 @@
     enable = true;
   };
 
+  ### SCRUTINY ###
+  services.scrutiny = {
+    enable = true;
+  };
+
   ### Monitoring ###
   services = {
     prometheus = {
