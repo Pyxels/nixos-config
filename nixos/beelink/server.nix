@@ -69,7 +69,10 @@
 
   services = {
     ### AUDIOBOOKSHELF ###
-    audiobookshelf.enable = true;
+    audiobookshelf = {
+      enable = true;
+      host = "0.0.0.0";
+    };
 
     ### JELLYFIN ###
     jellyfin.enable = true;
@@ -169,6 +172,7 @@
 
       settings = {
         server.http_port = 3010;
+        server.http_addr = "0.0.0.0";
         analytics.reporting_enable = false;
       };
 
@@ -191,6 +195,7 @@
     provider = "oidc";
     extraConfig.reverse-proxy = true;
     keyFile = config.age.secrets.oauth2ProxySecrets.path;
+    httpAddress = "http://0.0.0.0:4180";
   };
   services.caddy = let
     mkOauth2Proxy = port: ''

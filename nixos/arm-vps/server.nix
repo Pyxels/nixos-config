@@ -216,6 +216,14 @@ in {
     };
   };
 
+  services.uptime-kuma = {
+    enable = true;
+    settings = {
+      UPTIME_KUMA_HOST = "0.0.0.0";
+      UPTIME_KUMA_PORT = "3001";
+    };
+  };
+
   ### POCKET-ID ###
   customConfig.pocket-id = {
     enable = true;
