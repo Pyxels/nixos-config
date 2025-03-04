@@ -132,6 +132,7 @@
           group = "media";
           url = "http://127.0.0.1:8989";
           apiKeyFile = config.age.secrets.sonarr.path;
+          environment.ENABLE_ADDITIONAL_METRICS = "true";
         };
         exportarr-radarr = {
           port = 3023;
