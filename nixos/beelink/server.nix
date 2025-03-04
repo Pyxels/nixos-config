@@ -188,6 +188,7 @@
       };
     };
   };
+  systemd.services.grafana.serviceConfig.EnvironmentFile = config.age.secrets.domain.path;
 
   ### REVERSE PROXY ###
   services.oauth2-proxy = {
