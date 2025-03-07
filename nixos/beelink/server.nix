@@ -37,6 +37,11 @@
     }
   ];
 
+  ### OVERRIDES ###
+  nixpkgs.overlays = [
+    (import ../../overlays/beszel.nix)
+  ];
+
   ### BESZEL ###
   systemd.services = {
     beszel-agent = {
@@ -48,7 +53,7 @@
         ExecStart = "${pkgs.beszel}/bin/beszel-agent";
       };
       environment = {
-        PORT = "45876";
+        LISTEN = "45876";
         KEY = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ8LG4ijPENqiHz1kS/2+CVZXKgl4nmlY0xCJPuMLhcU";
       };
       wantedBy = ["multi-user.target"];
