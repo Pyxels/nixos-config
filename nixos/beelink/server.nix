@@ -6,6 +6,7 @@
   imports = [
     ../../modules/wanderer
     ../../modules/reboot-required
+    ../../modules/jellyfin-exporter
 
     {
       age.secrets = {
@@ -33,6 +34,7 @@
           group = "media";
           mode = "770";
         };
+        jellyfin-exporter.file = ../../secrets/beelink-jellyfin-exporter.age;
       };
     }
   ];
@@ -85,6 +87,10 @@
     radarr.enable = true;
     sonarr.enable = true;
     prowlarr.enable = true;
+  };
+  customConfig.jellyfin-exporter = {
+    enable = true;
+    secrets = config.age.secrets.jellyfin-exporter.path;
   };
 
   users.groups."media".members = [
@@ -166,6 +172,7 @@
                 "127.0.0.1:${toString config.services.prometheus.exporters.exportarr-radarr.port}"
                 "127.0.0.1:${toString config.services.prometheus.exporters.exportarr-prowlarr.port}"
                 "127.0.0.1:19091"
+                "127.0.0.1:9027" # jellyfin-exporter
               ];
             }
           ];
