@@ -42,7 +42,7 @@ in {
     };
 
     virtualisation.oci-containers.containers."pocket-id" = {
-      image = "ghcr.io/pocket-id/pocket-id:v0.37.0";
+      image = "ghcr.io/pocket-id/pocket-id:v0.40.1";
       ports = ["127.0.0.1:${toString cfg.port}:8100"];
       volumes = ["${cfg.stateDir}:/app/backend/data"];
       environment = {
