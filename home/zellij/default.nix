@@ -44,20 +44,6 @@
   };
 
   nixpkgs.overlays = [
-    (final: prev: {
-      zellij = prev.zellij.overrideAttrs (_oldAttrs: rec {
-        version = "0.42.0";
-        src = final.fetchFromGitHub {
-          owner = "zellij-org";
-          repo = "zellij";
-          rev = "9f0056335d67453a57323e1406ca585addd49a33";
-          sha256 = "sha256-8B4UQ7VT5InYrNMfGRN0eGKI8AOv3taCQAGEcrChAtw=";
-        };
-        cargoDeps = final.rustPlatform.fetchCargoVendor {
-          inherit src;
-          hash = "sha256-lItIbpnV7n4Eml5ePp2cJqQ4OOiwoc09Qv7NoFGubF0=";
-        };
-      });
-    })
+    (import ../../overlays/zellij.nix)
   ];
 }
