@@ -81,7 +81,7 @@ in {
         };
       };
       "wanderer-db" = {
-        image = "docker.io/flomp/wanderer-db:v0.15.2";
+        image = "docker.io/flomp/wanderer-db:v0.16.5";
         dependsOn = ["wanderer-search"];
         extraOptions = ["--network=wanderer-net"];
         ports = ["${toString cfg.backendPort}:8090"];
@@ -92,7 +92,7 @@ in {
         };
       };
       "wanderer-web" = {
-        image = "docker.io/flomp/wanderer-web:v0.15.2";
+        image = "docker.io/flomp/wanderer-web:v0.16.5";
         dependsOn = ["wanderer-search" "wanderer-db"];
         extraOptions = ["--network=wanderer-net"];
         ports = ["${toString cfg.frontendPort}:3000"];

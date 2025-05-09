@@ -2,7 +2,7 @@
   programs.bash = {
     enable = true;
     sessionVariables = {
-      FLAKE = "/home/${name}/.dotfiles";
+      NH_FLAKE = "/home/${name}/.dotfiles";
     };
     shellAliases = {
       cp = "cp -i";

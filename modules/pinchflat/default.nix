@@ -31,7 +31,7 @@ in {
     };
 
     virtualisation.oci-containers.containers."pinchflat" = {
-      image = "ghcr.io/kieraneglin/pinchflat:v2025.3.6";
+      image = "ghcr.io/kieraneglin/pinchflat:v2025.3.17";
       ports = ["${toString cfg.port}:8945"];
       volumes = ["${cfg.configDir}:/config" "${cfg.dataDir}:/downloads"];
       environment = {
