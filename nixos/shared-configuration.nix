@@ -54,8 +54,11 @@
     nerd-fonts.roboto-mono
   ];
 
-  programs.hyprland.enable = true;
-  programs.hyprland.package = inputs.hyprland.packages.${host.system}.hyprland;
+  programs.hyprland = {
+    enable = true;
+    package = inputs.hyprland.packages.${host.system}.hyprland;
+    portalPackage = inputs.hyprland.packages.${host.system}.xdg-desktop-portal-hyprland;
+  };
   security.pam.services.swaylock = {};
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 

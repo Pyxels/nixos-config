@@ -127,6 +127,10 @@ in {
     ];
     wayland.windowManager.hyprland = {
       enable = true;
+      # set the Hyprland and XDPH packages to null to use the ones from the NixOS module
+      # see https://wiki.hyprland.org/Nix/Hyprland-on-Home-Manager/#using-the-home-manager-module-with-nixos
+      package = null;
+      portalPackage = null;
       settings =
         {
           input = {
