@@ -42,8 +42,4 @@
       source = ./gruvbox_with_selection.kdl;
     };
   };
-
-  nixpkgs.overlays = [
-    (import ../../overlays/zellij.nix)
-  ];
 }
