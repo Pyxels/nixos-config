@@ -8,7 +8,6 @@
   bitwardenDomain = "bitwarden.${domain}";
 in {
   imports = [
-    ../../modules/pocket-id
     ../../modules/reboot-required
   ];
 
@@ -94,9 +93,17 @@ in {
   };
 
   ### POCKET-ID ###
-  customConfig.pocket-id = {
+  services.pocket-id = {
     enable = true;
-    url = "id.${domain}";
+    settings = rec {
+      PUBLIC_APP_URL = "https://id.${domain}";
+      TRUST_PROXY = true;
+      PORT = 15649;
+      BACKEND_PORT = 15648;
+      INTERNAL_BACKEND_URL = "http://127.0.0.1:${toString BACKEND_PORT}";
+      PUBLIC_UI_CONFIG_DISABLED = true;
+      EMAILS_VERIFIED = true;
+    };
   };
 
   ### REVERSE PROXY ###
@@ -112,7 +119,11 @@ in {
         }
         reverse_proxy 127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}
       '';
-      ${config.customConfig.pocket-id.url}.extraConfig = "reverse_proxy 127.0.0.1:${toString config.customConfig.pocket-id.port}";
+      "id.${domain}".extraConfig = ''
+        reverse_proxy /api/* 127.0.0.1:${toString config.services.pocket-id.settings.BACKEND_PORT}
+        reverse_proxy /.well-known/* 127.0.0.1:${toString config.services.pocket-id.settings.BACKEND_PORT}
+        reverse_proxy /* 127.0.0.1:${toString config.services.pocket-id.settings.PORT}
+      '';
     };
   };
 }
