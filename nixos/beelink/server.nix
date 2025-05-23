@@ -7,7 +7,6 @@
     ../../modules/wanderer
     ../../modules/reboot-required
     ../../modules/jellyfin-exporter
-    ../../modules/pinchflat
 
     {
       age.secrets = {
@@ -74,11 +73,6 @@
     wanderer = {
       enable = true;
       secretsPath = config.age.secrets.wandererSecrets.path;
-    };
-
-    ### PINCHFLAT ###
-    pinchflat = {
-      enable = true;
     };
   };
 
