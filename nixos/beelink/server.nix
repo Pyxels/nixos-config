@@ -117,11 +117,6 @@
     };
   };
 
-  ### MEALIE ###
-  services.mealie = {
-    enable = true;
-  };
-
   ### SCRUTINY ###
   services.scrutiny = {
     enable = true;
@@ -246,7 +241,6 @@
       "request.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.jellyseerr.port}";
       "grafana.{$DOMAIN}".extraConfig = mkOauth2Proxy (toString config.services.grafana.settings.server.http_port);
       "photos.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.immich.port}";
-      "meals.{$DOMAIN}".extraConfig = mkOauth2Proxy (toString config.services.mealie.port);
     };
     environmentFile = config.age.secrets.domain.path;
   };
