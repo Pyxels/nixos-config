@@ -10,6 +10,10 @@ in {
   imports = [
     ../../modules/reboot-required
   ];
+  nixpkgs.overlays = [
+    (import ../../overlays/beszel.nix)
+    (import ../../overlays/pocket-id.nix)
+  ];
 
   services = {
     syncthing.enable = true;
@@ -47,9 +51,6 @@ in {
   };
 
   ### BESZEL ###
-  nixpkgs.overlays = [
-    (import ../../overlays/beszel.nix)
-  ];
   systemd.services = {
     beszel-hub = {
       description = "Beszel Hub";
@@ -95,15 +96,19 @@ in {
   ### POCKET-ID ###
   services.pocket-id = {
     enable = true;
-    settings = rec {
-      PUBLIC_APP_URL = "https://id.${domain}";
+    settings = {
+      APP_URL = "https://id.${domain}";
       TRUST_PROXY = true;
       PORT = 15649;
-      BACKEND_PORT = 15648;
-      INTERNAL_BACKEND_URL = "http://127.0.0.1:${toString BACKEND_PORT}";
-      PUBLIC_UI_CONFIG_DISABLED = true;
+      UI_CONFIG_DISABLED = true;
       EMAILS_VERIFIED = true;
     };
+  };
+  systemd.services = {
+    # use new backend executable name
+    pocket-id-backend.serviceConfig.ExecStart = lib.mkForce "${pkgs.pocket-id}/bin/pocket-id";
+    # disable frontend due to v1.0.0 overlay including it in the backend
+    pocket-id-frontend.enable = false;
   };
 
   ### REVERSE PROXY ###
@@ -119,11 +124,7 @@ in {
         }
         reverse_proxy 127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}
       '';
-      "id.${domain}".extraConfig = ''
-        reverse_proxy /api/* 127.0.0.1:${toString config.services.pocket-id.settings.BACKEND_PORT}
-        reverse_proxy /.well-known/* 127.0.0.1:${toString config.services.pocket-id.settings.BACKEND_PORT}
-        reverse_proxy /* 127.0.0.1:${toString config.services.pocket-id.settings.PORT}
-      '';
+      "id.${domain}".extraConfig = "reverse_proxy 127.0.0.1:${toString config.services.pocket-id.settings.PORT}";
     };
   };
 }
