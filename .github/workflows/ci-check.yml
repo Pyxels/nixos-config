@@ -1,0 +1,19 @@
+name: CI - Nix Checks
+
+on:
+  push:
+  workflow_call:
+    secrets:
+      ATTIC_CACHE_KEY:
+        required: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: "Login into attic cache"
+        run: nix run nixpkgs#attic-client -- login actions https://attic.pyxels.me/ ${{ secrets.ATTIC_CACHE_KEY }} && nix run nixpkgs#attic-client -- use actions
+      - name: "Run .#checks in parallel"
+        run: nix run github:Mic92/nix-fast-build -- --attic-cache actions --no-nom --skip-cached
