@@ -35,6 +35,7 @@
           mode = "770";
         };
         jellyfin-exporter.file = ../../secrets/beelink-jellyfin-exporter.age;
+        attic-config.file = ../../secrets/attic-config.age;
       };
     }
   ];
@@ -199,6 +200,15 @@
     };
   };
   systemd.services.grafana.serviceConfig.EnvironmentFile = config.age.secrets.domain.path;
+
+  services.atticd = {
+    enable = true;
+    environmentFile = config.age.secrets.attic-config.path;
+    settings = {
+      listen = "[::]:2272";
+      require-proof-of-possession = false;
+    };
+  };
 
   ### REVERSE PROXY ###
   services.oauth2-proxy = {
