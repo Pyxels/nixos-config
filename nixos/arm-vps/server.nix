@@ -12,7 +12,6 @@ in {
   ];
   nixpkgs.overlays = [
     (import ../../overlays/beszel.nix)
-    (import ../../overlays/pocket-id.nix)
   ];
 
   services = {
@@ -103,12 +102,6 @@ in {
       UI_CONFIG_DISABLED = true;
       EMAILS_VERIFIED = true;
     };
-  };
-  systemd.services = {
-    # use new backend executable name
-    pocket-id-backend.serviceConfig.ExecStart = lib.mkForce "${pkgs.pocket-id}/bin/pocket-id";
-    # disable frontend due to v1.0.0 overlay including it in the backend
-    pocket-id-frontend.enable = false;
   };
 
   ### REVERSE PROXY ###
