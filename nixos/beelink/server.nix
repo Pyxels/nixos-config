@@ -132,7 +132,7 @@
       exporters = {
         node = {
           port = 3021;
-          enabledCollectors = ["systemd"];
+          enabledCollectors = ["systemd" "filesystem"];
           enable = true;
         };
         exportarr-sonarr = {
