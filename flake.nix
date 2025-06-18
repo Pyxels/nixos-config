@@ -106,10 +106,19 @@
         git-hooks = import ./git-hooks.nix {inherit inputs system;};
       in {
         devShells.default = pkgs.mkShell {
-          inherit (git-hooks) shellHook;
           buildInputs =
             git-hooks.enabledPackages
-            ++ [pkgs.deploy-rs];
+            ++ (with pkgs; [
+              nix-output-monitor
+              deploy-rs
+              just
+            ]);
+
+          shellHook = ''
+            ${git-hooks.shellHook}
+
+            just
+          '';
         };
 
         checks = {
