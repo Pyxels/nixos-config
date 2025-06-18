@@ -12,7 +12,6 @@ in {
   ];
   nixpkgs.overlays = [
     (import ../../overlays/beszel.nix)
-    (import ../../overlays/pocket-id.nix)
   ];
 
   services = {
