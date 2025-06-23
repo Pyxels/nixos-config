@@ -7,6 +7,8 @@
 with lib; let
   cfg = config.customConfig.wanderer;
 in {
+  imports = [./package.nix];
+
   options.customConfig.wanderer = {
     enable = mkEnableOption "wanderer service";
     secretsPath = mkOption {
@@ -16,13 +18,14 @@ in {
           ```
           ORIGIN=https://<domain>
           MEILI_MASTER_KEY=<secret-key>
+          POCKETBASE_ENCRYPTION_KEY=<secret-key>
           ```
       '';
     };
     stateDir = mkOption {
       type = types.str;
       default = "/var/lib/wanderer";
-      description = "Wanderer state directory (without trailing /)";
+      description = "Wanderer meili search state directory (without trailing /)";
     };
     backendPort = mkOption {
       type = types.port;
@@ -32,7 +35,7 @@ in {
     frontendPort = mkOption {
       type = types.port;
       default = 3000;
-      description = "Frontend port for wanderer";
+      description = "Frontend port for wanderer (cant be changed for now)";
     };
     meiliSearchPort = mkOption {
       type = types.port;
@@ -49,65 +52,63 @@ in {
       }
     ];
 
-    system.activationScripts = {
-      wanderer-create-state-dir = "mkdir -p ${cfg.stateDir}/{data.ms,pb_data,uploads}";
-    };
-
-    systemd.services."podman-wanderer-network" = {
-      path = [pkgs.podman];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStop = "${lib.getExe pkgs.podman} network rm -f wanderer-net";
-      };
-      script = ''
-        podman network inspect wanderer-net \
-          || podman network create wanderer-net --driver=bridge
-      '';
-      partOf = ["podman-compose-test-root.target"];
-      wantedBy = ["multi-user.target"];
-    };
+    systemd.tmpfiles.rules = [
+      "d ${cfg.stateDir} 0755 root root -"
+      "d ${cfg.stateDir}/data.ms 0755 root root -"
+    ];
 
     virtualisation.oci-containers.containers = {
       "wanderer-search" = {
         image = "docker.io/getmeili/meilisearch:v1.11.3";
-        extraOptions = ["--network=wanderer-net"];
         ports = ["${toString cfg.meiliSearchPort}:7700"];
         volumes = ["${cfg.stateDir}/data.ms:/meili_data/data.ms"];
         environmentFiles = [cfg.secretsPath];
         environment = {
-          MEILI_URL = "http://wanderer-search:7700";
           MEILI_NO_ANALYTICS = "true";
         };
       };
-      "wanderer-db" = {
-        image = "docker.io/flomp/wanderer-db:v0.16.5";
-        dependsOn = ["wanderer-search"];
-        extraOptions = ["--network=wanderer-net"];
-        ports = ["${toString cfg.backendPort}:8090"];
-        volumes = ["${cfg.stateDir}/pb_data:/pb_data"];
-        environmentFiles = [cfg.secretsPath];
-        environment = {
-          MEILI_URL = "http://wanderer-search:7700";
+    };
+    systemd.services = {
+      wanderer-db = {
+        description = "Wanderer backend service";
+        after = ["network.target"];
+        wantedBy = ["multi-user.target"];
+
+        serviceConfig = {
+          ExecStart = "${lib.getExe pkgs.wanderer-db} serve --http=0.0.0.0:${toString cfg.backendPort} --dir=/var/lib/wanderer-db/pb_data";
+          DynamicUser = true;
+          StateDirectory = ["wanderer-db" "wanderer-db/pb_data"];
+          WorkingDirectory = "/var/lib/wanderer-db/pb_data";
+          EnvironmentFile = cfg.secretsPath;
+          Environment = "MEILI_URL=http://127.0.0.1:${toString cfg.meiliSearchPort}";
+
+          ExecStartPre = "${lib.getExe (pkgs.writeShellScriptBin "wanderer_add_migrations_startup" ''
+            if [ ! -e /var/lib/wanderer-db/pb_data/migrations ]; then
+              cp -r ${pkgs.wanderer-db}/share/* /var/lib/wanderer-db/pb_data/
+              chown -R --reference=/var/lib/wanderer-db/pb_data /var/lib/wanderer-db/pb_data/*
+            fi
+          '')}";
         };
       };
-      "wanderer-web" = {
-        image = "docker.io/flomp/wanderer-web:v0.16.5";
-        dependsOn = ["wanderer-search" "wanderer-db"];
-        extraOptions = ["--network=wanderer-net"];
-        ports = ["${toString cfg.frontendPort}:3000"];
-        volumes = ["${cfg.stateDir}/uploads:/app/uploads"];
-        environmentFiles = [cfg.secretsPath];
-        environment = {
-          MEILI_URL = "http://wanderer-search:7700";
-          BODY_SIZE_LIMIT = "Infinity";
-          PUBLIC_POCKETBASE_URL = "http://wanderer-db:8090";
-          PUBLIC_DISABLE_SIGNUP = "true";
-          UPLOAD_FOLDER = "/app/uploads";
-          UPLOAD_USER = "";
-          UPLOAD_PASSWORD = "";
-          PUBLIC_VALHALLA_URL = "https://valhalla1.openstreetmap.de";
-          PUBLIC_NOMINATIM_URL = "https://nominatim.openstreetmap.org";
+
+      wanderer-web = {
+        description = "Wanderer frontend service";
+        after = ["network.target" "wanderer-db.service"];
+        requires = ["wanderer-db.service"];
+        wantedBy = ["multi-user.target"];
+
+        serviceConfig = {
+          ExecStart = lib.getExe pkgs.wanderer-web;
+          EnvironmentFile = cfg.secretsPath;
+          Environment = [
+            "MEILI_URL=http://127.0.0.1:${toString cfg.meiliSearchPort}"
+            "BODY_SIZE_LIMIT=Infinity"
+            "PUBLIC_POCKETBASE_URL=http://127.0.0.1:${toString cfg.backendPort}"
+            "PUBLIC_DISABLE_SIGNUP=true"
+            "PUBLIC_PRIVATE_INSTANCE=true" # dont allow visitors from viewing trails
+            "PUBLIC_VALHALLA_URL=https://valhalla1.openstreetmap.de"
+            "PUBLIC_NOMINATIM_URL=https://nominatim.openstreetmap.org"
+          ];
         };
       };
     };
