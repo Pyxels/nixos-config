@@ -72,7 +72,7 @@
   customConfig = {
     ### WANDERER ###
     wanderer = {
-      enable = true;
+      enable = false;
       secretsPath = config.age.secrets.wandererSecrets.path;
     };
   };
