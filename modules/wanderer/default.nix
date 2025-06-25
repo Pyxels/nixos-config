@@ -22,11 +22,6 @@ in {
           ```
       '';
     };
-    stateDir = mkOption {
-      type = types.str;
-      default = "/var/lib/wanderer";
-      description = "Wanderer meili search state directory (without trailing /)";
-    };
     backendPort = mkOption {
       type = types.port;
       default = 8090;
@@ -52,21 +47,10 @@ in {
       }
     ];
 
-    systemd.tmpfiles.rules = [
-      "d ${cfg.stateDir} 0755 root root -"
-      "d ${cfg.stateDir}/data.ms 0755 root root -"
-    ];
-
-    virtualisation.oci-containers.containers = {
-      "wanderer-search" = {
-        image = "docker.io/getmeili/meilisearch:v1.11.3";
-        ports = ["${toString cfg.meiliSearchPort}:7700"];
-        volumes = ["${cfg.stateDir}/data.ms:/meili_data/data.ms"];
-        environmentFiles = [cfg.secretsPath];
-        environment = {
-          MEILI_NO_ANALYTICS = "true";
-        };
-      };
+    services.meilisearch = {
+      enable = true;
+      listenPort = cfg.meiliSearchPort;
+      masterKeyEnvironmentFile = cfg.secretsPath;
     };
     systemd.services = {
       wanderer-db = {
