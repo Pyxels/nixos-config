@@ -5,8 +5,8 @@
       src = prev.pkgs.fetchFromGitHub {
         owner = "Flomp";
         repo = "wanderer";
-        rev = "8e3eea6216fe8ff8355789e34a429dce338c1571";
-        sha256 = "sha256-ihHcEMOegpKDXlqPztWpJwC84N15D1gUwsqQwGL7dTk=";
+        rev = "9b6522ec210258c4ac9e9249ed0788955688c8dc";
+        sha256 = "sha256-ANOcw+ZsKxDHhaEp1B1ZDGakNxyVJKfSU3rt+pRq3As=";
       };
     in {
       wanderer-web-dist = prev.pkgs.buildNpmPackage {
