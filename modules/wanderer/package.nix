@@ -1,29 +1,22 @@
 {
   nixpkgs.overlays = [
     (final: prev: let
-      version = "0.17.0";
+      version = "0.17.1";
       src = prev.pkgs.fetchFromGitHub {
         owner = "Flomp";
         repo = "wanderer";
-        rev = "9b6522ec210258c4ac9e9249ed0788955688c8dc";
-        sha256 = "sha256-ANOcw+ZsKxDHhaEp1B1ZDGakNxyVJKfSU3rt+pRq3As=";
+        tag = "v${version}";
+        sha256 = "sha256-GDz+I1Cae/DqCC+WoEYX9Xre69bYc8Cp2mn8cc7TL+0=";
       };
     in {
       wanderer-web-dist = prev.pkgs.buildNpmPackage {
         inherit version src;
         pname = "wanderer-web-dist";
 
-        npmDepsHash = "sha256-NwxmiGjiAqlt+9EjWIij4HdzGO48LShmGrelY+cXesY=";
+        npmDepsHash = "sha256-fck1BYU59qW3RamUXk+gu9kA6EoUPU/8SERUr4o3x/E=";
         npmFlags = ["--legacy-peer-deps"];
         makeCacheWritable = true;
         sourceRoot = "${src.name}/web";
-
-        patchPhase = ''
-          runHook prePatch
-          # https://github.com/Flomp/wanderer/issues/308#issuecomment-2911797555
-          sed -i '9,17d' vite.config.ts
-          runHook postPatch
-        '';
 
         installPhase = ''
           runHook preInstall
