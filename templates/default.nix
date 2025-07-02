@@ -22,4 +22,15 @@ rec {
       Run `direnv allow` to enable automatic dev shell loading.
     '';
   };
+
+  rust-cross = {
+    path = ./rust-cross;
+    description = "A rust arm musl cross compile template using crane";
+    welcomeText = ''
+      # Rust - cross
+      ## Intended usage
+      Starting point for rust for arm musl development using the crane library (https://crane.dev/).
+      Run `direnv allow` to enable automatic dev shell loading.
+    '';
+  };
 }

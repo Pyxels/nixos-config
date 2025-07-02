@@ -1,7 +1,6 @@
 # nix
-result
 .direnv/
-.pre-commit-config.yaml
+result
 
 # rust
 /target
