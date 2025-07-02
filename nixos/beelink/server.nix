@@ -128,6 +128,7 @@
     prometheus = {
       port = 3020;
       enable = true;
+      retentionTime = "90y";
 
       exporters = {
         node = {
@@ -171,9 +172,14 @@
                 "127.0.0.1:${toString config.services.prometheus.exporters.exportarr-prowlarr.port}"
                 "127.0.0.1:19091"
                 "127.0.0.1:9027" # jellyfin-exporter
-                "marshydro:47874"
               ];
             }
+          ];
+        }
+        {
+          job_name = "home";
+          static_configs = [
+            {targets = ["marshydro:47874"];}
           ];
         }
       ];
