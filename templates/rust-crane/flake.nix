@@ -1,5 +1,5 @@
 {
-  description = "Rust Dev and Build Flake using Crane";
+  description = "Rust extensive Dev and Build Flake using Crane";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";

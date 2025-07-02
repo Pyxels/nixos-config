@@ -22,15 +22,4 @@ rec {
       Run `direnv allow` to enable automatic dev shell loading.
     '';
   };
-
-  rust-dream2nix = {
-    path = ./rust-dream2nix;
-    description = "A rust development and build flake using dream 2 nix";
-    welcomeText = ''
-      # Rust - dream2nix
-      ## Intended usage
-      Starting point for rust development using the dream2nix library (https://nix-community.github.io/dream2nix/).
-      Run `direnv allow` to enable automatic dev shell loading.
-    '';
-  };
 }
