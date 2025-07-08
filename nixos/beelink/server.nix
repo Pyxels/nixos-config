@@ -179,7 +179,12 @@
         {
           job_name = "home";
           static_configs = [
-            {targets = ["marshydro:47874"];}
+            {
+              targets = [
+                "marshydro:47874"
+                "127.0.0.1:${builtins.head (builtins.split ":" (builtins.head config.virtualisation.oci-containers.containers.shelly-plugs-exporter.ports))}"
+              ];
+            }
           ];
         }
       ];
@@ -214,6 +219,14 @@
     settings = {
       listen = "[::]:2272";
       require-proof-of-possession = false;
+    };
+  };
+
+  virtualisation.oci-containers.containers = {
+    shelly-plugs-exporter = {
+      image = "lukassoo/shelly-plus-plug-exporter:latest";
+      ports = ["10009:10009"];
+      volumes = ["/etc/shelly-plugs-exporter/config:/Config:ro"];
     };
   };
 
