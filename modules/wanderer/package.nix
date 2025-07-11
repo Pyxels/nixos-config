@@ -1,12 +1,12 @@
 {
   nixpkgs.overlays = [
     (final: prev: let
-      version = "0.17.1";
+      version = "0.17.2";
       src = prev.pkgs.fetchFromGitHub {
         owner = "Flomp";
         repo = "wanderer";
         tag = "v${version}";
-        sha256 = "sha256-GDz+I1Cae/DqCC+WoEYX9Xre69bYc8Cp2mn8cc7TL+0=";
+        sha256 = "sha256-Mpla2Y/lNJSqZHP1Du3OG86pkGJE88IlA8+RD9sCx8Y=";
       };
     in {
       wanderer-web-dist = prev.pkgs.buildNpmPackage {
