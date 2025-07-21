@@ -20,7 +20,7 @@
       };
     };
 
-    deploy-rs.url = "github:serokell/deploy-rs";
+    deploy-rs.url = "github:PhilTaken/deploy-rs/phil/async-build-and-push";
 
     nixvim-config = {
       url = "github:pyxels/nixvim-config";
@@ -55,39 +55,58 @@
       flake = let
         name = "jonas";
         configPath = "/home/${name}/.dotfiles";
-        hosts = ["vetus" "nixos-l540" "minimal-iso" "beelink"];
+        hosts = [
+          "vetus"
+          "nixos-l540"
+          "minimal-iso"
+          "beelink"
+        ];
         homes = hosts ++ ["jonas-bits"];
         servers = ["arm-vps"];
 
         mkNixosSystems = hosts:
-          builtins.listToAttrs (map
-            (hostName: let
-              host = import ./hosts/${hostName}.nix {};
-            in {
-              name = hostName;
-              value = nixpkgs.lib.nixosSystem {
-                specialArgs = {inherit inputs name host;};
-                modules = [
-                  inputs.agenix.nixosModules.default
-                  ./nixos/${hostName}/configuration.nix
-                ];
-              };
-            })
-            hosts);
+          builtins.listToAttrs (
+            map (
+              hostName: let
+                host = import ./hosts/${hostName}.nix {};
+              in {
+                name = hostName;
+                value = nixpkgs.lib.nixosSystem {
+                  specialArgs = {inherit inputs name host;};
+                  modules = [
+                    inputs.agenix.nixosModules.default
+                    ./nixos/${hostName}/configuration.nix
+                  ];
+                };
+              }
+            )
+            hosts
+          );
 
         mkHomeConfigs = name: hosts:
-          builtins.listToAttrs (map
-            (hostName: let
-              host = import ./hosts/${hostName}.nix {};
-            in {
-              name = "${name}@${hostName}";
-              value = inputs.home-manager.lib.homeManagerConfiguration {
-                pkgs = nixpkgs.legacyPackages.${host.system}; # Home-manager requires 'pkgs' instance
-                extraSpecialArgs = {inherit inputs name configPath host nixpkgs;};
-                modules = [./home/home.nix] ++ host.modules;
-              };
-            })
-            hosts);
+          builtins.listToAttrs (
+            map (
+              hostName: let
+                host = import ./hosts/${hostName}.nix {};
+              in {
+                name = "${name}@${hostName}";
+                value = inputs.home-manager.lib.homeManagerConfiguration {
+                  pkgs = nixpkgs.legacyPackages.${host.system}; # Home-manager requires 'pkgs' instance
+                  extraSpecialArgs = {
+                    inherit
+                      inputs
+                      name
+                      configPath
+                      host
+                      nixpkgs
+                      ;
+                  };
+                  modules = [./home/home.nix] ++ host.modules;
+                };
+              }
+            )
+            hosts
+          );
       in {
         nixosConfigurations = mkNixosSystems (hosts ++ servers);
         homeConfigurations = mkHomeConfigs name homes;
@@ -97,7 +116,12 @@
         deploy = import ./hosts/servers.nix {inherit inputs self;};
       };
 
-      systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"];
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
+      ];
       perSystem = {
         pkgs,
         system,
@@ -110,7 +134,7 @@
             git-hooks.enabledPackages
             ++ (with pkgs; [
               nix-output-monitor
-              deploy-rs
+              inputs.deploy-rs.packages.${system}.default
               just
             ]);
 

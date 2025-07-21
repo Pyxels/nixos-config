@@ -65,15 +65,16 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1749105467,
-        "narHash": "sha256-hXh76y/wDl15almBcqvjryB50B0BaiXJKk20f314RoE=",
-        "owner": "serokell",
+        "lastModified": 1738265858,
+        "narHash": "sha256-ZkprVoBKkzlZPFaK2BXsqU1bbztwT6FZvi13V6A8Kg0=",
+        "owner": "PhilTaken",
         "repo": "deploy-rs",
-        "rev": "6bc76b872374845ba9d645a2f012b764fecd765f",
+        "rev": "b20db77041ac080cc04518e3d59b1569c49405fe",
         "type": "github"
       },
       "original": {
-        "owner": "serokell",
+        "owner": "PhilTaken",
+        "ref": "phil/async-build-and-push",
         "repo": "deploy-rs",
         "type": "github"
       }
