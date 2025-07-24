@@ -9,24 +9,32 @@
   cfg = config.customConfig.hyprland;
 
   generateWorkspaces = workspaces:
-    lib.lists.flatten
-    (map
-      (ws: ["SUPER, ${toString ws.number}, workspace, name:${ws.name}" "SUPER_SHIFT, ${toString ws.number}, movetoworkspacesilent, name:${ws.name}"])
-      workspaces);
+    lib.lists.flatten (
+      map (ws: [
+        "SUPER, ${toString ws.number}, workspace, name:${ws.name}"
+        "SUPER_SHIFT, ${toString ws.number}, movetoworkspacesilent, name:${ws.name}"
+      ])
+      workspaces
+    );
 
   generateWorkspaceMonitorBindings = workspaces:
-    map (ws: ''name:${ws.name}, monitor:${ws.monitor}, default:${
-        if ws.default or false
-        then "true"
-        else "false"
-      }'') workspaces;
+    map (
+      ws: ''name:${ws.name}, monitor:${ws.monitor}, default:${
+          if ws.default or false
+          then "true"
+          else "false"
+        }''
+    )
+    workspaces;
 
   generateMonitors = monitors:
-    builtins.listToAttrs (map (monitor: {
+    builtins.listToAttrs (
+      map (monitor: {
         inherit (monitor) name;
         value = monitor.code;
       })
-      monitors);
+      monitors
+    );
 in {
   imports = [
     ./waybar
@@ -35,31 +43,33 @@ in {
 
   options.customConfig.hyprland = {
     workspaces = lib.mkOption {
-      type = lib.types.listOf (lib.types.submodule {
-        options = {
-          name = lib.mkOption {
-            type = lib.types.str;
-            description = "The name of the workspace.";
-          };
+      type = lib.types.listOf (
+        lib.types.submodule {
+          options = {
+            name = lib.mkOption {
+              type = lib.types.str;
+              description = "The name of the workspace.";
+            };
 
-          number = lib.mkOption {
-            type = lib.types.int;
-            description = "The workspace number.";
-          };
+            number = lib.mkOption {
+              type = lib.types.int;
+              description = "The workspace number.";
+            };
 
-          monitor = lib.mkOption {
-            type = lib.types.str;
-            description = "Identifier for the monitor this workspace is on.";
-            default = "$default_mon";
-          };
+            monitor = lib.mkOption {
+              type = lib.types.str;
+              description = "Identifier for the monitor this workspace is on.";
+              default = "$default_mon";
+            };
 
-          default = lib.mkOption {
-            type = lib.types.bool;
-            default = false;
-            description = "Whether this is the default workspace.";
+            default = lib.mkOption {
+              type = lib.types.bool;
+              default = false;
+              description = "Whether this is the default workspace.";
+            };
           };
-        };
-      });
+        }
+      );
       example = [
         {
           name = "Ws 1";
@@ -73,33 +83,35 @@ in {
     };
 
     monitors = lib.mkOption {
-      type = lib.types.listOf (lib.types.submodule {
-        options = {
-          name = lib.mkOption {
-            type = lib.types.str;
-            description = "The identifier used within the configuration for this monitor.";
+      type = lib.types.listOf (
+        lib.types.submodule {
+          options = {
+            name = lib.mkOption {
+              type = lib.types.str;
+              description = "The identifier used within the configuration for this monitor.";
+            };
+            code = lib.mkOption {
+              type = lib.types.str;
+              description = "The hardware code of the monitor, used by the system to identify it.";
+            };
+            resolution = lib.mkOption {
+              type = lib.types.str;
+              default = "preferred";
+              description = "The resolution setting for the monitor. Use 'preferred' for the default resolution.";
+            };
+            position = lib.mkOption {
+              type = lib.types.str;
+              default = "0x0";
+              description = "The position of the monitor in the virtual display space, in the format 'XxY'.";
+            };
+            scale = lib.mkOption {
+              type = lib.types.str;
+              default = "1";
+              description = "The scaling factor for the monitor.";
+            };
           };
-          code = lib.mkOption {
-            type = lib.types.str;
-            description = "The hardware code of the monitor, used by the system to identify it.";
-          };
-          resolution = lib.mkOption {
-            type = lib.types.str;
-            default = "preferred";
-            description = "The resolution setting for the monitor. Use 'preferred' for the default resolution.";
-          };
-          position = lib.mkOption {
-            type = lib.types.str;
-            default = "0x0";
-            description = "The position of the monitor in the virtual display space, in the format 'XxY'.";
-          };
-          scale = lib.mkOption {
-            type = lib.types.str;
-            default = "1";
-            description = "The scaling factor for the monitor.";
-          };
-        };
-      });
+        }
+      );
       example = [
         {
           name = "$left_mon";
@@ -133,6 +145,11 @@ in {
       portalPackage = null;
       settings =
         {
+          ecosystem = {
+            no_update_news = true;
+            no_donation_nag = true;
+          };
+
           input = {
             kb_layout = "de";
             kb_variant = "nodeadkeys";
@@ -265,7 +282,9 @@ in {
           ########################################################################################
 
           monitor =
-            map (monitor: "${monitor.name}, ${monitor.resolution}, ${monitor.position}, ${monitor.scale}")
+            map (
+              monitor: "${monitor.name}, ${monitor.resolution}, ${monitor.position}, ${monitor.scale}"
+            )
             cfg.monitors
             ++ [",preferred, auto, 1"];
 
