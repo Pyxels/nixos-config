@@ -136,11 +136,15 @@
       port = 3020;
       enable = true;
       retentionTime = "90y";
+      extraFlags = ["--web.enable-remote-write-receiver"];
 
       exporters = {
         node = {
           port = 3021;
-          enabledCollectors = ["systemd" "filesystem"];
+          enabledCollectors = [
+            "systemd"
+            "filesystem"
+          ];
           enable = true;
         };
         exportarr-sonarr = {
@@ -188,7 +192,6 @@
           static_configs = [
             {
               targets = [
-                "marshydro:47874"
                 "127.0.0.1:${builtins.head (builtins.split ":" (builtins.head config.virtualisation.oci-containers.containers.shelly-plugs-exporter.ports))}"
               ];
             }
@@ -276,7 +279,9 @@
       "audio.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.audiobookshelf.port}";
       "media.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:8096";
       "request.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.jellyseerr.port}";
-      "grafana.{$DOMAIN}".extraConfig = mkOauth2Proxy (toString config.services.grafana.settings.server.http_port);
+      "grafana.{$DOMAIN}".extraConfig = mkOauth2Proxy (
+        toString config.services.grafana.settings.server.http_port
+      );
       "photos.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.immich.port}";
     };
     environmentFile = config.age.secrets.domain.path;
