@@ -50,7 +50,7 @@ in {
     services.meilisearch = {
       enable = true;
       listenPort = cfg.meiliSearchPort;
-      masterKeyEnvironmentFile = cfg.secretsPath;
+      masterKeyFile = cfg.secretsPath; # TODO add own secret for just key file
     };
     systemd.services = {
       wanderer-db = {

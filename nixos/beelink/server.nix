@@ -64,15 +64,22 @@
   };
 
   networking.firewall = {
-    allowedTCPPorts = [80 443];
-    allowedUDPPorts = [80 443 config.services.tailscale.port];
+    allowedTCPPorts = [
+      80
+      443
+    ];
+    allowedUDPPorts = [
+      80
+      443
+      config.services.tailscale.port
+    ];
     trustedInterfaces = ["tailscale0"];
   };
 
   customConfig = {
     ### WANDERER ###
     wanderer = {
-      enable = true;
+      enable = false;
       secretsPath = config.age.secrets.wandererSecrets.path;
     };
   };
