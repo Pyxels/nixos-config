@@ -44,6 +44,8 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    kicker-app.url = "github:pyxels/kicker-app/refs/tags/0.0.3";
   };
 
   outputs = {
