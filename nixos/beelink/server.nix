@@ -283,7 +283,9 @@
         toString config.services.grafana.settings.server.http_port
       );
       "photos.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.immich.port}";
+      "kicker.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:36831";
     };
+    # kicker is temporay
     environmentFile = config.age.secrets.domain.path;
   };
 }
