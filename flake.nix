@@ -20,7 +20,7 @@
       };
     };
 
-    deploy-rs.url = "github:PhilTaken/deploy-rs/phil/async-build-and-push";
+    deploy-rs.url = "github:serokell/deploy-rs";
 
     nixvim-config = {
       url = "github:pyxels/nixvim-config";
