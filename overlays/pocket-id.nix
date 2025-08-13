@@ -1,20 +1,53 @@
 (final: prev: {
-  pocket-id = prev.pocket-id.overrideAttrs (oldAttrs: rec {
-    version = "1.6.4";
+  pocket-id = prev.pocket-id.overrideAttrs (_oldAttrs: rec {
+    version = "1.7.0";
     src = final.fetchFromGitHub {
       owner = "pocket-id";
       repo = "pocket-id";
       tag = "v${version}";
-      sha256 = "sha256-P6pA0760eo/dL1t5Jics4oSztM4F/C8lIuZ3dZ9x5C8=";
+      sha256 = "sha256-u4H1wC5RL3p7GNL7WQkmK8DNgwKQvgxHd8TIug+Be+o=";
     };
-    vendorHash = "sha256-8D7sSmxR+Fq4ouB9SuoEDplu6Znv3U0BIyYISSmF6Bs=";
+    vendorHash = "sha256-guG/JnwUi2WeClSfAX9pRG3kLJMTvTDiJ7L54TGeSd0=";
 
-    frontend = oldAttrs.frontend.overrideAttrs (oldFrontend: {
-      inherit src version;
-      npmDeps = oldFrontend.npmDeps.overrideAttrs (_: {
-        inherit src;
-        outputHash = "sha256-FiFSnN6DOMr8XghvyGTWB/EMTNfvpqlAgx7FPnbGQxU=";
-      });
+    frontend = final.stdenv.mkDerivation (finalAttrs: {
+      pname = "pocket-id-frontend";
+      inherit version src;
+
+      nativeBuildInputs = [
+        final.nodejs
+        final.pnpm.configHook
+      ];
+
+      pnpmWorkspaces = ["pocket-id-frontend"];
+      pnpmDeps = final.pnpm.fetchDeps {
+        inherit
+          (finalAttrs)
+          pname
+          version
+          src
+          pnpmWorkspaces
+          ;
+        fetcherVersion = 1;
+        hash = "sha256-GSlyctAq7ubll9MtYy0lrAj9hh/bdWrQFh2fCu/dWuw=";
+      };
+
+      env.BUILD_OUTPUT_PATH = "dist";
+      buildPhase = ''
+        runHook preBuild
+
+        pnpm --filter pocket-id-frontend run build
+
+        runHook postBuild
+      '';
+
+      installPhase = ''
+        runHook preInstall
+
+        mkdir -p $out/lib/pocket-id-frontend
+        cp -r frontend/dist $out/lib/pocket-id-frontend/dist
+
+        runHook postInstall
+      '';
     });
   });
 })
