@@ -14,11 +14,20 @@ in {
     secretsPath = mkOption {
       type = types.path;
       description = ''
-        Path to secret file which contains the public facing url and meili search master key:
+        Path to secret file which contains the public facing url, meili key and pocketbase encryption key:
           ```
           ORIGIN=https://<domain>
           MEILI_MASTER_KEY=<secret-key>
           POCKETBASE_ENCRYPTION_KEY=<secret-key>
+          ```
+      '';
+    };
+    meiliMasterKey = mkOption {
+      type = types.path;
+      description = ''
+        Path to the secret file which contains meili master key:
+          ```
+          <secret-key>
           ```
       '';
     };
@@ -50,7 +59,7 @@ in {
     services.meilisearch = {
       enable = true;
       listenPort = cfg.meiliSearchPort;
-      masterKeyFile = cfg.secretsPath; # TODO add own secret for just key file
+      masterKeyFile = cfg.meiliMasterKey;
     };
     systemd.services = {
       wanderer-db = {
@@ -61,23 +70,29 @@ in {
         serviceConfig = {
           ExecStart = "${lib.getExe pkgs.wanderer-db} serve --http=0.0.0.0:${toString cfg.backendPort} --dir=/var/lib/wanderer-db/pb_data";
           DynamicUser = true;
-          StateDirectory = ["wanderer-db" "wanderer-db/pb_data"];
+          StateDirectory = [
+            "wanderer-db"
+            "wanderer-db/pb_data"
+          ];
           WorkingDirectory = "/var/lib/wanderer-db/pb_data";
           EnvironmentFile = cfg.secretsPath;
           Environment = "MEILI_URL=http://127.0.0.1:${toString cfg.meiliSearchPort}";
 
-          ExecStartPre = "${lib.getExe (pkgs.writeShellScriptBin "wanderer_add_migrations_startup" ''
-            if [ ! -e /var/lib/wanderer-db/pb_data/migrations ]; then
+          ExecStartPre = "${lib.getExe (
+            pkgs.writeShellScriptBin "wanderer_add_migrations_startup" ''
               cp -r ${pkgs.wanderer-db}/share/* /var/lib/wanderer-db/pb_data/
               chown -R --reference=/var/lib/wanderer-db/pb_data /var/lib/wanderer-db/pb_data/*
-            fi
-          '')}";
+            ''
+          )}";
         };
       };
 
       wanderer-web = {
         description = "Wanderer frontend service";
-        after = ["network.target" "wanderer-db.service"];
+        after = [
+          "network.target"
+          "wanderer-db.service"
+        ];
         requires = ["wanderer-db.service"];
         wantedBy = ["multi-user.target"];
 

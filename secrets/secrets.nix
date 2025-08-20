@@ -12,6 +12,7 @@ let
 in {
   "attic-config.age".publicKeys = users ++ systems;
   "wanderer.age".publicKeys = users ++ [beelink];
+  "wandererMeiliKey.age".publicKeys = users ++ [beelink];
   "oauth2-proxy.age".publicKeys = users ++ [beelink];
   "beelink-private-domain.age".publicKeys = users ++ [beelink];
   "wireguard-conf.age".publicKeys = users ++ [beelink];

@@ -11,6 +11,7 @@
     {
       age.secrets = {
         wandererSecrets.file = ../../secrets/wanderer.age;
+        wandererMeiliKey.file = ../../secrets/wandererMeiliKey.age;
         oauth2ProxySecrets = {
           file = ../../secrets/oauth2-proxy.age;
           owner = "oauth2-proxy";
@@ -79,8 +80,9 @@
   customConfig = {
     ### WANDERER ###
     wanderer = {
-      enable = false;
+      enable = true;
       secretsPath = config.age.secrets.wandererSecrets.path;
+      meiliMasterKey = config.age.secrets.wandererMeiliKey.path;
     };
   };
 
