@@ -736,16 +736,16 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1755632516,
-        "narHash": "sha256-keJpcxSST0VlgAIduTbCTNeEk2Gq/HcT8qKLd1g+0QU=",
+        "lastModified": 1755873785,
+        "narHash": "sha256-YEVW2iLVb631N0dbH+XQNHmCma/rupsMGY19Q5huU70=",
         "owner": "pyxels",
         "repo": "kicker-app",
-        "rev": "f8b45f3b82472a3eab8155b61a6c3b2d4b21a97a",
+        "rev": "890f7e382eb6bc3ab8a563b2adf38a6dc0a82de0",
         "type": "github"
       },
       "original": {
         "owner": "pyxels",
-        "ref": "refs/tags/0.0.4",
+        "ref": "refs/tags/0.0.7",
         "repo": "kicker-app",
         "type": "github"
       }

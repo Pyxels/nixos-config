@@ -5,10 +5,23 @@
   ...
 }: let
   port = "36831";
-  kickerPkgs = inputs.kicker-app.packages.${host.system};
+  kicker-app = inputs.kicker-app.packages.${host.system};
 in {
   services.caddy.virtualHosts = {
-    "kicker.{$DOMAIN}".extraConfig = "reverse_proxy localhost:${port}";
+    "kicker.{$DOMAIN}".extraConfig = ''
+      reverse_proxy localhost:${port}
+
+      @html {
+          path / /index.html
+      }
+      header @html Cache-Control "no-store"
+
+      @assets {
+          path /assets/*
+          path_regexp static \.(js|css|woff2?|png|jpe?g|gif|svg|webp)$
+      }
+      header @assets Cache-Control "public, max-age=31536000, immutable"
+    '';
   };
 
   systemd.services = {
@@ -19,12 +32,9 @@ in {
 
       serviceConfig = {
         ExecStart = ''
-          ${lib.getExe kickerPkgs.pocketbase} \
-            serve \
+          ${lib.getExe kicker-app.default} \
             --http=0.0.0.0:${port} \
-            --dir=/var/lib/kicker-app/pb_data \
-            --migrationsDir=${kickerPkgs.backend-data}/pb_migrations \
-            --publicDir=${kickerPkgs.frontend-dist}/dist
+            --dir=/var/lib/kicker-app/pb_data
         '';
         DynamicUser = true;
         StateDirectory = [
