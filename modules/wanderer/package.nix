@@ -1,19 +1,19 @@
 {
   nixpkgs.overlays = [
     (final: prev: let
-      version = "0.17.2";
+      version = "0.18.0";
       src = prev.pkgs.fetchFromGitHub {
         owner = "Flomp";
         repo = "wanderer";
         tag = "v${version}";
-        sha256 = "sha256-Mpla2Y/lNJSqZHP1Du3OG86pkGJE88IlA8+RD9sCx8Y=";
+        sha256 = "sha256-RALi8HfKB7MnRfVb7MRiEtwu3d4CmtGa5A6tkui8VvI=";
       };
     in {
       wanderer-web-dist = prev.pkgs.buildNpmPackage {
         inherit version src;
         pname = "wanderer-web-dist";
 
-        npmDepsHash = "sha256-fck1BYU59qW3RamUXk+gu9kA6EoUPU/8SERUr4o3x/E=";
+        npmDepsHash = "sha256-rR+df6IS/jnmugotrPC8im73bLrTsF3onp2/x/m9cag=";
         npmFlags = ["--legacy-peer-deps"];
         makeCacheWritable = true;
         sourceRoot = "${src.name}/web";
@@ -36,7 +36,7 @@
         inherit version src;
         pname = "wanderer-db";
 
-        vendorHash = "sha256-giXDMG3o6mtG5sbgRdXT+YAxBCLXy4daLENR2NbK5qM=";
+        vendorHash = "sha256-P8FOeQOl3601hTjq2gFcQyIu3Lt1gO1MOWoiLhjOs0A=";
         sourceRoot = "${src.name}/db";
 
         postInstall = ''
