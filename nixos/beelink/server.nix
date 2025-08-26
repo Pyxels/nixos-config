@@ -42,9 +42,7 @@
   ];
 
   ### OVERRIDES ###
-  nixpkgs.overlays = [
-    (import ../../overlays/beszel.nix)
-  ];
+  nixpkgs.overlays = [];
 
   ### BESZEL ###
   systemd.services = {

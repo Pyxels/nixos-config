@@ -11,7 +11,6 @@ in {
     ../../modules/reboot-required
   ];
   nixpkgs.overlays = [
-    (import ../../overlays/beszel.nix)
     (import ../../overlays/pocket-id.nix)
   ];
 
