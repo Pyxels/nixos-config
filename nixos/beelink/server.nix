@@ -78,7 +78,7 @@
   customConfig = {
     ### WANDERER ###
     wanderer = {
-      enable = true;
+      enable = false;
       secretsPath = config.age.secrets.wandererSecrets.path;
       meiliMasterKey = config.age.secrets.wandererMeiliKey.path;
     };
