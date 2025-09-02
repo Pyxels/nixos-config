@@ -30,6 +30,11 @@
       };
     };
 
+    crowdsec = {
+      url = "git+https://codeberg.org/kampka/nix-flake-crowdsec.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     hyprpaper = {
       url = "github:hyprwm/hyprpaper";

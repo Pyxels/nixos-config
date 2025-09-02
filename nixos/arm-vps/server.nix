@@ -9,6 +9,7 @@
 in {
   imports = [
     ../../modules/reboot-required
+    ../../modules/crowdsec
   ];
   nixpkgs.overlays = [
     (import ../../overlays/pocket-id.nix)
@@ -105,8 +106,17 @@ in {
   };
 
   ### REVERSE PROXY ###
-  networking.firewall.allowedTCPPorts = [80 443];
-  networking.firewall.allowedUDPPorts = [80 443];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
+  networking.firewall.allowedUDPPorts = [
+    80
+    443
+  ];
+
+  ### CROWDSEC ###
+  customConfig.crowdsec.enable = true;
 
   services.caddy = {
     enable = true;

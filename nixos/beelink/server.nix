@@ -7,6 +7,7 @@
     ../../modules/wanderer
     ../../modules/reboot-required
     ../../modules/jellyfin-exporter
+    ../../modules/crowdsec
 
     {
       age.secrets = {
@@ -76,6 +77,9 @@
   };
 
   customConfig = {
+    ### CROWDSEC ###
+    crowdsec.enable = true;
+
     ### WANDERER ###
     wanderer = {
       enable = false;
@@ -184,6 +188,7 @@
                 "127.0.0.1:19091"
                 "127.0.0.1:9027" # jellyfin-exporter
                 "127.0.0.1:2019" # caddy
+                "127.0.0.1:13224" # crowdsec
               ];
             }
           ];
@@ -204,6 +209,7 @@
             {
               targets = [
                 "arm-vps:2019" # caddy
+                "arm-vps:13224" # crowdsec
               ];
             }
           ];
