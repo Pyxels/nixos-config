@@ -183,6 +183,7 @@
                 "127.0.0.1:${toString config.services.prometheus.exporters.exportarr-prowlarr.port}"
                 "127.0.0.1:19091"
                 "127.0.0.1:9027" # jellyfin-exporter
+                "127.0.0.1:2019" # caddy
               ];
             }
           ];
@@ -193,6 +194,16 @@
             {
               targets = [
                 "127.0.0.1:${builtins.head (builtins.split ":" (builtins.head config.virtualisation.oci-containers.containers.shelly-plugs-exporter.ports))}"
+              ];
+            }
+          ];
+        }
+        {
+          job_name = "arm-vps";
+          static_configs = [
+            {
+              targets = [
+                "arm-vps:2019" # caddy
               ];
             }
           ];
@@ -285,5 +296,19 @@
       "photos.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.immich.port}";
     };
     environmentFile = config.age.secrets.domain.path;
+    globalConfig = ''
+      log stdout_logger {
+       output file ${config.services.caddy.logDir}/access.log {
+          roll_size 10MB
+          roll_keep 5
+          roll_keep_for 14d
+          mode 0640
+        }
+        level INFO
+      }
+      metrics {
+        per_host
+      }
+    '';
   };
 }
