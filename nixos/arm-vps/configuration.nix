@@ -9,6 +9,7 @@
 
     ./hardware-configuration.nix
     ./networking.nix
+    ./comin.nix
     ./server.nix
   ];
 

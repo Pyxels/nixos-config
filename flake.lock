@@ -58,6 +58,26 @@
         "type": "github"
       }
     },
+    "comin": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1756416055,
+        "narHash": "sha256-13b/OmlVWgKQvEzLhzABw7e7EjcNjvA+fOw/pRHyGKc=",
+        "owner": "nlewo",
+        "repo": "comin",
+        "rev": "238850e8ed3cad2f99e2d38bc395b57d08538623",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nlewo",
+        "repo": "comin",
+        "type": "github"
+      }
+    },
     "crowdsec": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -986,6 +1006,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "comin": "comin",
         "crowdsec": "crowdsec",
         "deploy-rs": "deploy-rs",
         "disko": "disko",
