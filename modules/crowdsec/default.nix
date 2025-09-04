@@ -15,11 +15,11 @@ in {
     {
       age.secrets = {
         crowdsecEnrollKey = {
-          file = ../../secrets/crowdsec-enroll-key.age;
+          file = ./crowdsec-enroll-key.age;
           owner = "crowdsec";
         };
         crowdsecFirewallKey = {
-          file = ../../secrets/crowdsec-firewall-key.age;
+          file = ./crowdsec-firewall-key.age;
           owner = "crowdsec";
         };
       };
