@@ -54,11 +54,7 @@
     nerd-fonts.roboto-mono
   ];
 
-  programs.hyprland = {
-    enable = true;
-    package = inputs.hyprland.packages.${host.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${host.system}.xdg-desktop-portal-hyprland;
-  };
+  programs.hyprland.enable = true;
   security.pam.services.swaylock = {};
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
@@ -67,7 +63,11 @@
   #########################################
   users.users.${name} = {
     isNormalUser = true;
-    extraGroups = ["wheel" "networkmanager" "dialout"];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "dialout"
+    ];
   };
 
   nix = {
@@ -78,11 +78,12 @@
     };
 
     settings = {
-      trusted-users = ["root" "@wheel"];
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
       experimental-features = "nix-command flakes";
       auto-optimise-store = true;
-      substituters = ["https://hyprland.cachix.org"];
-      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
     };
   };
 

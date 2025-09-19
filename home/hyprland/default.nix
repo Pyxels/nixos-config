@@ -1,7 +1,5 @@
 {
-  inputs,
   pkgs,
-  host,
   lib,
   config,
   ...
@@ -143,6 +141,7 @@ in {
       # see https://wiki.hyprland.org/Nix/Hyprland-on-Home-Manager/#using-the-home-manager-module-with-nixos
       package = null;
       portalPackage = null;
+
       settings =
         {
           ecosystem = {
@@ -303,7 +302,6 @@ in {
 
     home = {
       packages = with pkgs; [
-        libsForQt5.polkit-kde-agent
         hyprpaper
         wl-clipboard
 
@@ -316,10 +314,7 @@ in {
         ".config/hypr/img/background.png".source = ./background.png;
         ".config/hypr/img/lockscreen.png".source = ./lockscreen.png;
       };
+      sessionVariables.NIXOS_OZONE_WL = "1";
     };
-
-    nixpkgs.overlays = [
-      (_: _: {hyprpaper = inputs.hyprpaper.packages.${host.system}.default;})
-    ];
   };
 }
