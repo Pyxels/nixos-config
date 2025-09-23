@@ -14,6 +14,7 @@
     ./comin.nix
     ./server.nix
     ./kicker.nix
+    ./home-assistant.nix
   ];
 
   system.stateVersion = "25.05";
