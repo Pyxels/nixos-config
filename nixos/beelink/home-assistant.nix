@@ -8,6 +8,7 @@
       extraOptions = [
         "--network=host"
         "--privileged"
+        "--device=/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_862df52f3380ef118515181cedd322a4-if00-port0:/dev/ttyUSB0"
       ];
     };
     esphome = {
