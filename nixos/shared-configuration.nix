@@ -28,6 +28,11 @@
       alsa.support32Bit = true;
       pulse.enable = true;
     };
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      nssmdns6 = true;
+    };
   };
   services.tailscale.enable = true;
 

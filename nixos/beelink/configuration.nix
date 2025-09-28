@@ -61,6 +61,11 @@
     openssh.settings.PasswordAuthentication = false;
     tailscale.enable = true;
     syncthing.enable = true;
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      nssmdns6 = true;
+    };
   };
   users.users.root.openssh.authorizedKeys.keys = [
     ''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILXebXmITS8OF3CLbwVC+HFRg8b/96FiEccvAfQV/ovZ jonas@jonas-bits''
