@@ -195,6 +195,13 @@
           ];
         }
         {
+          job_name = "hass";
+          metrics_path = "/api/prometheus";
+          static_configs = [
+            {targets = ["127.0.0.0:8123"];}
+          ];
+        }
+        {
           job_name = "home";
           static_configs = [
             {
