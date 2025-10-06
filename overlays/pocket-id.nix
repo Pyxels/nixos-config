@@ -1,11 +1,11 @@
 (final: prev: {
   pocket-id = prev.pocket-id.overrideAttrs (oldAttrs: rec {
-    version = "1.11.2";
+    version = "1.13.0";
     src = final.fetchFromGitHub {
       owner = "pocket-id";
       repo = "pocket-id";
       tag = "v${version}";
-      sha256 = "sha256-thKPYbHx9w75hUgWkLS5fX4R3QLLqFtAJqcvfTxAFiY=";
+      sha256 = "sha256-rXNHteSkRomRK+dlEq9E5l5K/gjiINW2HJ9wqsFYkDg=";
     };
     vendorHash = "sha256-+HF1zAWA6Ak7uJqWCcTXrttTy1sPA8bN+/No95eqFTU=";
 
