@@ -11,6 +11,7 @@
       gpg.format = "ssh";
       user.signingkey = "~/.ssh/id_rsa.pub";
       interactive.singlekey = true;
+      push.autoSetupRemote = true;
     };
 
     difftastic.enable = true;
