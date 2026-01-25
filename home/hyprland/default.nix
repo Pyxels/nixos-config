@@ -296,6 +296,7 @@ in {
     services = {
       dunst = import ./dunst.nix;
       hyprpolkitagent.enable = true;
+      hyprsunset.enable = true;
     };
 
     home = {
