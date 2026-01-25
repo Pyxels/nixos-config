@@ -8,6 +8,13 @@
 with lib; let
   cfg = config.customConfig.crowdsec;
 in {
+  # disabled newer crowdsec module in nixpkgs in favor of https://codeberg.org/kampka/nix-flake-crowdsec
+  # due to lazyness to migrate
+  disabledModules = [
+    "services/security/crowdsec.nix"
+    "services/security/crowdsec-firewall-bouncer.nix"
+  ];
+
   imports = [
     inputs.crowdsec.nixosModules.crowdsec
     inputs.crowdsec.nixosModules.crowdsec-firewall-bouncer
