@@ -11,9 +11,6 @@ in {
     ../../modules/reboot-required
     ../../modules/crowdsec
   ];
-  nixpkgs.overlays = [
-    (import ../../overlays/pocket-id.nix)
-  ];
 
   services = {
     syncthing.enable = true;
