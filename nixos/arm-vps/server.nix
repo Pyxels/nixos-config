@@ -10,6 +10,11 @@ in {
   imports = [
     ../../modules/reboot-required
     ../../modules/crowdsec
+    {
+      age.secrets = {
+        pocket-id_secrets.file = ../../secrets/pocket-id.age;
+      };
+    }
   ];
 
   services = {
@@ -100,6 +105,7 @@ in {
       UI_CONFIG_DISABLED = true;
       EMAILS_VERIFIED = true;
     };
+    environmentFile = config.age.secrets.pocket-id_secrets.path;
   };
 
   ### REVERSE PROXY ###
