@@ -258,10 +258,7 @@ in {
           # Startup
           ########################################################################################
 
-          exec-once = [
-            "waybar"
-            "polkit-kde-authentication-agent-1"
-          ];
+          exec-once = ["waybar"];
 
           ########################################################################################
           # Env Vars
@@ -298,6 +295,7 @@ in {
 
     services = {
       dunst = import ./dunst.nix;
+      hyprpolkitagent.enable = true;
     };
 
     home = {
