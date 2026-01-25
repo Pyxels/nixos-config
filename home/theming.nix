@@ -8,7 +8,7 @@
     enable = true;
     platformTheme.name = "gtk";
     style.name = "adwaita-dark";
-    style.package = pkgs.adwaita-qt;
+    style.package = pkgs.adwaita-qt6;
   };
   gtk = {
     enable = true;
