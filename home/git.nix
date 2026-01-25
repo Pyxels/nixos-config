@@ -2,19 +2,23 @@
   programs.git = {
     enable = true;
 
-    userEmail = "39232833+Pyxels@users.noreply.github.com";
-    userName = "Pyxels";
-
-    extraConfig = {
+    settings = {
       init.defaultBranch = "master";
       commit.gpgsign = true;
       gpg.format = "ssh";
       user.signingkey = "~/.ssh/id_rsa.pub";
       interactive.singlekey = true;
       push.autoSetupRemote = true;
-    };
 
-    difftastic.enable = true;
-    difftastic.display = "inline";
+      user = {
+        email = "39232833+Pyxels@users.noreply.github.com";
+        name = "Pyxels";
+      };
+    };
+  };
+
+  programs.difftastic = {
+    enable = true;
+    git.enable = true;
   };
 }
