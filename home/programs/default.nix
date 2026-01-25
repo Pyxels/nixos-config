@@ -19,14 +19,11 @@
 
     discord
     jellyfin-media-player
-
-    obsidian
   ];
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "discord"
-      "obsidian"
     ];
 
   xdg.configFile.kickoff = {
