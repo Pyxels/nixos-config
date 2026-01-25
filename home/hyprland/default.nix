@@ -37,6 +37,7 @@ in {
   imports = [
     ./waybar
     ./scripts
+    ./hyprpaper.nix
   ];
 
   options.customConfig.hyprland = {
@@ -259,7 +260,6 @@ in {
 
           exec-once = [
             "waybar"
-            "hyprpaper -n"
             "polkit-kde-authentication-agent-1"
           ];
 
@@ -302,7 +302,6 @@ in {
 
     home = {
       packages = with pkgs; [
-        hyprpaper
         wl-clipboard
 
         libnotify
@@ -310,8 +309,6 @@ in {
       ];
 
       file = {
-        ".config/hypr/hyprpaper.conf".source = ./hyprpaper.conf;
-        ".config/hypr/img/background.png".source = ./background.png;
         ".config/hypr/img/lockscreen.png".source = ./lockscreen.png;
       };
       sessionVariables.NIXOS_OZONE_WL = "1";
