@@ -5,7 +5,12 @@
       wallpaper = [
         {
           monitor = "";
-          path = toString ./background.png;
+          path = toString (
+            builtins.path {
+              path = ./background.png;
+              name = "desktop_background.png";
+            }
+          );
         }
       ];
       splash = false;
