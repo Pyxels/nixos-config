@@ -7,6 +7,14 @@
 }:
 with lib; let
   cfg = config.customConfig.crowdsec;
+  atticWhitelistParser = pkgs.writeText "attic-whitelist.yaml" ''
+    name: custom/attic-whitelist
+    description: "Whitelist Attic cache vhost"
+    whitelist:
+      reason: "attic.pyxels.me cache traffic"
+      expression:
+        - "evt.Meta.target_fqdn != nil && (evt.Meta.target_fqdn == 'attic.pyxels.me' || evt.Meta.target_fqdn startsWith 'attic.pyxels.me:')"
+  '';
 in {
   # disabled newer crowdsec module in nixpkgs in favor of https://codeberg.org/kampka/nix-flake-crowdsec
   # due to lazyness to migrate
@@ -80,6 +88,12 @@ in {
         };
       };
     };
+
+    systemd.tmpfiles.rules = [
+      "d /var/lib/crowdsec/config/parsers 0750 crowdsec crowdsec - -"
+      "d /var/lib/crowdsec/config/parsers/s02-enrich 0750 crowdsec crowdsec - -"
+      "L+ /var/lib/crowdsec/config/parsers/s02-enrich/attic-whitelist.yaml - - - - ${atticWhitelistParser}"
+    ];
 
     systemd.services = {
       crowdsec.serviceConfig.ExecStartPre = [
