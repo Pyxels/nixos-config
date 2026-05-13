@@ -21,10 +21,6 @@
     };
 
     deploy-rs.url = "github:serokell/deploy-rs";
-    comin = {
-      url = "github:nlewo/comin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     nixvim-config = {
       url = "github:pyxels/nixvim-config";

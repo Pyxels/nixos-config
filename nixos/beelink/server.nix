@@ -189,7 +189,6 @@
                 "127.0.0.1:9027" # jellyfin-exporter
                 "127.0.0.1:2019" # caddy
                 "127.0.0.1:13224" # crowdsec
-                "127.0.0.1:${toString config.services.comin.exporter.port}"
               ];
             }
           ];
@@ -218,7 +217,6 @@
               targets = [
                 "arm-vps:2019" # caddy
                 "arm-vps:13224" # crowdsec
-                "arm-vps:4243" # comin
               ];
             }
           ];
