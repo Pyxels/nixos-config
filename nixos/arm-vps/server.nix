@@ -142,12 +142,6 @@ in {
         }
         level INFO
       }
-      admin 0.0.0.0:2019 {
-        origins 127.0.0.0/16 100.64.0.0/10
-      }
-      metrics {
-        per_host
-      }
     '';
   };
 }

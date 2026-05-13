@@ -191,7 +191,6 @@
                 "127.0.0.1:${toString config.services.prometheus.exporters.exportarr-prowlarr.port}"
                 "127.0.0.1:19091"
                 "127.0.0.1:9027" # jellyfin-exporter
-                "127.0.0.1:2019" # caddy
                 "127.0.0.1:13224" # crowdsec
               ];
             }
@@ -219,7 +218,6 @@
           static_configs = [
             {
               targets = [
-                "arm-vps:2019" # caddy
                 "arm-vps:13224" # crowdsec
               ];
             }
@@ -314,9 +312,6 @@
           mode 0640
         }
         level INFO
-      }
-      metrics {
-        per_host
       }
     '';
   };
