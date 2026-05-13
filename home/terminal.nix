@@ -59,13 +59,12 @@
     feh
     gh # github cli
     nh # nix helper
-    attic-client # private cache
   ];
 
   nix.settings = {
     experimental-features = ["nix-command" "flakes"];
-    substituters = ["https://cache.nixos.org" "http://beelink:2272/private/" "http://beelink:2272/actions"];
-    trusted-public-keys = ["cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" "private:FdCe3TcRN4WaHm4ME4c03t9MdWfeNajllB9SlE5RZxo=" "actions:SmswmKVqKQ0MJvZwhTp93WfsA6dkzAHV05+kZGazSos="];
+    substituters = ["https://cache.nixos.org"];
+    trusted-public-keys = ["cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="];
     netrc-file = "/home/${name}/.config/nix/netrc";
   };
   nix.package = pkgs.nix;

@@ -13,11 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@main
-      - uses: ryanccn/attic-action@v0
-        with:
-          endpoint: https://attic.pyxels.me
-          cache: actions
-          token: ${{ secrets.ATTIC_CACHE_KEY }}
 
       - name: "Run .#checks in parallel"
         run: nix run github:Mic92/nix-fast-build -- --no-nom --skip-cached

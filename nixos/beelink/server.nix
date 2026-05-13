@@ -37,7 +37,6 @@
           mode = "770";
         };
         jellyfin-exporter.file = ../../secrets/beelink-jellyfin-exporter.age;
-        attic-config.file = ../../secrets/attic-config.age;
         grafana-secret-key = {
           file = ../../secrets/beelink-grafana-secret-key.age;
           owner = "grafana";
@@ -252,15 +251,6 @@
     };
   };
   systemd.services.grafana.serviceConfig.EnvironmentFile = config.age.secrets.domain.path;
-
-  services.atticd = {
-    enable = true;
-    environmentFile = config.age.secrets.attic-config.path;
-    settings = {
-      listen = "[::]:2272";
-      require-proof-of-possession = false;
-    };
-  };
 
   virtualisation.oci-containers.containers = {
     shelly-plugs-exporter = {

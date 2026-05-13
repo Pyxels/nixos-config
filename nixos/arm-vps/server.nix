@@ -131,7 +131,6 @@ in {
         reverse_proxy 127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}
       '';
       "id.${domain}".extraConfig = "reverse_proxy 127.0.0.1:${toString config.services.pocket-id.settings.PORT}";
-      "attic.${domain}".extraConfig = "reverse_proxy http://beelink:2272";
     };
     globalConfig = ''
       log stdout_logger {
