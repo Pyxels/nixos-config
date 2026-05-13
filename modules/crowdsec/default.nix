@@ -56,7 +56,14 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = [inputs.crowdsec.overlays.default];
+    nixpkgs.overlays = [
+      (final: _prev: let
+        sys = final.stdenv.hostPlatform.system;
+      in {
+        crowdsec = inputs.crowdsec.packages.${sys}.crowdsec;
+        crowdsec-firewall-bouncer = inputs.crowdsec.packages.${sys}.crowdsec-firewall-bouncer;
+      })
+    ];
     services = {
       crowdsec = {
         enable = true;

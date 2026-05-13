@@ -20,6 +20,7 @@ in {
   "beelink-sonarr-key.age".publicKeys = users ++ [beelink];
   "beelink-prowlarr-key.age".publicKeys = users ++ [beelink];
   "beelink-jellyfin-exporter.age".publicKeys = users ++ [beelink];
+  "beelink-grafana-secret-key.age".publicKeys = users ++ [beelink];
   "../modules/crowdsec/crowdsec-enroll-key.age".publicKeys = users ++ [beelink arm-vps];
   "../modules/crowdsec/crowdsec-firewall-key.age".publicKeys = users ++ [beelink arm-vps];
   "pocket-id.age".publicKeys = users ++ [arm-vps];

@@ -38,6 +38,11 @@
         };
         jellyfin-exporter.file = ../../secrets/beelink-jellyfin-exporter.age;
         attic-config.file = ../../secrets/attic-config.age;
+        grafana-secret-key = {
+          file = ../../secrets/beelink-grafana-secret-key.age;
+          owner = "grafana";
+          group = "grafana";
+        };
       };
     }
   ];
@@ -97,7 +102,7 @@
 
     ### JELLYFIN ###
     jellyfin.enable = true;
-    jellyseerr.enable = true;
+    seerr.enable = true;
     radarr.enable = true;
     sonarr.enable = true;
     prowlarr.enable = true;
@@ -231,6 +236,7 @@
         server.http_port = 3010;
         server.http_addr = "0.0.0.0";
         analytics.reporting_enable = false;
+        security.secret_key = "$__file{${config.age.secrets.grafana-secret-key.path}}";
       };
 
       provision.datasources.settings = {
@@ -302,7 +308,7 @@
       "trails.{$DOMAIN}".extraConfig = mkOauth2Proxy (toString config.customConfig.wanderer.frontendPort);
       "audio.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.audiobookshelf.port}";
       "media.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:8096";
-      "request.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.jellyseerr.port}";
+      "request.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.seerr.port}";
       "grafana.{$DOMAIN}".extraConfig = mkOauth2Proxy (
         toString config.services.grafana.settings.server.http_port
       );

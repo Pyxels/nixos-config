@@ -30,7 +30,7 @@
 in
   {
     meta = {
-      nixpkgs = import nixpkgs {system = "x86_64-linux";};
+      nixpkgs = import nixpkgs {localSystem = "x86_64-linux";};
       specialArgs = {inherit inputs name;};
       inherit nodeSpecialArgs;
     };
