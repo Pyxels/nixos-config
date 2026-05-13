@@ -20,7 +20,10 @@
       };
     };
 
-    deploy-rs.url = "github:serokell/deploy-rs";
+    colmena = {
+      url = "github:zhaofengli/colmena";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nixvim-config = {
       url = "github:pyxels/nixvim-config";
@@ -43,11 +46,7 @@
     kicker-app.url = "github:pyxels/kicker-app/refs/tags/0.0.7";
   };
 
-  outputs = {
-    nixpkgs,
-    self,
-    ...
-  } @ inputs:
+  outputs = {nixpkgs, ...} @ inputs:
     inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       flake = let
         name = "jonas";
@@ -110,7 +109,10 @@
 
         templates = import ./templates;
 
-        deploy = import ./hosts/servers.nix {inherit inputs self;};
+        colmenaHive = inputs.colmena.lib.makeHive (import ./hosts/servers.nix {
+          inherit inputs nixpkgs name;
+          servers = ["arm-vps" "beelink"];
+        });
       };
 
       systems = [
@@ -131,7 +133,7 @@
             git-hooks.enabledPackages
             ++ (with pkgs; [
               nix-output-monitor
-              inputs.deploy-rs.packages.${system}.default
+              inputs.colmena.packages.${system}.colmena
               just
             ]);
 

@@ -1,9 +1,9 @@
 default:
   @just --list
 
-# Deploy the given host without checks and with nom
+# Deploy the given host with colmena
 deploy host:
-  deploy -s -- .#{{host}} --log-format internal-json -v |& nom --json
+  colmena apply --on {{host}}
 
 # build the given host locally
 build host:

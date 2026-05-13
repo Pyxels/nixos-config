@@ -1,28 +1,38 @@
 {
   inputs,
-  self,
-}: {
-  nodes = {
-    arm-vps = let
-      system = "aarch64-linux";
-    in {
-      hostname = "arm-vps";
-      remoteBuild = true;
-      sshUser = "root";
-      profiles.system = {
-        user = "root";
-        path = inputs.deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations.arm-vps;
+  nixpkgs,
+  name,
+  servers,
+}: let
+  hostInfos = map (hostName: import ./${hostName}.nix {} // {inherit hostName;}) servers;
+
+  mkNode = host: {
+    name = host.hostName;
+    value = {
+      deployment = {
+        targetHost = host.name;
+        targetUser = "root";
+        buildOnTarget = host.system == "aarch64-linux";
       };
-    };
-    beelink = let
-      system = "x86_64-linux";
-    in {
-      hostname = "beelink";
-      sshUser = "root";
-      profiles.system = {
-        user = "root";
-        path = inputs.deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations.beelink;
-      };
+      nixpkgs.hostPlatform = host.system;
+      imports = [
+        inputs.agenix.nixosModules.default
+        ../nixos/${host.hostName}/configuration.nix
+      ];
     };
   };
-}
+
+  nodeSpecialArgs = builtins.listToAttrs (map (host: {
+      name = host.hostName;
+      value = {inherit host;};
+    })
+    hostInfos);
+in
+  {
+    meta = {
+      nixpkgs = import nixpkgs {system = "x86_64-linux";};
+      specialArgs = {inherit inputs name;};
+      inherit nodeSpecialArgs;
+    };
+  }
+  // builtins.listToAttrs (map mkNode hostInfos)
