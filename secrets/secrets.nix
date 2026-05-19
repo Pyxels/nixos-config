@@ -19,5 +19,6 @@ in {
   "beelink-grafana-secret-key.age".publicKeys = users ++ [beelink];
   "../modules/crowdsec/crowdsec-enroll-key.age".publicKeys = users ++ [beelink arm-vps];
   "../modules/crowdsec/crowdsec-firewall-key.age".publicKeys = users ++ [beelink arm-vps];
+  "crowdsec-sync-ssh-key.age".publicKeys = users ++ [beelink];
   "pocket-id.age".publicKeys = users ++ [arm-vps];
 }

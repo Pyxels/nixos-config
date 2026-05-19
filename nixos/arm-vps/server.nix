@@ -10,6 +10,7 @@ in {
   imports = [
     ../../modules/reboot-required
     ../../modules/crowdsec
+    ../../modules/crowdsec-sync-server
     {
       age.secrets = {
         pocket-id_secrets.file = ../../secrets/pocket-id.age;
@@ -120,6 +121,13 @@ in {
 
   ### CROWDSEC ###
   customConfig.crowdsec.enable = true;
+  customConfig.crowdsec-sync-server = {
+    enable = true;
+    allowlist = "private";
+    # public key of the matching private key stored in
+    # secrets/crowdsec-sync-ssh-key.age on beelink
+    clientPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIJN72p1oGDdCzFRS5tctv30or9rYpwqKihNqS9theTK crowdsec-sync@beelink";
+  };
 
   services.caddy = {
     enable = true;

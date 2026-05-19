@@ -8,6 +8,7 @@
     ../../modules/reboot-required
     ../../modules/jellyfin-exporter
     ../../modules/crowdsec
+    ../../modules/crowdsec-sync-client
 
     {
       age.secrets = {
@@ -83,6 +84,10 @@
   customConfig = {
     ### CROWDSEC ###
     crowdsec.enable = true;
+    crowdsec-sync-client = {
+      enable = true;
+      remoteHost = "arm-vps";
+    };
 
     ### WANDERER ###
     wanderer = {
