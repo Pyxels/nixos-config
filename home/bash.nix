@@ -25,12 +25,5 @@
     historyFile = "/home/${name}/.bash_history";
     historyFileSize = 50000;
     historySize = 10000;
-    initExtra = ''
-      case "$-" in *i*) ;; *) return ;; esac
-      # always run ll after cd'ing into a directory
-      function cd {
-        builtin cd "$@" && ll
-      }
-    '';
   };
 }
