@@ -8,6 +8,8 @@
     efiSupport = true;
     efiInstallAsRemovable = true;
     device = "nodev";
+    # boot is tiny
+    configurationLimit = 2;
   };
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/43F7-29CD";
