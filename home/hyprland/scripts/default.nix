@@ -14,5 +14,6 @@ in {
 
     ./select_workspace.nix
     ./create_workspace.nix
+    ./clipboard_history.nix
   ];
 }

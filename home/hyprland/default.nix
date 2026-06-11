@@ -311,6 +311,9 @@ in {
               (mkExec "SUPER + Y" "select_workspace")
               (mkExec "SUPER + SHIFT + Y" "create_workspace")
 
+              # Clipboard history
+              (mkExec "SUPER + V" "clipboard_history")
+
               # Move/resize windows with mainMod + LMB/RMB and dragging
               (mkBindFlags "SUPER + mouse:272" "hl.dsp.window.drag()" {mouse = true;})
               (mkBindFlags "SUPER + mouse:273" "hl.dsp.window.resize()" {mouse = true;})
@@ -327,6 +330,7 @@ in {
               (mkLuaInline ''
                 function()
                   hl.exec_cmd("waybar")
+                  hl.exec_cmd("${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.cliphist}/bin/cliphist store")
                 end'')
             ];
           };
@@ -383,6 +387,7 @@ in {
     home = {
       packages = with pkgs; [
         wl-clipboard
+        cliphist
 
         libnotify
         pamixer
