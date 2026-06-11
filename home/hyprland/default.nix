@@ -6,30 +6,39 @@
 }: let
   cfg = config.customConfig.hyprland;
 
+  inherit (lib.generators) mkLuaInline;
+
+  # A keybind is `hl.bind(key, dispatcher[, flags])`. Dispatchers are raw Lua
+  # expressions (hl.dsp.*), so they are passed through mkLuaInline.
+  mkBind = key: dispatcher: {_args = [key (mkLuaInline dispatcher)];};
+  mkBindFlags = key: dispatcher: flags: {_args = [key (mkLuaInline dispatcher) flags];};
+  mkExec = key: cmd: mkBind key ''hl.dsp.exec_cmd("${cmd}")'';
+
   generateWorkspaces = workspaces:
     lib.lists.flatten (
       map (ws: [
-        "SUPER, ${toString ws.number}, workspace, name:${ws.name}"
-        "SUPER_SHIFT, ${toString ws.number}, movetoworkspacesilent, name:${ws.name}"
+        (mkBind "SUPER + ${toString ws.number}" ''hl.dsp.focus({ workspace = "name:${ws.name}" })'')
+        (mkBind "SUPER + SHIFT + ${toString ws.number}" ''hl.dsp.window.move({ workspace = "name:${ws.name}", follow = false })'')
       ])
       workspaces
     );
 
   generateWorkspaceMonitorBindings = workspaces:
-    map (
-      ws: ''name:${ws.name}, monitor:${ws.monitor}, default:${
-          if ws.default or false
-          then "true"
-          else "false"
-        }''
-    )
+    map (ws: {
+      workspace = "name:${ws.name}";
+      # Reference the monitor's Lua local (hyprlang `$foo` becomes Lua `foo`).
+      monitor = mkLuaInline (lib.removePrefix "$" ws.monitor);
+      default = ws.default or false;
+    })
     workspaces;
 
+  # Hyprlang `$foo = code` variables become Lua locals; the `$` is stripped so
+  # the name is a valid Lua identifier.
   generateMonitors = monitors:
     builtins.listToAttrs (
       map (monitor: {
-        inherit (monitor) name;
-        value = monitor.code;
+        name = lib.removePrefix "$" monitor.name;
+        value = {_var = monitor.code;};
       })
       monitors
     );
@@ -143,122 +152,184 @@ in {
       package = null;
       portalPackage = null;
 
+      configType = "lua";
       settings =
         {
-          ecosystem = {
-            no_update_news = true;
-            no_donation_nag = true;
-          };
+          # Static variables/sections all live inside a single `hl.config({...})` call.
+          config = {
+            ecosystem = {
+              no_update_news = true;
+              no_donation_nag = true;
+            };
 
-          input = {
-            kb_layout = "de";
-            kb_variant = "nodeadkeys";
+            input = {
+              kb_layout = "de";
+              kb_variant = "nodeadkeys";
 
-            follow_mouse = 2;
-          };
+              follow_mouse = 2;
+            };
 
-          general = {
-            gaps_in = 3;
-            gaps_out = 10;
-            border_size = 2;
-            "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
+            general = {
+              gaps_in = 3;
+              gaps_out = 10;
+              border_size = 2;
+              col.active_border = {
+                colors = ["rgba(33ccffee)" "rgba(00ff99ee)"];
+                angle = 45;
+              };
 
-            layout = "master";
-          };
+              layout = "master";
+            };
 
-          cursor.inactive_timeout = 5;
-          cursor.enable_hyprcursor = false;
+            cursor = {
+              inactive_timeout = 5;
+              enable_hyprcursor = false;
+            };
 
-          misc = {
-            mouse_move_focuses_monitor = false;
-            disable_hyprland_logo = true;
-          };
+            misc = {
+              mouse_move_focuses_monitor = false;
+              disable_hyprland_logo = true;
+            };
 
-          decoration = {
-            rounding = 5;
-            inactive_opacity = 0.85;
-            shadow.enabled = false;
+            decoration = {
+              rounding = 5;
+              inactive_opacity = 0.85;
+              shadow.enabled = false;
 
-            blur = {
-              passes = 2;
-              ignore_opacity = true;
+              blur = {
+                passes = 2;
+                ignore_opacity = true;
+              };
             };
           };
 
-          animations = {
-            bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
+          ########################################################################################
+          # Animations
+          ########################################################################################
 
-            animation = [
-              "windows,    1, 5,   myBezier"
-              "windowsOut, 1, 5,   default, popin 80%"
-              "border,     1, 10,  default"
-              "fade,       1, 7,   default"
-              "workspaces, 1, 6,   default"
+          curve = {
+            _args = [
+              "myBezier"
+              {
+                type = "bezier";
+                points = [[0.05 0.9] [0.1 1.05]];
+              }
             ];
           };
 
-          windowrulev2 = [
-            "bordercolor rgb(fb4934), fullscreen:1"
-            "bordercolor rgb(d3869b), pinned:1"
+          animation = [
+            {
+              leaf = "windows";
+              enabled = true;
+              speed = 5;
+              bezier = "myBezier";
+            }
+            {
+              leaf = "windowsOut";
+              enabled = true;
+              speed = 5;
+              bezier = "default";
+              style = "popin 80%";
+            }
+            {
+              leaf = "border";
+              enabled = true;
+              speed = 10;
+              bezier = "default";
+            }
+            {
+              leaf = "fade";
+              enabled = true;
+              speed = 7;
+              bezier = "default";
+            }
+            {
+              leaf = "workspaces";
+              enabled = true;
+              speed = 6;
+              bezier = "default";
+            }
+          ];
+
+          ########################################################################################
+          # Window rules
+          ########################################################################################
+
+          window_rule = [
+            {
+              match.fullscreen = true;
+              border_color = "rgb(fb4934)";
+            }
+            {
+              match.pin = true;
+              border_color = "rgb(d3869b)";
+            }
           ];
 
           bind =
             [
               # Basic
-              "SUPER,    Return,      exec, ${pkgs.alacritty}/bin/alacritty"
-              "SUPER,    Q,           killactive,"
-              "CTRL_ALT, BackSpace,   exit,"
+              (mkExec "SUPER + Return" "${pkgs.alacritty}/bin/alacritty")
+              (mkBind "SUPER + Q" "hl.dsp.window.close()")
+              (mkBind "CTRL + ALT + BackSpace" "hl.dsp.exit()")
 
               # Applications
-              "SUPER, D, exec, ${pkgs.kickoff}/bin/kickoff"
-              "SUPER, W, exec, ${pkgs.firefox}/bin/firefox"
-              "SUPER, N, exec, ${pkgs.alacritty}/bin/alacritty -e ${pkgs.libqalculate}/bin/qalc"
+              (mkExec "SUPER + D" "${pkgs.kickoff}/bin/kickoff")
+              (mkExec "SUPER + W" "${pkgs.firefox}/bin/firefox")
+              (mkExec "SUPER + N" "${pkgs.alacritty}/bin/alacritty -e ${pkgs.libqalculate}/bin/qalc")
 
               # Shortcuts
-              "SUPER,       Period, exec, ${pkgs.pamixer}/bin/pamixer --allow-boost -i 2"
-              "SUPER_SHIFT, Period, exec, ${pkgs.pamixer}/bin/pamixer --allow-boost -i 10"
-              "SUPER,       Comma,  exec, ${pkgs.pamixer}/bin/pamixer --allow-boost -d 2"
-              "SUPER_SHIFT, Comma,  exec, ${pkgs.pamixer}/bin/pamixer --allow-boost -d 10"
-              "SUPER_SHIFT, B,      exec, headset_toggle"
-              "SUPER_SHIFT, L,      exec, ${pkgs.swaylock}/bin/swaylock -eFi ~/.config/hypr/img/lockscreen.png"
+              (mkExec "SUPER + Period" "${pkgs.pamixer}/bin/pamixer --allow-boost -i 2")
+              (mkExec "SUPER + SHIFT + Period" "${pkgs.pamixer}/bin/pamixer --allow-boost -i 10")
+              (mkExec "SUPER + Comma" "${pkgs.pamixer}/bin/pamixer --allow-boost -d 2")
+              (mkExec "SUPER + SHIFT + Comma" "${pkgs.pamixer}/bin/pamixer --allow-boost -d 10")
+              (mkExec "SUPER + SHIFT + B" "headset_toggle")
+              (mkExec "SUPER + SHIFT + L" "${pkgs.swaylock}/bin/swaylock -eFi ~/.config/hypr/img/lockscreen.png")
 
               # Layout
-              "SUPER,       Space,  layoutmsg, swapwithmaster master"
-              "SUPER_SHIFT, Space,  togglefloating,"
-              "SUPER,       F,      fullscreen, 1"
-              "SUPER_SHIFT, F,      fullscreen, 0"
-              "SUPER,       J,      layoutmsg, cyclenext"
-              "SUPER,       K,      layoutmsg, cycleprev"
-              "SUPER_SHIFT, J,      layoutmsg, swapnext"
-              "SUPER_SHIFT, K,      layoutmsg, swapprev"
-              "SUPER_SHIFT, S,      pin"
+              (mkBind "SUPER + Space" ''hl.dsp.layout("swapwithmaster master")'')
+              (mkBind "SUPER + SHIFT + Space" ''hl.dsp.window.float({ action = "toggle" })'')
+              (mkBind "SUPER + F" ''hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" })'')
+              (mkBind "SUPER + SHIFT + F" ''hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" })'')
+              (mkBind "SUPER + J" ''hl.dsp.layout("cyclenext")'')
+              (mkBind "SUPER + K" ''hl.dsp.layout("cycleprev")'')
+              (mkBind "SUPER + SHIFT + J" ''hl.dsp.layout("swapnext")'')
+              (mkBind "SUPER + SHIFT + K" ''hl.dsp.layout("swapprev")'')
+              (mkBind "SUPER + SHIFT + S" "hl.dsp.window.pin()")
 
-              "SUPER_SHIFT, Left,   layoutmsg, orientationleft"
-              "SUPER_SHIFT, Up,     layoutmsg, orientationtop"
-              "SUPER_SHIFT, Right,  layoutmsg, orientationright"
-              "SUPER_SHIFT, Down,   layoutmsg, orientationbottom"
-              "SUPER,       C,      layoutmsg, orientationcenter"
+              (mkBind "SUPER + SHIFT + Left" ''hl.dsp.layout("orientationleft")'')
+              (mkBind "SUPER + SHIFT + Up" ''hl.dsp.layout("orientationtop")'')
+              (mkBind "SUPER + SHIFT + Right" ''hl.dsp.layout("orientationright")'')
+              (mkBind "SUPER + SHIFT + Down" ''hl.dsp.layout("orientationbottom")'')
+              (mkBind "SUPER + C" ''hl.dsp.layout("orientationcenter")'')
 
-              "SUPER, L, splitratio, +0.05"
-              "SUPER, H, splitratio, -0.05"
+              # Master split ratio (hyprlang `splitratio` -> master `mfact` layout message)
+              (mkBind "SUPER + L" ''hl.dsp.layout("mfact +0.05")'')
+              (mkBind "SUPER + H" ''hl.dsp.layout("mfact -0.05")'')
 
               # Interactive workspace selector/creator
-              "SUPER,       Y, exec, select_workspace"
-              "SUPER_SHIFT, Y, exec, create_workspace"
+              (mkExec "SUPER + Y" "select_workspace")
+              (mkExec "SUPER + SHIFT + Y" "create_workspace")
+
+              # Move/resize windows with mainMod + LMB/RMB and dragging
+              (mkBindFlags "SUPER + mouse:272" "hl.dsp.window.drag()" {mouse = true;})
+              (mkBindFlags "SUPER + mouse:273" "hl.dsp.window.resize()" {mouse = true;})
             ]
             ++ generateWorkspaces cfg.workspaces;
-
-          # Move/resize windows with mainMod + LMB/RMB and dragging
-          bindm = [
-            "SUPER, mouse:272, movewindow"
-            "SUPER, mouse:273, resizewindow"
-          ];
 
           ########################################################################################
           # Startup
           ########################################################################################
 
-          exec-once = ["waybar"];
+          on = {
+            _args = [
+              "hyprland.start"
+              (mkLuaInline ''
+                function()
+                  hl.exec_cmd("waybar")
+                end'')
+            ];
+          };
 
           ########################################################################################
           # Env Vars
@@ -266,11 +337,11 @@ in {
 
           # Tell XWayland to use a cursor theme
           env = [
-            "XCURSOR_SIZE,24"
+            {_args = ["XCURSOR_SIZE" "24"];}
 
             # Enable appications
-            "MOZ_ENABLE_WAYLAND,1"
-            "QT_QPA_PLATFORM,wayland"
+            {_args = ["MOZ_ENABLE_WAYLAND" "1"];}
+            {_args = ["QT_QPA_PLATFORM" "wayland"];}
           ];
 
           ########################################################################################
@@ -278,17 +349,27 @@ in {
           ########################################################################################
 
           monitor =
-            map (
-              monitor: "${monitor.name}, ${monitor.resolution}, ${monitor.position}, ${monitor.scale}"
-            )
+            map (monitor: {
+              output = mkLuaInline (lib.removePrefix "$" monitor.name);
+              mode = monitor.resolution;
+              position = monitor.position;
+              scale = monitor.scale;
+            })
             cfg.monitors
-            ++ [",preferred, auto, 1"];
+            ++ [
+              {
+                output = "";
+                mode = "preferred";
+                position = "auto";
+                scale = "1";
+              }
+            ];
 
           ########################################################################################
           # Workspaces
           ########################################################################################
 
-          workspace = generateWorkspaceMonitorBindings cfg.workspaces;
+          workspace_rule = generateWorkspaceMonitorBindings cfg.workspaces;
         }
         // (generateMonitors cfg.monitors);
     };

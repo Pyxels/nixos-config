@@ -1,13 +1,26 @@
 {
   lib,
   pkgs,
+  config,
   ...
 }: {
   programs = {
     alacritty.enable = true;
     alacritty.settings = import ./alacritty.nix;
 
-    firefox = import ./firefox.nix;
+    firefox = {
+      enable = true;
+      profiles.Profile0 = {
+        id = 0;
+        name = "default";
+        path = "r9f1s9wy.default";
+        isDefault = true;
+        settings = {
+          "privacy.webrtc.legacyGlobalIndicator" = false;
+        };
+      };
+      configPath = "${config.xdg.configHome}/mozilla/firefox";
+    };
   };
 
   services.syncthing.enable = true;

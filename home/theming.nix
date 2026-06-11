@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
@@ -14,6 +18,7 @@
     enable = true;
     theme.name = "Adwaita-dark";
     theme.package = pkgs.adw-gtk3;
+    gtk4.theme = config.gtk.theme;
   };
 
   home.pointerCursor = {
