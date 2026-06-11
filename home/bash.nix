@@ -22,8 +22,7 @@
       "...." = "cd ../../..";
     };
     historyControl = ["ignoredups" "ignorespace"];
-    historyFile = "/home/${name}/.bash_history";
-    historyFileSize = 50000;
-    historySize = 10000;
+    historyFile = "/dev/null";
+    historySize = 1000;
   };
 }
