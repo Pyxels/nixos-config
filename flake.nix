@@ -135,6 +135,8 @@
               nix-output-monitor
               inputs.colmena.packages.${system}.colmena
               just
+              fzf
+              nvd
             ]);
 
           shellHook = ''
