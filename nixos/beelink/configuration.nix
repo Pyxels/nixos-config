@@ -12,7 +12,6 @@
     ./hardware-configuration.nix
     ./disko-config.nix
     ./server.nix
-    ./kicker.nix
     ./home-assistant.nix
   ];
 
