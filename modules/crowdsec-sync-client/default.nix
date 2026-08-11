@@ -72,28 +72,30 @@ in {
       owner = "root";
     };
 
-    systemd.tmpfiles.rules = [
-      "d ${cfg.stateDir} 0700 root root -"
-    ];
+    systemd = {
+      tmpfiles.rules = [
+        "d ${cfg.stateDir} 0700 root root -"
+      ];
 
-    systemd.services.crowdsec-sync = {
-      description = "Push beelink public IP to arm-vps crowdsec allowlist";
-      after = ["network-online.target"];
-      wants = ["network-online.target"];
-      serviceConfig = {
-        Type = "oneshot";
-        User = "root";
-        ExecStart = lib.getExe syncScript;
+      services.crowdsec-sync = {
+        description = "Push beelink public IP to arm-vps crowdsec allowlist";
+        after = ["network-online.target"];
+        wants = ["network-online.target"];
+        serviceConfig = {
+          Type = "oneshot";
+          User = "root";
+          ExecStart = lib.getExe syncScript;
+        };
       };
-    };
 
-    systemd.timers.crowdsec-sync = {
-      wantedBy = ["timers.target"];
-      timerConfig = {
-        OnBootSec = "2min";
-        OnUnitActiveSec = cfg.interval;
-        Persistent = true;
-        Unit = "crowdsec-sync.service";
+      timers.crowdsec-sync = {
+        wantedBy = ["timers.target"];
+        timerConfig = {
+          OnBootSec = "2min";
+          OnUnitActiveSec = cfg.interval;
+          Persistent = true;
+          Unit = "crowdsec-sync.service";
+        };
       };
     };
   };

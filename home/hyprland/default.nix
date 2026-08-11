@@ -356,8 +356,7 @@ in {
             map (monitor: {
               output = mkLuaInline (lib.removePrefix "$" monitor.name);
               mode = monitor.resolution;
-              position = monitor.position;
-              scale = monitor.scale;
+              inherit (monitor) position scale;
             })
             cfg.monitors
             ++ [
