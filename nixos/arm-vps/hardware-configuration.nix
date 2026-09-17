@@ -8,8 +8,10 @@
     efiSupport = true;
     efiInstallAsRemovable = true;
     device = "nodev";
-    # boot is tiny
-    configurationLimit = 2;
+    # /boot is a 253M ESP that cannot be grown (it sits before the root
+    # partition). A kernel + initrd set is ~90M and install-grub copies the new
+    # set before pruning old ones, so a limit of 2 needs 3 sets (~283M) at peak.
+    configurationLimit = 1;
   };
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/43F7-29CD";
