@@ -24,8 +24,9 @@
     fzf = {
       enable = true;
       enableBashIntegration = true;
-      fileWidgetCommand = "${lib.getExe pkgs.fd} --type f --hidden --exclude .git";
-      fileWidgetOptions = ["--preview '${lib.getExe pkgs.bat} --color=always {}'"];
+      fileWidget.command = "${lib.getExe pkgs.fd} --type f --hidden --exclude .git";
+      fileWidget.options = ["--preview '${lib.getExe pkgs.bat} --color=always {}'"];
+      historyWidget.bash.command = "";
     };
 
     direnv = {
