@@ -14,6 +14,6 @@
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings.LC_TIME = "de_DE.UTF-8";
   console.keyMap = "de";
-  nix.settings. experimental-features = "nix-command flakes";
+  nix.settings. experimental-features = ["nix-command" "flakes"];
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
