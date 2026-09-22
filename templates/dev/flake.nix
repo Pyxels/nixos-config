@@ -1,17 +1,21 @@
 {
   description = "Basic Dev Shell";
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  inputs.flake-parts.url = "github:hercules-ci/flake-parts";
+  inputs.nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
 
-  outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
-      systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"];
-      perSystem = {pkgs, ...}: {
-        devShells.default = pkgs.mkShell {
-          packages = with pkgs; [
-            bashInteractive
-          ];
-        };
+  outputs = {nixpkgs, ...}: let
+    forAllSystems = function:
+      nixpkgs.lib.genAttrs [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ] (system: function nixpkgs.legacyPackages.${system} system);
+  in {
+    devShells = forAllSystems (pkgs: _system: {
+      default = pkgs.mkShell {
+        packages = with pkgs; [
+          bashInteractive
+        ];
       };
-    };
+    });
+  };
 }

@@ -7,7 +7,7 @@ rec {
     welcomeText = ''
       # Simple Dev Shell Template
       ## Intended usage
-      Simple flake to initialize a dev shell using flake-utils and direnv.
+      Simple flake to initialize a dev shell using direnv.
       Run `direnv allow` to enable automatic dev shell loading.
     '';
   };
