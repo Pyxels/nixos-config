@@ -123,7 +123,7 @@
         system,
         ...
       }: let
-        git-hooks = import ./git-hooks.nix {inherit inputs system;};
+        git-hooks = import ./git-hooks.nix {inherit inputs system pkgs;};
       in {
         devShells.default = pkgs.mkShell {
           buildInputs =
