@@ -10,7 +10,7 @@
   };
   qt = {
     enable = true;
-    platformTheme.name = "gtk";
+    platformTheme.name = "gtk3";
     style.name = "adwaita-dark";
     style.package = pkgs.adwaita-qt6;
   };
@@ -22,6 +22,7 @@
   };
 
   home.pointerCursor = {
+    enable = true;
     name = "phinger-cursors-dark";
     package = pkgs.phinger-cursors;
     gtk.enable = true;
