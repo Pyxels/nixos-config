@@ -8,9 +8,6 @@ in {
   home.packages = map importShellBin [
     ./screenshot.nix
     ./headset_toggle.nix
-    ./toggle_music.nix
-    ./drive_mounter.nix
-    ./drive_unmounter.nix
 
     ./select_workspace.nix
     ./create_workspace.nix
