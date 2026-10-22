@@ -1,34 +1,17 @@
 {
-  inputs,
   config,
-  pkgs,
   lib,
   ...
 }:
 with lib; let
   cfg = config.customConfig.crowdsec;
+  stateDir = "/var/lib/crowdsec";
 in {
-  # disabled newer crowdsec module in nixpkgs in favor of https://codeberg.org/kampka/nix-flake-crowdsec
-  # due to lazyness to migrate
-  disabledModules = [
-    "services/security/crowdsec.nix"
-    "services/security/crowdsec-firewall-bouncer.nix"
-  ];
-
   imports = [
-    inputs.crowdsec.nixosModules.crowdsec
-    inputs.crowdsec.nixosModules.crowdsec-firewall-bouncer
-
     {
-      age.secrets = {
-        crowdsecEnrollKey = {
-          file = ./crowdsec-enroll-key.age;
-          owner = "crowdsec";
-        };
-        crowdsecFirewallKey = {
-          file = ./crowdsec-firewall-key.age;
-          owner = "crowdsec";
-        };
+      age.secrets.crowdsecEnrollKey = {
+        file = ./crowdsec-enroll-key.age;
+        owner = "crowdsec";
       };
     }
   ];
@@ -48,75 +31,72 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = [
-      (final: _prev: let
-        sys = final.stdenv.hostPlatform.system;
-      in {
-        crowdsec = inputs.crowdsec.packages.${sys}.crowdsec;
-        crowdsec-firewall-bouncer = inputs.crowdsec.packages.${sys}.crowdsec-firewall-bouncer;
-      })
-    ];
     services = {
       crowdsec = {
         enable = true;
-        enrollKeyFile = config.age.secrets.crowdsecEnrollKey.path;
-        settings = {
-          api.server.listen_uri = "0.0.0.0:${toString cfg.apiServerPort}";
-          prometheus = {
-            enabled = true;
-            listen_addr = "0.0.0.0";
-            listen_port = 13224;
-          };
+        autoUpdateService = true;
+        extraGroups = mkIf cfg.enableCaddyLogParser ["caddy"];
+
+        hub = {
+          collections =
+            ["crowdsecurity/linux"]
+            ++ optional cfg.enableCaddyLogParser "crowdsecurity/caddy";
+          parsers = ["crowdsecurity/whitelists"];
         };
 
-        acquisitions = mkIf cfg.enableCaddyLogParser [
-          {
-            labels.type = "caddy";
-            filenames = [
-              "${config.services.caddy.logDir}/access.log"
-              "${config.services.caddy.logDir}/access-*.log"
-            ];
-          }
-        ];
+        settings = {
+          config = {
+            api = {
+              server = {
+                listen_uri = "0.0.0.0:${toString cfg.apiServerPort}";
+                # keep the credential/console paths of the previous module so
+                # the existing machine, console enrollment and allowlists survive
+                online_client.credentials_path = "${stateDir}/online_api_credentials.yaml";
+                console_path = "${stateDir}/console.yaml";
+              };
+              client.credentials_path = "${stateDir}/local_api_credentials.yaml";
+            };
+            prometheus = {
+              enabled = true;
+              listen_addr = "0.0.0.0";
+              listen_port = 13224;
+            };
+          };
+
+          console = {
+            enrollKeyFile = config.age.secrets.crowdsecEnrollKey.path;
+            configuration = {
+              share_manual_decisions = true;
+              share_custom = true;
+              share_tainted = true;
+              share_context = true;
+              console_management = false;
+            };
+          };
+
+          acquisitions =
+            [
+              {
+                source = "journalctl";
+                journalctl_filter = ["_SYSTEMD_UNIT=sshd.service"];
+                labels.type = "syslog";
+              }
+            ]
+            ++ optional cfg.enableCaddyLogParser {
+              source = "file";
+              labels.type = "caddy";
+              filenames = [
+                "${config.services.caddy.logDir}/access.log"
+                "${config.services.caddy.logDir}/access-*.log"
+              ];
+            };
+        };
       };
+
       crowdsec-firewall-bouncer = {
         enable = true;
-        settings = {
-          api_key = "\${API_KEY}";
-          api_url = "http://localhost:${toString cfg.apiServerPort}";
-        };
+        settings.api_url = "http://127.0.0.1:${toString cfg.apiServerPort}";
       };
     };
-
-    systemd.services = {
-      crowdsec.serviceConfig.ExecStartPre = [
-        (lib.getExe (
-          pkgs.writeShellScriptBin "install-configurations" ''
-            if ! cscli collections list | grep -q "caddy"; then
-                cscli collections install crowdsecurity/caddy
-            fi
-            if ! cscli collections list | grep -q "linux"; then
-                cscli collections install crowdsecurity/linux
-            fi
-            if ! cscli parsers list | grep -q "whitelists"; then
-                cscli parsers install crowdsecurity/whitelists
-            fi
-          ''
-        ))
-        (lib.getExe (
-          pkgs.writeShellScriptBin "register-bouncer" ''
-            if ! cscli bouncers list | grep -q "firewall"; then
-                cscli bouncers add "firewall" --key "$(cat ${config.age.secrets.crowdsecFirewallKey.path} | cut -d= -f2)"
-            fi
-          ''
-        ))
-      ];
-
-      crowdsec-firewall-bouncer.serviceConfig.EnvironmentFile =
-        config.age.secrets.crowdsecFirewallKey.path;
-    };
-
-    # ensure crowdsec can access logs
-    users.users.crowdsec.extraGroups = mkIf cfg.enableCaddyLogParser ["caddy"];
   };
 }

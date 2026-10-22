@@ -6,8 +6,7 @@
 }:
 with lib; let
   cfg = config.customConfig.crowdsec-sync-server;
-  # system-path wrapper that injects -c with the generated config path;
-  # raw ${pkgs.crowdsec}/bin/cscli would fail to find /etc/crowdsec/config.yaml
+  # cscli reads /etc/crowdsec/config.yaml, which the nixpkgs module generates
   cscli = "/run/current-system/sw/bin/cscli";
 
   sudo = "/run/wrappers/bin/sudo";

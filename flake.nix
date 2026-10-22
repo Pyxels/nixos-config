@@ -13,11 +13,7 @@
 
     agenix = {
       url = "github:ryantm/agenix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        darwin.follows = "";
-        home-manager.follows = "home-manager";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     colmena = {
@@ -31,11 +27,6 @@
         flake-parts.follows = "flake-parts";
         git-hooks.follows = "git-hooks";
       };
-    };
-
-    crowdsec = {
-      url = "git+https://codeberg.org/kampka/nix-flake-crowdsec.git";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     git-hooks = {
