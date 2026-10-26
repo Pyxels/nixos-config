@@ -230,39 +230,18 @@
     keyFile = config.age.secrets.oauth2ProxySecrets.path;
     httpAddress = "http://0.0.0.0:4180";
   };
-  services.caddy = let
-    mkOauth2Proxy = port: ''
-      handle /oauth2/* {
-        reverse_proxy 127.0.0.1:4180 {
-          header_up X-Real-IP {http.request.header.CF-Connecting-IP}
-          header_up X-Forwarded-Uri {uri}
-        }
-      }
+  customConfig.caddy-oauth2 = {
+    enable = true;
+    realIpHeader = "{http.request.header.CF-Connecting-IP}";
+    virtualHosts."grafana.{$DOMAIN}" = config.services.grafana.settings.server.http_port;
+  };
 
-      handle {
-        forward_auth 127.0.0.1:4180 {
-          uri /oauth2/auth
-
-          header_up X-Real-IP {http.request.header.CF-Connecting-IP}
-
-          @error status 401
-          handle_response @error {
-            redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
-          }
-        }
-
-        reverse_proxy http://127.0.0.1:${port}
-      }
-    '';
-  in {
+  services.caddy = {
     enable = true;
     virtualHosts = {
       "audio.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.audiobookshelf.port}";
       "media.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:8096";
       "request.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.seerr.port}";
-      "grafana.{$DOMAIN}".extraConfig = mkOauth2Proxy (
-        toString config.services.grafana.settings.server.http_port
-      );
       "photos.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.immich.port}";
     };
     environmentFile = config.age.secrets.domain.path;

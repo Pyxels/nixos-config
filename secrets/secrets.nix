@@ -14,4 +14,5 @@ in {
   "crowdsec-enroll-key.age".publicKeys = users ++ [beelink arm-vps];
   "crowdsec-sync-ssh-key.age".publicKeys = users ++ [beelink];
   "pocket-id.age".publicKeys = users ++ [arm-vps];
+  "arm-vps-oauth2-proxy.age".publicKeys = users ++ [arm-vps];
 }

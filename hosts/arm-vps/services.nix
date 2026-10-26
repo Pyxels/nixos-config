@@ -9,6 +9,11 @@
 in {
   age.secrets = {
     pocket-id_secrets.file = ../../secrets/pocket-id.age;
+    # client id/secret of the "up" pocket-id OIDC client + cookie secret
+    oauth2-proxy = {
+      file = ../../secrets/arm-vps-oauth2-proxy.age;
+      owner = "oauth2-proxy";
+    };
   };
 
   services = {
@@ -49,8 +54,26 @@ in {
   services.uptime-kuma = {
     enable = true;
     settings = {
-      UPTIME_KUMA_HOST = "0.0.0.0";
+      UPTIME_KUMA_HOST = "127.0.0.1";
       UPTIME_KUMA_PORT = "3001";
+    };
+  };
+
+  ### OAUTH2-PROXY ###
+  services.oauth2-proxy = {
+    enable = true;
+    provider = "oidc";
+    oidcIssuerUrl = "https://id.${domain}";
+    keyFile = config.age.secrets.oauth2-proxy.path;
+    httpAddress = "http://127.0.0.1:4180";
+    reverseProxy = true;
+    # caddy forward_auth only asks for a decision, never proxies through
+    upstream = ["static://202"];
+    email.domains = ["*"];
+    extraConfig = {
+      code-challenge-method = "S256";
+      skip-provider-button = true;
+      whitelist-domain = ".${domain}";
     };
   };
 
@@ -77,14 +100,22 @@ in {
     443
   ];
 
-  ### CROWDSEC ###
-  customConfig.crowdsec.enable = true;
-  customConfig.crowdsec-sync-server = {
-    enable = true;
-    allowlist = "private";
-    # public key of the matching private key stored in
-    # secrets/crowdsec-sync-ssh-key.age on beelink
-    clientPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIJN72p1oGDdCzFRS5tctv30or9rYpwqKihNqS9theTK crowdsec-sync@beelink";
+  customConfig = {
+    ### UPTIME KUMA ###
+    caddy-oauth2 = {
+      enable = true;
+      virtualHosts."up.${domain}" = lib.toInt config.services.uptime-kuma.settings.UPTIME_KUMA_PORT;
+    };
+
+    ### CROWDSEC ###
+    crowdsec.enable = true;
+    crowdsec-sync-server = {
+      enable = true;
+      allowlist = "private";
+      # public key of the matching private key stored in
+      # secrets/crowdsec-sync-ssh-key.age on beelink
+      clientPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIJN72p1oGDdCzFRS5tctv30or9rYpwqKihNqS9theTK crowdsec-sync@beelink";
+    };
   };
 
   services.caddy = {
