@@ -1,7 +1,6 @@
 # Headless machines deployed with colmena (`just deploy`).
 {
   inputs,
-  pkgs,
   config,
   ...
 }: {
@@ -24,22 +23,6 @@
   };
 
   customConfig.reboot-required.enable = true;
-
-  ### BESZEL ###
-  systemd.services.beszel-agent = {
-    description = "Beszel Agent Service";
-    after = ["network.target"];
-    serviceConfig = {
-      Restart = "always";
-      RestartSec = "5";
-      ExecStart = "${pkgs.beszel}/bin/beszel-agent";
-    };
-    environment = {
-      LISTEN = "45876";
-      KEY = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ8LG4ijPENqiHz1kS/2+CVZXKgl4nmlY0xCJPuMLhcU";
-    };
-    wantedBy = ["multi-user.target"];
-  };
 
   ### CADDY ###
   # file logging, also read by crowdsec's caddy parser

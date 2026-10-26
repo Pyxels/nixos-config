@@ -46,27 +46,6 @@ in {
     };
   };
 
-  ### BESZEL ###
-  systemd.services = {
-    beszel-hub = {
-      description = "Beszel Hub";
-      after = ["network.target"];
-      serviceConfig = {
-        Type = "simple";
-        Restart = "always";
-        RestartSec = "3";
-        User = "root";
-        WorkingDirectory = "/root/beszel";
-        ExecStart = "${pkgs.beszel}/bin/beszel-hub serve --http '0.0.0.0:8090'";
-      };
-      environment = {
-        USER_CREATION = "true";
-        SHARE_ALL_SYSTEMS = "true";
-      };
-      wantedBy = ["multi-user.target"];
-    };
-  };
-
   services.uptime-kuma = {
     enable = true;
     settings = {
