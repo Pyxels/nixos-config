@@ -6,6 +6,5 @@ _: {
     ./crowdsec-sync-server
     ./jellyfin-exporter
     ./reboot-required
-    ./wanderer
   ];
 }

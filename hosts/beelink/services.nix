@@ -1,7 +1,5 @@
 {config, ...}: {
   age.secrets = {
-    wandererSecrets.file = ../../secrets/wanderer.age;
-    wandererMeiliKey.file = ../../secrets/wandererMeiliKey.age;
     oauth2ProxySecrets = {
       file = ../../secrets/oauth2-proxy.age;
       owner = "oauth2-proxy";
@@ -55,13 +53,6 @@
     crowdsec-sync-client = {
       enable = true;
       remoteHost = "arm-vps";
-    };
-
-    ### WANDERER ###
-    wanderer = {
-      enable = false;
-      secretsPath = config.age.secrets.wandererSecrets.path;
-      meiliMasterKey = config.age.secrets.wandererMeiliKey.path;
     };
   };
 
@@ -266,7 +257,6 @@
   in {
     enable = true;
     virtualHosts = {
-      "trails.{$DOMAIN}".extraConfig = mkOauth2Proxy (toString config.customConfig.wanderer.frontendPort);
       "audio.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.audiobookshelf.port}";
       "media.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:8096";
       "request.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.seerr.port}";
