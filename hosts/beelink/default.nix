@@ -1,18 +1,16 @@
 {
   inputs,
-  pkgs,
-  host,
   config,
   ...
 }: {
   imports = [
     inputs.disko.nixosModules.disko
-    inputs.nixvim-config.nixosModules.default
 
-    ./hardware-configuration.nix
-    ./disko-config.nix
-    ./server.nix
+    ./hardware.nix
+    ./disko.nix
+    ./services.nix
     ./home-assistant.nix
+    ../../profiles/server.nix
   ];
 
   system.stateVersion = "25.05";
@@ -35,29 +33,9 @@
   };
   systemd.enableEmergencyMode = false;
 
-  nix = {
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
-    };
+  nix.gc.options = "--delete-older-than 30d";
 
-    settings = {
-      trusted-users = [
-        "root"
-        "@wheel"
-      ];
-      experimental-features = ["nix-command" "flakes"];
-      auto-optimise-store = true;
-    };
-  };
-
-  boot.tmp.cleanOnBoot = true;
-  networking.hostName = host.name;
   services = {
-    openssh.enable = true;
-    openssh.settings.PasswordAuthentication = false;
-    tailscale.enable = true;
     syncthing.enable = true;
     avahi = {
       enable = true;
@@ -65,10 +43,6 @@
       nssmdns6 = true;
     };
   };
-  users.users.root.openssh.authorizedKeys.keys = [
-    ''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILXebXmITS8OF3CLbwVC+HFRg8b/96FiEccvAfQV/ovZ jonas@jonas-bits''
-    ''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPYL1ifWNX2y80O0Sk4OnKZIDJ3Y7dXVRtNcmCkusXuS jonas@vetus''
-  ];
   users.users.jonas = {
     isNormalUser = true;
     extraGroups = [
@@ -76,16 +50,6 @@
       "docker"
     ];
     openssh.authorizedKeys.keys = config.users.users.root.openssh.authorizedKeys.keys;
-  };
-
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-  ];
-
-  nixvim-config = {
-    enable = true;
-    aliases = ["v"];
   };
 
   virtualisation.docker = {

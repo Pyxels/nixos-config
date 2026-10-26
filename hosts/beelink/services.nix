@@ -1,72 +1,40 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
-  imports = [
-    ../../modules/wanderer
-    ../../modules/reboot-required
-    ../../modules/jellyfin-exporter
-    ../../modules/crowdsec
-    ../../modules/crowdsec-sync-client
-
-    {
-      age.secrets = {
-        wandererSecrets.file = ../../secrets/wanderer.age;
-        wandererMeiliKey.file = ../../secrets/wandererMeiliKey.age;
-        oauth2ProxySecrets = {
-          file = ../../secrets/oauth2-proxy.age;
-          owner = "oauth2-proxy";
-        };
-        domain = {
-          file = ../../secrets/beelink-private-domain.age;
-          owner = "caddy";
-        };
-        sonarr = {
-          file = ../../secrets/beelink-sonarr-key.age;
-          group = "media";
-          mode = "770";
-        };
-        radarr = {
-          file = ../../secrets/beelink-radarr-key.age;
-          group = "media";
-          mode = "770";
-        };
-        prowlarr = {
-          file = ../../secrets/beelink-prowlarr-key.age;
-          group = "media";
-          mode = "770";
-        };
-        jellyfin-exporter.file = ../../secrets/beelink-jellyfin-exporter.age;
-        grafana-secret-key = {
-          file = ../../secrets/beelink-grafana-secret-key.age;
-          owner = "grafana";
-          group = "grafana";
-        };
-      };
-    }
-  ];
+{config, ...}: {
+  age.secrets = {
+    wandererSecrets.file = ../../secrets/wanderer.age;
+    wandererMeiliKey.file = ../../secrets/wandererMeiliKey.age;
+    oauth2ProxySecrets = {
+      file = ../../secrets/oauth2-proxy.age;
+      owner = "oauth2-proxy";
+    };
+    domain = {
+      file = ../../secrets/beelink-private-domain.age;
+      owner = "caddy";
+    };
+    sonarr = {
+      file = ../../secrets/beelink-sonarr-key.age;
+      group = "media";
+      mode = "770";
+    };
+    radarr = {
+      file = ../../secrets/beelink-radarr-key.age;
+      group = "media";
+      mode = "770";
+    };
+    prowlarr = {
+      file = ../../secrets/beelink-prowlarr-key.age;
+      group = "media";
+      mode = "770";
+    };
+    jellyfin-exporter.file = ../../secrets/beelink-jellyfin-exporter.age;
+    grafana-secret-key = {
+      file = ../../secrets/beelink-grafana-secret-key.age;
+      owner = "grafana";
+      group = "grafana";
+    };
+  };
 
   ### OVERRIDES ###
   nixpkgs.overlays = [];
-
-  ### BESZEL ###
-  systemd.services = {
-    beszel-agent = {
-      description = "Beszel Agent Service";
-      after = ["network.target"];
-      serviceConfig = {
-        Restart = "always";
-        RestartSec = "5";
-        ExecStart = "${pkgs.beszel}/bin/beszel-agent";
-      };
-      environment = {
-        LISTEN = "45876";
-        KEY = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ8LG4ijPENqiHz1kS/2+CVZXKgl4nmlY0xCJPuMLhcU";
-      };
-      wantedBy = ["multi-user.target"];
-    };
-  };
 
   networking.firewall = {
     allowedTCPPorts = [
@@ -308,16 +276,5 @@
       "photos.{$DOMAIN}".extraConfig = "reverse_proxy http://127.0.0.1:${toString config.services.immich.port}";
     };
     environmentFile = config.age.secrets.domain.path;
-    globalConfig = ''
-      log stdout_logger {
-       output file ${config.services.caddy.logDir}/access.log {
-          roll_size 10MB
-          roll_keep 5
-          roll_keep_for 14d
-          mode 0640
-        }
-        level INFO
-      }
-    '';
   };
 }

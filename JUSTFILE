@@ -74,11 +74,11 @@ deploy:
 build host:
   nix build .#nixosConfigurations.{{host}}.config.system.build.toplevel -L
 
-# use nh to rebuild and switch nixos
+# use nh to rebuild and switch nixos (includes home-manager on NixOS hosts)
 os:
   nh os switch
 
-# use nh to rebuild and switch home-manager
+# use nh to rebuild and switch standalone home-manager (non-NixOS hosts)
 home:
   nh home switch
 

@@ -67,7 +67,7 @@ in {
 
   config = mkIf cfg.enable {
     age.secrets.crowdsec-sync-ssh-key = {
-      file = ../../secrets/crowdsec-sync-ssh-key.age;
+      file = ../../../secrets/crowdsec-sync-ssh-key.age;
       mode = "0400";
       owner = "root";
     };

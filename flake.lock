@@ -228,9 +228,7 @@
     },
     "nixvim-config": {
       "inputs": {
-        "flake-parts": [
-          "flake-parts"
-        ],
+        "flake-parts": "flake-parts",
         "git-hooks": [
           "git-hooks"
         ],
@@ -260,7 +258,6 @@
         "agenix": "agenix",
         "colmena": "colmena",
         "disko": "disko",
-        "flake-parts": "flake-parts",
         "git-hooks": "git-hooks",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",

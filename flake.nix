@@ -9,8 +9,6 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    flake-parts.url = "github:hercules-ci/flake-parts";
-
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,10 +21,7 @@
 
     nixvim-config = {
       url = "github:pyxels/nixvim-config";
-      inputs = {
-        flake-parts.follows = "flake-parts";
-        git-hooks.follows = "git-hooks";
-      };
+      inputs.git-hooks.follows = "git-hooks";
     };
 
     git-hooks = {
@@ -35,108 +30,52 @@
     };
   };
 
-  outputs = {nixpkgs, ...} @ inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
-      flake = let
-        name = "jonas";
-        configPath = "/home/${name}/.dotfiles";
-        hosts = [
-          "vetus"
-          "nixos-l540"
-          "minimal-iso"
-          "beelink"
-        ];
-        homes = hosts ++ ["jonas-bits"];
-        servers = ["arm-vps"];
+  outputs = {nixpkgs, ...} @ inputs: let
+    inherit (nixpkgs) lib;
+    hosts = import ./lib/hosts.nix {inherit inputs;};
 
-        mkNixosSystems = hosts:
-          builtins.listToAttrs (
-            map (
-              hostName: let
-                host = import ./hosts/${hostName}.nix {};
-              in {
-                name = hostName;
-                value = nixpkgs.lib.nixosSystem {
-                  specialArgs = {inherit inputs name host;};
-                  modules = [
-                    inputs.agenix.nixosModules.default
-                    ./nixos/${hostName}/configuration.nix
-                  ];
-                };
-              }
-            )
-            hosts
-          );
+    forAllSystems = f:
+      lib.genAttrs ["x86_64-linux" "aarch64-linux" "aarch64-darwin"]
+      (system: f nixpkgs.legacyPackages.${system});
 
-        mkHomeConfigs = name: hosts:
-          builtins.listToAttrs (
-            map (
-              hostName: let
-                host = import ./hosts/${hostName}.nix {};
-              in {
-                name = "${name}@${hostName}";
-                value = inputs.home-manager.lib.homeManagerConfiguration {
-                  pkgs = nixpkgs.legacyPackages.${host.system}; # Home-manager requires 'pkgs' instance
-                  extraSpecialArgs = {
-                    inherit
-                      inputs
-                      name
-                      configPath
-                      host
-                      nixpkgs
-                      ;
-                  };
-                  modules = [./home/home.nix] ++ host.modules;
-                };
-              }
-            )
-            hosts
-          );
-      in {
-        nixosConfigurations = mkNixosSystems (hosts ++ servers);
-        homeConfigurations = mkHomeConfigs name homes;
-
-        templates = import ./templates;
-
-        colmenaHive = inputs.colmena.lib.makeHive (import ./hosts/servers.nix {
-          inherit inputs nixpkgs name;
-          servers = ["arm-vps" "beelink"];
-        });
+    gitHooks = pkgs:
+      import ./git-hooks.nix {
+        inherit inputs pkgs;
+        inherit (pkgs.stdenv.hostPlatform) system;
       };
+  in {
+    inherit (hosts) nixosConfigurations colmenaHive;
 
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "aarch64-darwin"
-      ];
-      perSystem = {
-        pkgs,
-        system,
-        ...
-      }: let
-        git-hooks = import ./git-hooks.nix {inherit inputs system pkgs;};
-      in {
-        devShells.default = pkgs.mkShell {
-          buildInputs =
-            git-hooks.enabledPackages
-            ++ (with pkgs; [
-              nix-output-monitor
-              inputs.colmena.packages.${system}.colmena
-              just
-              fzf
-              nvd
-            ]);
-
-          shellHook = ''
-            ${git-hooks.shellHook}
-
-            just
-          '';
-        };
-
-        checks = {
-          inherit git-hooks;
-        };
-      };
+    homeConfigurations."jonas@jonas-bits" = inputs.home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      extraSpecialArgs = {inherit inputs;};
+      modules = [./hosts/jonas-bits/home.nix];
     };
+
+    templates = import ./templates;
+
+    devShells = forAllSystems (pkgs: {
+      default = pkgs.mkShell {
+        buildInputs =
+          (gitHooks pkgs).enabledPackages
+          ++ (with pkgs; [
+            nix-output-monitor
+            inputs.colmena.packages.${pkgs.stdenv.hostPlatform.system}.colmena
+            just
+            fzf
+            nvd
+          ]);
+
+        shellHook = ''
+          ${(gitHooks pkgs).shellHook}
+
+          just
+        '';
+      };
+    });
+
+    checks = forAllSystems (pkgs: {
+      git-hooks = gitHooks pkgs;
+    });
+  };
 }

@@ -1,9 +1,5 @@
-{
-  pkgs,
-  configPath,
-  ...
-}: let
-  importShellBin = file: import file {inherit pkgs configPath;};
+{pkgs, ...}: let
+  importShellBin = file: import file {inherit pkgs;};
 in {
   home.packages = map importShellBin [
     ./screenshot.nix

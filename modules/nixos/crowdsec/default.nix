@@ -7,15 +7,6 @@ with lib; let
   cfg = config.customConfig.crowdsec;
   stateDir = "/var/lib/crowdsec";
 in {
-  imports = [
-    {
-      age.secrets.crowdsecEnrollKey = {
-        file = ./crowdsec-enroll-key.age;
-        owner = "crowdsec";
-      };
-    }
-  ];
-
   options.customConfig.crowdsec = {
     enable = mkEnableOption "crowdsec";
     apiServerPort = mkOption {
@@ -31,6 +22,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    age.secrets.crowdsecEnrollKey = {
+      file = ../../../secrets/crowdsec-enroll-key.age;
+      owner = "crowdsec";
+    };
+
     services = {
       crowdsec = {
         enable = true;

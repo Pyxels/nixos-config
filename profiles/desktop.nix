@@ -1,11 +1,14 @@
+# Workstations: hyprland session, audio, and home-manager for the main user.
 {
   inputs,
+  lib,
   pkgs,
-  name,
-  host,
   ...
 }: {
-  imports = [];
+  imports = [
+    ./base.nix
+    inputs.home-manager.nixosModules.home-manager
+  ];
 
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub = {
@@ -17,10 +20,8 @@
   systemd.enableEmergencyMode = false;
 
   networking.networkmanager.enable = true;
-  networking.hostName = host.name;
 
   services = {
-    openssh.enable = true;
     mullvad-vpn.enable = true;
     pipewire = {
       enable = true;
@@ -34,7 +35,6 @@
       nssmdns6 = true;
     };
   };
-  services.tailscale.enable = true;
 
   hardware.bluetooth.enable = true;
 
@@ -48,16 +48,19 @@
   #########################################
   # Global packages
   #########################################
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-
-    inputs.agenix.packages.${host.system}.default
+  environment.systemPackages = [
+    inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   fonts.packages = with pkgs; [
     nerd-fonts.roboto-mono
   ];
+
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      "discord-unwrapped"
+      "discord"
+    ];
 
   programs.hyprland.enable = true;
   security.pam.services.swaylock = {};
@@ -66,7 +69,7 @@
   #########################################
   # Users
   #########################################
-  users.users.${name} = {
+  users.users.jonas = {
     isNormalUser = true;
     extraGroups = [
       "wheel"
@@ -75,23 +78,13 @@
     ];
   };
 
-  nix = {
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
-
-    settings = {
-      trusted-users = [
-        "root"
-        "@wheel"
-      ];
-      experimental-features = ["nix-command" "flakes"];
-      auto-optimise-store = true;
-    };
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    extraSpecialArgs = {inherit inputs;};
+    users.jonas.imports = [
+      ../home
+      ../home/desktop.nix
+    ];
   };
-
-  # dont change
-  system.stateVersion = "22.11"; # Did you read the comment?
 }

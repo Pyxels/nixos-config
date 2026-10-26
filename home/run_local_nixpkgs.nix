@@ -1,12 +1,12 @@
 {
   pkgs,
-  nixpkgs,
+  inputs,
   ...
 }: let
   nix_run_local =
     pkgs.writeShellScriptBin "nr"
     ''
-      nix run "${nixpkgs}#$@"
+      nix run "${inputs.nixpkgs}#$@"
     '';
 
   nix_shell_local =
@@ -15,7 +15,7 @@
       PROMPT="nix shell"
 
       for program in "$@"; do
-        PROMPT="$PROMPT ${nixpkgs}#$program"
+        PROMPT="$PROMPT ${inputs.nixpkgs}#$program"
       done
 
       eval "$PROMPT"

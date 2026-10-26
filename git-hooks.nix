@@ -13,15 +13,15 @@ inputs.git-hooks.lib.${system}.run {
     deadnix = {
       enable = true;
       settings.exclude = [
-        "./nixos/vetus/hardware-configuration.nix"
-        "./nixos/nixos-l540/hardware-configuration.nix"
+        "./hosts/vetus/hardware.nix"
+        "./hosts/nixos-l540/hardware.nix"
         "./templates/rust-crane/flake.nix"
         "./secrets/secrets.nix"
       ];
     };
     statix = {
       enable = true;
-      settings.ignore = ["**/*hardware-configuration.nix" "**/arm-vps/configuration.nix"];
+      settings.ignore = ["**/hardware.nix"];
     };
 
     shellcheck = {

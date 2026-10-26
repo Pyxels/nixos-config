@@ -1,5 +1,11 @@
 {
-  programs.bash.interactiveShellInit = let
+  config,
+  lib,
+  ...
+}: {
+  options.customConfig.reboot-required.enable = lib.mkEnableOption "a login warning when kernel/initrd/systemd changed since boot";
+
+  config.programs.bash.interactiveShellInit = lib.mkIf config.customConfig.reboot-required.enable (let
     RED = "\\033[31m";
     YELLOW = "\\033[33m";
     BLUE = "\\033[34m";
@@ -13,5 +19,5 @@
       printf "${BLUE}%-72s${YELLOW} -> ${RESET}%s\n" "$(readlink /run/booted-system/kernel-modules)" "$(readlink `readlink /nix/var/nix/profiles/system/kernel-modules`)"
       printf "${BLUE}%-72s${YELLOW} -> ${RESET}%s\n" "$(readlink /run/booted-system/systemd)" "$(readlink `readlink /nix/var/nix/profiles/system/systemd`)"
     fi
-  '';
+  '');
 }

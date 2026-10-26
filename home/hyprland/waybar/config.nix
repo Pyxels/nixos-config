@@ -1,4 +1,4 @@
-{host}: {
+{cfg}: {
   mainBar = {
     layer = "top";
     position = "bottom";
@@ -36,7 +36,7 @@
         "temperature"
       ]
       ++ (
-        if host.name == "vetus"
+        if cfg.gpuTempPath != null
         then [
           "custom/gpu-temp"
         ]
@@ -51,7 +51,7 @@
         "custom/vpn"
       ]
       ++ (
-        if host.name == "nixos-l540"
+        if cfg.battery
         then [
           "custom/left-arrow-light"
           "custom/left-arrow-dark"
@@ -104,7 +104,7 @@
       interval = 5;
     };
     "custom/gpu-temp" = {
-      exec = "echo $(($(cat /sys/class/hwmon/hwmon2/temp1_input) / 1000 ))";
+      exec = "echo $(($(cat ${toString cfg.gpuTempPath}) / 1000 ))";
       format = "GPU: {}°C";
       interval = 5;
     };
@@ -155,9 +155,9 @@
         format-icons = ["" "" "󰈸"];
       }
       // (
-        if host.name == "vetus"
+        if cfg.cpuTempPath != null
         then {
-          hwmon-path = "/sys/class/hwmon/hwmon1/temp1_input";
+          hwmon-path = cfg.cpuTempPath;
         }
         else {}
       );

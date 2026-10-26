@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   config,
   ...
@@ -33,12 +32,6 @@
     discord
     jellyfin-media-player
   ];
-
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [
-      "discord-unwrapped"
-      "discord"
-    ];
 
   xdg.configFile.kickoff = {
     target = "kickoff/config.toml";

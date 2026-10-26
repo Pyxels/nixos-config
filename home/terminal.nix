@@ -2,7 +2,7 @@
   inputs,
   pkgs,
   lib,
-  name,
+  config,
   ...
 }: {
   imports = [
@@ -67,13 +67,12 @@
     experimental-features = ["nix-command" "flakes"];
     substituters = ["https://cache.nixos.org"];
     trusted-public-keys = ["cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="];
-    netrc-file = "/home/${name}/.config/nix/netrc";
+    netrc-file = "${config.home.homeDirectory}/.config/nix/netrc";
   };
-  nix.package = pkgs.nix;
 
   home = {
     sessionPath = [
-      "/home/${name}/.cargo/bin"
+      "${config.home.homeDirectory}/.cargo/bin"
     ];
     sessionVariables = {
       DIRENV_LOG_FORMAT = ''\033[2mdirenv: %s\033[0m'';

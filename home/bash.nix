@@ -1,8 +1,8 @@
-{name, ...}: {
+{config, ...}: {
   programs.bash = {
     enable = true;
     sessionVariables = {
-      NH_FLAKE = "/home/${name}/.dotfiles";
+      NH_FLAKE = "${config.home.homeDirectory}/.dotfiles";
     };
     shellAliases = {
       cp = "cp -i";
