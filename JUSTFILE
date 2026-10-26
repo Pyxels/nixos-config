@@ -70,9 +70,19 @@ deploy:
     done
   fi
 
-# build the given host locally
-build host:
-  nix build .#nixosConfigurations.{{host}}.config.system.build.toplevel -L
+# build the given host locally (fzf select if omitted)
+build host="":
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  host="{{host}}"
+  if [ -z "$host" ]; then
+    all_hosts="$(nix eval --json .#nixosConfigurations --apply builtins.attrNames | tr -d '[]"' | tr ',' ' ')"
+    host="$(printf '%s\n' $all_hosts | fzf --prompt='host> ')" || true
+    if [ -z "$host" ]; then echo "no host selected, abort"; exit 1; fi
+  fi
+
+  nix build ".#nixosConfigurations.$host.config.system.build.toplevel" -L
 
 # use nh to rebuild and switch nixos (includes home-manager on NixOS hosts)
 os:
