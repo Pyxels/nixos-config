@@ -24,6 +24,7 @@
     fzf = {
       enable = true;
       enableBashIntegration = true;
+      defaultOptions = ["--bind 'ctrl-a:toggle-all'"];
       fileWidget.command = "${lib.getExe pkgs.fd} --type f --hidden --exclude .git";
       fileWidget.options = ["--preview '${lib.getExe pkgs.bat} --color=always {}'"];
       historyWidget.bash.command = "";

@@ -31,10 +31,10 @@ deploy *args:
     esac
   done
 
-  # pick hosts (tab multi-select, enter confirm)
+  # pick hosts (tab multi-select, ctrl-a toggle all, enter confirm)
   if [ -z "$hosts" ]; then
     hosts="$(printf '%s\n' $all_hosts | fzf --multi --prompt='hosts> ' \
-      --header='TAB to select, ENTER to confirm')" || true
+      --header='TAB to select, CTRL-A to toggle all, ENTER to confirm')" || true
     if [ -z "$hosts" ]; then echo "no host selected, abort"; exit 1; fi
   fi
 
