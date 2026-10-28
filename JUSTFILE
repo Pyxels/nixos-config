@@ -113,6 +113,19 @@ os:
   nh os switch
 
 # use nh to rebuild and switch standalone home-manager (non-NixOS hosts)
-home:
-  nh home switch
+home *args:
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  nh home switch "$@"
+
+  # targets.genericLinux.gpu: rerun root setup when the driver store path changed
+  setup="$HOME/.nix-profile/bin/non-nixos-gpu-setup"
+  if [ -x "$setup" ]; then
+    want="$(grep -o '/nix/store/[^ ]*/non-nixos-gpu.conf' "$setup")"
+    if [ "$(readlink /etc/tmpfiles.d/non-nixos-gpu.conf || true)" != "$want" ]; then
+      printf "\033[33m==> gpu drivers changed, running non-nixos-gpu-setup\033[0m\n"
+      sudo "$(readlink -f "$setup")"
+    fi
+  fi
 
